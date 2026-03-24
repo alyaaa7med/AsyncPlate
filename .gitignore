@@ -77,6 +77,13 @@ artifacts/
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 
+
+# Angular specifics
+**/node_modules/
+**/dist/
+.angular/
+**/src/assets/i18n/*.json
+
 # StyleCop
 StyleCopReport.xml
 
