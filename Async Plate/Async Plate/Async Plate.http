@@ -1,6 +1,0 @@
-@Async_Plate_HostAddress = http://localhost:5120
-
-GET {{Async_Plate_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
