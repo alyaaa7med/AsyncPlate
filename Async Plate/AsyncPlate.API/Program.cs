@@ -3,19 +3,18 @@ using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Add services to the container.
 builder.Services.AddControllers();
 
-// If you have Swagger/OpenAPI enabled, add these:
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// --- 1. REGISTRATION AREA (Dependency Injection) ---
+builder.Services.AddTransient<RequestLoggerMiddleware>(); //one per injection
+builder.Services.AddTransient<ExceptionMiddleware>();
 
 var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-app.UseMiddleware<ExceptionMiddleware>(); //use : not crosscutting + first one as it is the whole wrapper 
+app.UseMiddleware<ExceptionMiddleware>(); //use & first one as it is the whole wrapper 
+app.UseMiddleware<RequestLoggerMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

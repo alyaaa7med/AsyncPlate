@@ -8,7 +8,7 @@ namespace AsyncPlate.API.Middlewares
     public class ExceptionMiddleware
     {
         //it is about the http request not specific action-> middleware (before + invoke + after)
-        //i need to add middleware for catching execptions ->try + catch
+        //i need to add middleware for catching execptions -> method contains (try + catch )
 
         private readonly RequestDelegate _next; //point to a function of this signature 
         private readonly ILogger<ExceptionMiddleware> _logger;
