@@ -1,20 +1,34 @@
 using AsyncPlate.API.Middlewares;
-using Microsoft.AspNetCore.Builder;
+using AsyncPlate.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+// --- 1. DATABASE CONFIGURATION ---
+// Hardcode the string here temporarily to ensure the API can always find it
+var connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=AsyncPlateDb;Integrated Security=True;TrustServerCertificate=True;";
 
-// --- 1. REGISTRATION AREA (Dependency Injection) ---
-builder.Services.AddTransient<RequestLoggerMiddleware>(); //one per injection
-builder.Services.AddTransient<ExceptionMiddleware>();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// --- 2. REGISTRATION AREA (Dependency Injection) ---
+//transient -> per ordered 
+//scoped -> per request 
+//singletone -> per application 
+
+
+
 
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
-app.UseMiddleware<ExceptionMiddleware>(); //use & first one as it is the whole wrapper 
+// --- 3. MIDDLEWARE PIPELINE ---
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<RequestLoggerMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -22,9 +36,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
