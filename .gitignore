@@ -74,6 +74,13 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 
+# Custom Environment Settings
+appsettings.Development.json
+appsettings.Staging.json
+appsettings.Production.json
+
+
+
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 

@@ -1,4 +1,6 @@
 ﻿using AsyncPlate.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +13,14 @@ namespace AsyncPlate.Infrastructure.UnitOfWork
     {
 
         private readonly AppDbContext _context;
+        private IDbContextTransaction? _transaction;
+        private readonly IGuestRepo _guestRepo;
 
-        //i need to define all repositories here and then will add/update/..  
-        //note : i will use the interface of the unitofwork in the service so i need it to have the properties and the abstract methods
-        
 
-        public UnitOfWork(AppDbContext context)
+        public UnitOfWork(AppDbContext context, IGuestRepo guestRepo)
         {
             _context = context;
+            _guestRepo = guestRepo;
 
         }
 
@@ -27,8 +29,30 @@ namespace AsyncPlate.Infrastructure.UnitOfWork
             return await _context.SaveChangesAsync();
         }
 
+        public async Task BeginTransactionAsync()
+        {
+            _transaction = await _context.Database.BeginTransactionAsync();
+        }
+        public async Task CommitTransactionAsync()
+        {
+            await _context.SaveChangesAsync();
+            if (_transaction != null) await _transaction.CommitAsync();
+
+        }
+
+        public async Task RollBackTransactionAsync()
+        {
+            if (_transaction != null) await _transaction.RollbackAsync();
+        }
+
+
         public void Dispose()
         {
+            // 1. Dispose the transaction first
+            _transaction?.Dispose();
+            _transaction = null; // Important: Clear the reference
+
+            // 2. Dispose the context
             _context.Dispose();
         }
     }

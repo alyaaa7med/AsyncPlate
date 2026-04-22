@@ -29,32 +29,39 @@ namespace AsyncPlate.API.Middlewares
             catch (Exception ex)
             {
                 //after returning
+                _logger.LogError("An unhandled exception occurred: {Message}", ex.Message);
                 await HandleExceptionAsync(context, ex);
             }
         }
 
         //it is for a middleware not the controller 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
 
             var statusCode = exception switch
             {
-                NotFoundException => (int)HttpStatusCode.NotFound,
-                ValidationException => (int)HttpStatusCode.BadRequest,
-                _ => (int)HttpStatusCode.InternalServerError
+                NotFoundException => HttpStatusCode.NotFound,
+                ValidationException => HttpStatusCode.BadRequest,
+                BadRequestException => HttpStatusCode.BadRequest,
+                _ => HttpStatusCode.InternalServerError
             };
 
-            context.Response.StatusCode = statusCode;
+            context.Response.StatusCode = (int)statusCode;         ///for http not for the response body
+
 
             var response = new
             {
-                StatusCode = statusCode,
+                IsSuccess = false,
                 Message = exception.Message,
-                Errors = (exception as ValidationException)?.Errors //dictionary only in the validation error 
+                Errors = (exception as ValidationException)?.Errors
             };
 
-            return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            var json = JsonSerializer.Serialize(response, options);
+
+            await context.Response.WriteAsync(json);
+
         }
     }
 }

@@ -16,7 +16,9 @@ namespace AsyncPlate.Core.Interfaces
 
         Task<int> SaveChangesAsync();//int : num of rows affected 
 
-
+        Task BeginTransactionAsync();
+        Task CommitTransactionAsync();
+        Task RollBackTransactionAsync();
 
     }
 }

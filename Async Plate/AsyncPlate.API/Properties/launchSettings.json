@@ -1,3 +1,4 @@
+//.NET looks at an environment variable called ASPNETCORE_ENVIRONMENT to decide which file to load.
 {
   "profiles": {
     "AsyncPlate.API": {
