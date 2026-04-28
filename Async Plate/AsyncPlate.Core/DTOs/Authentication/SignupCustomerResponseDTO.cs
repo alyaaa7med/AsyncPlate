@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Core.DTOs.Authentication
 {
-    public class SignupCashierResponseDTO
+    public class SignupCustomerResponseDTO
     {
-        public int Id { get; set; }
-
+        public string Id { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
 
         public string FullName { get; set; } = string.Empty;

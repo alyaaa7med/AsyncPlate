@@ -11,9 +11,8 @@ namespace AsyncPlate.Core.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<SignupGuestResponseDTO> SignUpGuestAsync(SignupGuestRequestDTO requestDTO);
+        Task<SignupCustomerResponseDTO> SignUpCustomerAsync(SignupCustomerRequestDTO requestDTO);
         Task<SignupKitchenChefResponseDTO> SignUpKitchenChefAsync(SignupKitchenChefRequestDTO requestDTO);
-        Task<SignupCashierResponseDTO> SignUpCashierAsync(SignupCashierRequestDTO requestDTO);
         Task SignInAsync();
         Task SendEmailAsync();
     }

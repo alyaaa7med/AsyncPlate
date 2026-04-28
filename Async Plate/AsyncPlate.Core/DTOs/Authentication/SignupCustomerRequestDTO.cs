@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Core.DTOs.Authentication
 {
-    public class SignupGuestRequestDTO
+    public class SignupCustomerRequestDTO
     {
         public string FirstName { get; set; } = string.Empty;
 

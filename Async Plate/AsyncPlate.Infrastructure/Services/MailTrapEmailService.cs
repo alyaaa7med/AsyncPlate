@@ -19,7 +19,6 @@ namespace AsyncPlate.Infrastructure.Services
 
         public async Task SendEmailAsync(string to, string subject, string body)
         {
-            // If the properties exist in MailtarpMappingClass, these red lines will disappear
             var request = SendEmailRequest.Create()
                 .From(_settings.SenderEmail, _settings.SenderName)
                 .To(to)

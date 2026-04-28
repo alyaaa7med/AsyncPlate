@@ -23,9 +23,8 @@ namespace AsyncPlate.Core.Services.Implementation
         private readonly RoleManager<IdentityRole> _userRole;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IValidator<SignupGuestRequestDTO> _validator1;
+        private readonly IValidator<SignupCustomerRequestDTO> _validator1;
         private readonly IValidator<SignupKitchenChefRequestDTO> _validator2;
-        private readonly IValidator<SignupCashierRequestDTO> _validator3;
         private readonly ILogger<AuthService> _logger;
         private readonly IEmailService _emailService;
 
@@ -34,9 +33,9 @@ namespace AsyncPlate.Core.Services.Implementation
             RoleManager<IdentityRole> userRole,
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IValidator<SignupGuestRequestDTO> validator1,
+            IValidator<SignupCustomerRequestDTO> validator1,
             IValidator<SignupKitchenChefRequestDTO> validator2,
-            IValidator<SignupCashierRequestDTO> validator3, ILogger<AuthService> logger,
+             ILogger<AuthService> logger,
             IEmailService emailService)
         {
             _userManager = userManager;
@@ -46,11 +45,10 @@ namespace AsyncPlate.Core.Services.Implementation
             _logger = logger;
             _validator1 = validator1;
             _validator2 = validator2;
-            _validator3 = validator3;
             _emailService = emailService;
         }
 
-        public async Task<SignupGuestResponseDTO> SignUpGuestAsync(SignupGuestRequestDTO requestDTO)
+        public async Task<SignupCustomerResponseDTO> SignUpCustomerAsync(SignupCustomerRequestDTO requestDTO)
         {
             //check validation
             //mapper 
@@ -59,41 +57,41 @@ namespace AsyncPlate.Core.Services.Implementation
             //return response
 
 
-            var validationResult = await _validator1.ValidateAsync(requestDTO);
+            //var validationResult = await _validator1.ValidateAsync(requestDTO);
 
-            if (!validationResult.IsValid)
-            {
-                var errorsDictionary = validationResult.Errors.GroupBy(e => e.PropertyName).ToDictionary(
-                        g => g.Key,
-                        g => g.ToArray().Select(e => e.ErrorMessage).ToArray()
-                    );
+            //if (!validationResult.IsValid)
+            //{
+            //    var errorsDictionary = validationResult.Errors.GroupBy(e => e.PropertyName).ToDictionary(
+            //            g => g.Key,
+            //            g => g.ToArray().Select(e => e.ErrorMessage).ToArray()
+            //        );
 
-                throw new Exceptions.ValidationException(errorsDictionary); //custom validation exception
-            }
+            //    throw new Exceptions.ValidationException(errorsDictionary); //custom validation exception
+            //}
 
-            var guest = _mapper.Map<Guest>(requestDTO);
+            var customer = _mapper.Map<Customer>(requestDTO);
 
-            var result = await _userManager.CreateAsync(guest, requestDTO.Password);
-            if (!result.Succeeded)
-            {
-
-
-                var identityErrors = string.Join(", ", result.Errors.Select(e => e.Description));
-
-                _logger.LogWarning("User creation failed: {Errors}", identityErrors);
-
-                throw new BadRequestException($"Failed to create user: {identityErrors}");
-            }
+            //var result = await _userManager.CreateAsync(customer, requestDTO.Password);
+            //if (!result.Succeeded)
+            //{
 
 
-            //adding a previously created role in the database to the user
-            var roleResult = await _userManager.AddToRoleAsync(guest, "Guest");
-            if (!roleResult.Succeeded)
-            {
-                throw new BadRequestException("Failed to assign default role to user.");
-            }
-            _logger.LogInformation("New guest user created with ID: {UserId} ", guest.Id);
-            return _mapper.Map<SignupGuestResponseDTO>(guest);
+            //    var identityErrors = string.Join(", ", result.Errors.Select(e => e.Description));
+
+            //    _logger.LogWarning("User creation failed: {Errors}", identityErrors);
+
+            //    throw new BadRequestException($"Failed to create user: {identityErrors}");
+            //}
+
+
+            ////adding a previously created role in the database to the user
+            //var roleResult = await _userManager.AddToRoleAsync(customer, "Customer");
+            //if (!roleResult.Succeeded)
+            //{
+            //    throw new BadRequestException("Failed to assign default role to user.");
+            //}
+            //_logger.LogInformation("New Customer user created with ID: {UserId} ", guest.Id);
+            return _mapper.Map<SignupCustomerResponseDTO>(customer);
         }
 
 
@@ -107,10 +105,7 @@ namespace AsyncPlate.Core.Services.Implementation
         {
             return Task.FromResult(new SignupKitchenChefResponseDTO());
         }
-        public Task<SignupCashierResponseDTO> SignUpCashierAsync(SignupCashierRequestDTO requestDTO)
-        {
-                        return Task.FromResult(new SignupCashierResponseDTO());
-        }
+       
         public Task SignInAsync()
         {
             return Task.CompletedTask;

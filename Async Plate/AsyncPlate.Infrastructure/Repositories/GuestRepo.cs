@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Infrastructure.Repository
 {
-    public class GuestRepo : GenericRepo<Core.Entities.Guest>, IGuestRepo
+    public class GuestRepo : GenericRepo<Core.Entities.Customer>, ICustomerRepo
     {
         public GuestRepo(AppDbContext context) : base(context)
         {

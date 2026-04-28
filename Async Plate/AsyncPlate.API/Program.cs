@@ -31,7 +31,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<IGuestRepo, GuestRepo>();
+builder.Services.AddScoped<ICustomerRepo, GuestRepo>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -39,9 +39,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 // 2. VALIDATION & BUSINESS LOGIC
 // ==========================================
 
-builder.Services.AddScoped<IValidator<SignupGuestRequestDTO>, SignupGuestRequestValidator>();
+builder.Services.AddScoped<IValidator<SignupCustomerRequestDTO>, SignupGuestRequestValidator>();
 builder.Services.AddScoped<IValidator<SignupKitchenChefRequestDTO>, SignupKitchenChefRequestValidator>();
-builder.Services.AddScoped<IValidator<SignupCashierRequestDTO>, SignupCashierRequestValidator>();
+//builder.Services.AddScoped<IValidator<SignupCashierRequestDTO>, SignupCashierRequestValidator>();
 
 // ==========================================
 // 3. THIRD-PARTY SERVICES (Email & Mapping)
@@ -68,7 +68,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.ShouldMapMethod = (m) => false;
 
     // Add your profiles here
-    cfg.AddProfile<GuestProfile>();
+    cfg.AddProfile<CustomerProfile>();
 }, typeof(Program));
 
 // ==========================================
@@ -142,9 +142,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
         string[] roleNames = { "Admin", "Guest", "KitchenChef", "Cashier", "User" };
-
         foreach (var roleName in roleNames)
         {
             var roleExist = await roleManager.RoleExistsAsync(roleName);
@@ -159,6 +157,7 @@ using (var scope = app.Services.CreateScope())
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred while seeding roles.");
     }
+    //to dispose dbcontext , role manager objects to keep memory clean and avoid memory leaks
 }
 
 // ==========================================

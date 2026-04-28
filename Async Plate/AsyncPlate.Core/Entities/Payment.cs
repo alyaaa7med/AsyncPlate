@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Core.Entities
 {
-    public class KitchenChef  
+    public class Payment
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
+        public string? OrderId { get; set; } = null!;
+        public Order? Order { get; set; } = null!;
 
-
-        public string AppUserId { get; set; } = null!;
-        public AppUser AppUser { get; set; } = null!;//must in the db mapping 
     }
-   
 }

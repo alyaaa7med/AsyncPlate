@@ -3,7 +3,7 @@ using AsyncPlate.Core.DTOs.Authentication;
 
 namespace AsyncPlate.Core.Validators.Authentication
 {
-    public class SignupGuestRequestValidator : AbstractValidator<SignupGuestRequestDTO>
+    public class SignupGuestRequestValidator : AbstractValidator<SignupCustomerRequestDTO>
     {
         public SignupGuestRequestValidator()
         {

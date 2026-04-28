@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Core.Interfaces
 {
-    public interface ICashierRepo
+    public interface ICustomerRepo
     {
     }
 }

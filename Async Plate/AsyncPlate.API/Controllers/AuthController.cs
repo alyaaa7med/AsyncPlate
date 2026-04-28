@@ -24,11 +24,11 @@ namespace AsyncPlate.API.Controllers
         //call service 
         //return the dtos , errors will be handled by the service which will be handled by the global error handler
 
-        public async Task<IActionResult> SignUp([FromBody] SignupGuestRequestDTO requestDTO)
+        public async Task<IActionResult> SignUp([FromBody] SignupCustomerRequestDTO requestDTO)
         {
-            var responseDto = await _authService.SignUpGuestAsync(requestDTO);
+            var responseDto = await _authService.SignUpCustomerAsync(requestDTO);
 
-            return Ok(new ApiResponse<SignupGuestResponseDTO>(true, "Signup successful", responseDto));
+            return Created($"/customers/{responseDto.Id}", new ApiResponse<SignupCustomerResponseDTO>(true, "Signup successful", responseDto));
         }
         [HttpPost("send-email")]
         public async Task<IActionResult> SendEmailAsync()

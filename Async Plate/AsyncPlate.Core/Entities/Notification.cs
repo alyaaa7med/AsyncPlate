@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Interfaces
+namespace AsyncPlate.Core.Entities
 {
-    public interface IGuestRepo
+    public class Notification
     {
     }
 }

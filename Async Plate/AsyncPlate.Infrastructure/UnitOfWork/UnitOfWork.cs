@@ -14,10 +14,10 @@ namespace AsyncPlate.Infrastructure.UnitOfWork
 
         private readonly AppDbContext _context;
         private IDbContextTransaction? _transaction;
-        private readonly IGuestRepo _guestRepo;
+        private readonly ICustomerRepo _guestRepo;
 
 
-        public UnitOfWork(AppDbContext context, IGuestRepo guestRepo)
+        public UnitOfWork(AppDbContext context, ICustomerRepo guestRepo)
         {
             _context = context;
             _guestRepo = guestRepo;
