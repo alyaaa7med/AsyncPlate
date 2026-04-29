@@ -15,8 +15,7 @@ namespace AsyncPlate.Infrastructure.Configrations
 
         public void Configure(EntityTypeBuilder<Product> builder)
         {
-
-
+            builder.Property(p => p.BasePrice).HasColumnType("decimal(18,2)");
 
             builder.HasOne(g => g.Category)
                 .WithMany(g => g.Products)

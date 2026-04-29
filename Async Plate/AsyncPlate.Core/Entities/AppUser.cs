@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Core.Entities
 {
-    public abstract class AppUser : IdentityUser
+    public  class AppUser : IdentityUser
     {
         //appuser is an identity user :every time i use this i will use all of identityuser table
         //so => inheritance not 1:1 
@@ -16,6 +16,8 @@ namespace AsyncPlate.Core.Entities
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Address {get; set; } = string.Empty;
+        public string? ProfilePictureUrl { get; set; } 
+        public string? RefreshToken { get; set; }
 
         //nav props
         //virtual for lazy loading as we will use this not too much and we want to load it when we need it

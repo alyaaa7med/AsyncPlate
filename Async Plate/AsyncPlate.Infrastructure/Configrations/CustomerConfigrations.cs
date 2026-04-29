@@ -16,11 +16,13 @@ namespace AsyncPlate.Infrastructure.Configrations
 
             //app : customer = 1(may) : 1(must)
 
-            
+            builder.HasKey(c => c.Id);
+
+
             builder.HasOne(c => c.AppUser)
-                        .WithOne()
+                        .WithOne(a => a.Customer)
                         .HasForeignKey<Customer>(c => c.AppUserId)
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
 
         }

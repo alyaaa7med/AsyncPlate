@@ -10,10 +10,11 @@ namespace AsyncPlate.Core.Entities
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-
-
         public string AppUserId { get; set; } = null!;
         public AppUser AppUser { get; set; } = null!;//must in the db mapping 
+
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
+
     }
    
 }

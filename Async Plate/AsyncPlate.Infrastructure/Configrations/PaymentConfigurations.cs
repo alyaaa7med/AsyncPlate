@@ -14,13 +14,13 @@ namespace AsyncPlate.Infrastructure.Configrations
         public void Configure(EntityTypeBuilder<Payment> builder)
         {
 
-
+            builder.HasKey(p => p.Id);
 
             builder.HasOne(p => p.Order)
                    .WithOne(o => o.Payment)
                    .HasForeignKey<Payment>(p => p.OrderId)
                    .IsRequired(false)
-                   .OnDelete(DeleteBehavior.SetNull);
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

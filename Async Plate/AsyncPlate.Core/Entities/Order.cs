@@ -21,8 +21,10 @@ namespace AsyncPlate.Core.Entities
         public Payment? Payment { get; set; }
 
         public string? CustomerId { get; set; } 
-        public Customer? Customer { get; set; } 
+        public Customer? Customer { get; set; }
 
+        public string? KitchenChefId { get; set; }
+        public KitchenChef? KitchenChef { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }

@@ -13,6 +13,11 @@ namespace AsyncPlate.Infrastructure.Configrations
     {
         public void Configure(EntityTypeBuilder<Inventory> builder)
         {
+            builder.HasKey(i => i.Id);
+
+            builder.Property(i => i.PurchasedUnitPrice).HasColumnType("decimal(18,2)");
+            builder.Property(i => i.CurrentStock).HasColumnType("decimal(18,4)"); 
+            builder.Property(i=> i.MinStockLevel).HasColumnType("decimal(18,4)");
 
             builder.HasOne(i => i.Supplier)
                 .WithMany(s => s.Inventories)

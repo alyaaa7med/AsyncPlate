@@ -45,6 +45,12 @@ namespace AsyncPlate.Infrastructure
             // Configuration السطر السحري ده بيقرأ كل ملفات الـ  
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
+
+            foreach (var foreignKey in builder.Model.GetEntityTypes()
+                     .SelectMany(e => e.GetForeignKeys()))
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+            }
         }
        
 

@@ -13,11 +13,12 @@ namespace AsyncPlate.Infrastructure.Configrations
     {
         public void Configure(EntityTypeBuilder<KitchenChef> builder)
         {
-            //app  : chef =  1(may) : 1 (must)
+            builder.HasKey(k => k.Id);
+
             builder.HasOne(k => k.AppUser)
                 .WithOne(a => a.KitchenChef)
                 .HasForeignKey<KitchenChef>(k => k.AppUserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

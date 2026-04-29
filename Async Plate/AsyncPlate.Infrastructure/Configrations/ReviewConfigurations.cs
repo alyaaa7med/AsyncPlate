@@ -9,15 +9,17 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Infrastructure.Configrations
 {
-    public class ReviewConfigurations: IEntityTypeConfiguration<Review>
+    public class ReviewConfigurations : IEntityTypeConfiguration<Review>
     {
         public void Configure(EntityTypeBuilder<Review> builder)
         {
+            builder.HasKey(r => r.Id);
+
             builder.HasOne(r => r.Order)
                    .WithOne(o => o.Review)
                    .HasForeignKey<Review>(r => r.OrderId)
                    .IsRequired(false)
-                   .OnDelete(DeleteBehavior.SetNull);
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
