@@ -8,12 +8,11 @@ namespace AsyncPlate.Core.DTOs.Authentication
 {
     public class SignupKitchenChefResponseDTO
     {
-        public int Id { get; set; }
+        
+        //should be the same as customer entity 
+        public string Id { get; set; } = string.Empty;
+        public SignupAppUserResponseDTO AppUser { get; set; } = new();
 
-        public string Email { get; set; } = string.Empty;
+    }
+} 
 
-        public string FullName { get; set; } = string.Empty;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    } 
-}

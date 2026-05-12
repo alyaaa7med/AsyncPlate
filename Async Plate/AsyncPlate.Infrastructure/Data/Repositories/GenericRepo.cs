@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.Interfaces;
+﻿using AsyncPlate.Core.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Infrastructure.Repository
+namespace AsyncPlate.Infrastructure.Data.Repositories
 {
     public  class GenericRepo<T> : IBaseRepo <T> where T : class
     {

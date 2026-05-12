@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,16 +9,11 @@ namespace AsyncPlate.Core.DTOs.Authentication
 {
     public class SignupCustomerRequestDTO
     {
-        public string FirstName { get; set; } = string.Empty;
+        //Should be the same name  as AppUser  entity and customer entity or i need to define it in 
+        //the mapping profile
 
-        public string LastName { get; set; } = string.Empty;
-
-        public string PhoneNumber { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty; 
-        public string Address { get; set; } = string.Empty;
-
-        public string Password { get; set; } = string.Empty;
-        public string ConfirmPassword { get; set; } = string.Empty;
+        public SignupAppUserRequestDTO AppUser { get; set; } = new();
+     
     }
 }
   

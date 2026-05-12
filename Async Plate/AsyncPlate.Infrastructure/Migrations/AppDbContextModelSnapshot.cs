@@ -82,6 +82,9 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -91,6 +94,9 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -379,6 +385,9 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.Property<string>("ExtraProductId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ProductId", "ExtraProductId");
 
                     b.HasIndex("ExtraProductId");
@@ -402,6 +411,43 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasIndex("InventoryId");
 
                     b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("AsyncPlate.Core.Entities.RefreshToken", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsExpired")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsRevoked")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("RefreshTokenValue")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshToken");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Review", b =>
@@ -598,8 +644,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                 {
                     b.HasOne("AsyncPlate.Core.Entities.Offer", "CurrentOffer")
                         .WithMany("Categories")
-                        .HasForeignKey("OfferId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("OfferId");
 
                     b.Navigation("CurrentOffer");
                 });
@@ -620,7 +665,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasOne("AsyncPlate.Core.Entities.Supplier", "Supplier")
                         .WithMany("Inventories")
                         .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Supplier");
@@ -743,6 +788,17 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("AsyncPlate.Core.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("AsyncPlate.Core.Entities.AppUser", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("AsyncPlate.Core.Entities.Review", b =>
                 {
                     b.HasOne("AsyncPlate.Core.Entities.Order", "Order")
@@ -758,7 +814,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -767,7 +823,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasOne("AsyncPlate.Core.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -776,7 +832,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasOne("AsyncPlate.Core.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -785,13 +841,13 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AsyncPlate.Core.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -800,7 +856,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasOne("AsyncPlate.Core.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -809,6 +865,8 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("KitchenChef");
+
+                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Category", b =>

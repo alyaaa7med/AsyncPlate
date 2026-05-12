@@ -14,12 +14,28 @@ namespace AsyncPlate.Core.Mapping.Authentication
     {
         public CustomerProfile()
         {
-            //    CreateMap<SignupCustomerRequestDTO, Customer>()
-            //    .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
 
-            //    CreateMap<Customer, SignupCustomerResponseDTO>()
-            //                .ForMember(dest => dest.FullName,
-            //                           opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
+
+            CreateMap<SignupAppUserRequestDTO, AppUser>()
+                .ForMember(dest => dest.UserName,
+                    opt => opt.MapFrom(src => src.Email)) // غالبًا اليوزرنيم = الإيميل
+                .ForMember(dest => dest.ProfilePictureUrl,
+                    opt => opt.Ignore()); // لأن IFormFile يحتاج معالجة منفصلة
+
+            CreateMap<AppUser, SignupAppUserResponseDTO>()
+                .ForMember(dest => dest.FullName,
+                    opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+                .ForMember(dest => dest.ProfilePicture,
+                    opt => opt.MapFrom(src => string.IsNullOrEmpty(src.ProfilePictureUrl)
+                        ? null
+                        : $"https://localhost:51499{src.ProfilePictureUrl.Replace("\\", "/")}"));
+
+            // Customer Request DTO -> Customer Entity
+            CreateMap<SignupCustomerRequestDTO, Customer>();
+
+
+            // Customer Entity -> Customer Response DTO
+            CreateMap<Customer, SignupCustomerResponseDTO>();
 
         }
     }

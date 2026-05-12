@@ -16,6 +16,8 @@ namespace AsyncPlate.Infrastructure
     public class AppDbContext : IdentityDbContext<AppUser>
     {
         //dbsets for the application execlude the auth
+
+        //public DbSet<AppUser> AppUsers { get; set; } no need for this as we will use the identity user table 
         public DbSet<KitchenChef> Chefs { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -46,11 +48,6 @@ namespace AsyncPlate.Infrastructure
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
 
-            foreach (var foreignKey in builder.Model.GetEntityTypes()
-                     .SelectMany(e => e.GetForeignKeys()))
-            {
-                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
-            }
         }
        
 

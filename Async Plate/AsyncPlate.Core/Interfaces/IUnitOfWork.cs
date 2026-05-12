@@ -13,7 +13,6 @@ namespace AsyncPlate.Core.Interfaces
                 مش مسؤل عن التعامل مع الانتيتي نفسه لكن بيجمع و يحفظ ف ترانزاكشن واحدة
         */
 
-
         Task<int> SaveChangesAsync();//int : num of rows affected 
 
         Task BeginTransactionAsync();

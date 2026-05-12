@@ -13,6 +13,9 @@ namespace AsyncPlate.Infrastructure.Configrations
     {
         public void Configure(EntityTypeBuilder<OrderItem> builder)
         {
+
+            builder.HasKey(oi => oi.Id);
+
             builder.Property(oi => oi.UnitPriceAtSale).HasColumnType("decimal(18,2)");
 
             builder.HasOne(oi => oi.Order)

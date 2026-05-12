@@ -13,7 +13,7 @@ namespace AsyncPlate.Core.Services.Interfaces
     {
         Task<SignupCustomerResponseDTO> SignUpCustomerAsync(SignupCustomerRequestDTO requestDTO);
         Task<SignupKitchenChefResponseDTO> SignUpKitchenChefAsync(SignupKitchenChefRequestDTO requestDTO);
-        Task SignInAsync();
-        Task SendEmailAsync();
+        Task<LoginResponseDTO> LoginAsync(LoginRequestDTO requestDTO);
+        //Task SendEmailAsync();
     }
 }

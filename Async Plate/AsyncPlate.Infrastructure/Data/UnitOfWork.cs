@@ -1,4 +1,5 @@
 ﻿using AsyncPlate.Core.Interfaces;
+using AsyncPlate.Core.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
@@ -7,21 +8,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Infrastructure.UnitOfWork
+namespace AsyncPlate.Infrastructure.Data
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
 
+
         private readonly AppDbContext _context;
         private IDbContextTransaction? _transaction;
-        private readonly ICustomerRepo _guestRepo;
 
+        public ICustomerRepo customers { get; }
+        public IKitchenChefRepo kitchenChefs { get; }
 
-        public UnitOfWork(AppDbContext context, ICustomerRepo guestRepo)
+        public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo)
         {
             _context = context;
-            _guestRepo = guestRepo;
-
+            customers = customerRepo;
+            kitchenChefs = kitchenChefRepo;
         }
 
         public async Task<int> SaveChangesAsync()

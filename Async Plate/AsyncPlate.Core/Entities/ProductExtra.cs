@@ -8,6 +8,8 @@ namespace AsyncPlate.Core.Entities
 {
     public  class ProductExtra
     {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
         public string ProductId { get; set; } = null!;        // Main product
         public Product Product { get; set; } = null!;
 

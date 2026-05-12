@@ -19,25 +19,47 @@ namespace AsyncPlate.API.Controllers
             _authService = authService;
         }
 
-        [HttpPost("signup-guest")]
+        [HttpPost("signup-customer")]
         //accept the dto from body 
         //call service 
-        //return the dtos , errors will be handled by the service which will be handled by the global error handler
+        //return the response , errors will be handled by the service which will be handled by the global error handler
 
-        public async Task<IActionResult> SignUp([FromBody] SignupCustomerRequestDTO requestDTO)
+        //fromform -> multipart/form-data
+        //frombody -> application/json
+        public async Task<IActionResult> SignUp([FromForm] SignupCustomerRequestDTO requestDTO)
         {
             var responseDto = await _authService.SignUpCustomerAsync(requestDTO);
 
-            return Created($"/customers/{responseDto.Id}", new ApiResponse<SignupCustomerResponseDTO>(true, "Signup successful", responseDto));
+            return Created($"/customers/{responseDto.Id}", new ApiResponse<SignupCustomerResponseDTO>(true, "Signup successful as a customer", responseDto));
         }
-        [HttpPost("send-email")]
-        public async Task<IActionResult> SendEmailAsync()
-        {
-            await _authService.SendEmailAsync();
 
-            return Ok(new ApiResponse<string>(true, "Email sent successfully", null));
+        [HttpPost("signup-kitchenchef")]
+        //accept the dto from body 
+        //call service 
+        //return response , errors will be handled by the service which will be handled by the global error handler
+
+        public async Task<IActionResult> SignUp([FromForm] SignupKitchenChefRequestDTO requestDTO)
+        {
+            var responseDto = await _authService.SignUpKitchenChefAsync(requestDTO);
+
+            return Created($"/kitchenchefs/{responseDto.Id}", new ApiResponse<SignupKitchenChefResponseDTO>(true, "Signup successful as a kitchen chef", responseDto));
         }
-        
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO requestDTO)
+        {
+            var responseDto = await _authService.LoginAsync(requestDTO);
+            return Ok(new ApiResponse<LoginResponseDTO>(true, "Login successful", responseDto));
+        }
+
+        //[HttpPost("send-email")]
+        //public async Task<IActionResult> SendEmailAsync()
+        //{
+        //    await _authService.SendEmailAsync();
+
+        //    return Ok(new ApiResponse<string>(true, "Email sent successfully", null));
+        //}
+
 
     }
 }

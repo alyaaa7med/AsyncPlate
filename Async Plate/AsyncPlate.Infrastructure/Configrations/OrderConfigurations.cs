@@ -13,6 +13,9 @@ namespace AsyncPlate.Infrastructure.Configrations
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
+
+            builder.HasKey(o => o.Id);
+
             builder.Property(o => o.TotalAmountPrice).HasColumnType("decimal(18,2)");
             builder.Property(o => o.TotalFee).HasColumnType("decimal(18,2)");
             builder.Property(o => o.TotalFeeTotal).HasColumnType("decimal(18,2)");

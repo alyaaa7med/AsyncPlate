@@ -2,15 +2,18 @@ using AsyncPlate.API.Middlewares;
 using AsyncPlate.Core.DTOs.Authentication;
 using AsyncPlate.Core.Entities;
 using AsyncPlate.Core.Interfaces;
+using AsyncPlate.Core.Interfaces.Repositories;
+using AsyncPlate.Core.Interfaces.Services;
 using AsyncPlate.Core.Mapping.Authentication;
 using AsyncPlate.Core.Services.Implementation;
 using AsyncPlate.Core.Services.Interfaces;
 using AsyncPlate.Core.Validators.Authentication;
 using AsyncPlate.Infrastructure;
-using AsyncPlate.Infrastructure.Repository;
+using AsyncPlate.Infrastructure.Data;
+using AsyncPlate.Infrastructure.Data.Repositories;
 using AsyncPlate.Infrastructure.Services;
-using AsyncPlate.Infrastructure.UnitOfWork;
 using FluentValidation;
+using Jose;
 using Mailtrap;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -22,30 +25,30 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ==========================================
-// 1. DATABASE & REPOSITORIES (Infrastructure)
-// ==========================================
+// Database and Repositories from [infra + core ]
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<ICustomerRepo, GuestRepo>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
+builder.Services.AddScoped<IKitchenChefRepo, KitchenChefRepo>();
+builder.Services.AddScoped<IMediaService, MediaService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
-// ==========================================
-// 2. VALIDATION & BUSINESS LOGIC
-// ==========================================
 
-builder.Services.AddScoped<IValidator<SignupCustomerRequestDTO>, SignupGuestRequestValidator>();
+// Validations using FluentValidation [core ]
+
+builder.Services.AddScoped<IValidator<SignupAppUserRequestDTO>, SignupAppUserRequestValidator>();   
+builder.Services.AddScoped<IValidator<SignupCustomerRequestDTO>, SignupCustomerRequestValidator>();
 builder.Services.AddScoped<IValidator<SignupKitchenChefRequestDTO>, SignupKitchenChefRequestValidator>();
-//builder.Services.AddScoped<IValidator<SignupCashierRequestDTO>, SignupCashierRequestValidator>();
+builder.Services.AddScoped<IValidator<LoginRequestDTO>, LoginRequestValidator>();
 
-// ==========================================
-// 3. THIRD-PARTY SERVICES (Email & Mapping)
-// ==========================================
+// Thrid Party and AutoMapper [infra + core ]
 
 builder.Services.AddTransient<IEmailService, MailTrapEmailService>();
 
@@ -68,12 +71,15 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.ShouldMapMethod = (m) => false;
 
     // Add your profiles here
+    cfg.AddProfile<AuthProfile>();
     cfg.AddProfile<CustomerProfile>();
+    cfg.AddProfile<KitchenChefProfile>();
+
 }, typeof(Program));
 
-// ==========================================
-// 4. API & SWAGGER CONFIGURATION
-// ==========================================
+
+
+// API Swagger [infra ]
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -100,9 +106,7 @@ builder.Services.AddSwaggerGen(c => {
     });
 });
 
-// ==========================================
-// 5. IDENTITY & JWT SECURITY
-// ==========================================
+// Identity and JWT [ infra + core ]
 
 //identity settings 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
@@ -119,30 +123,29 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(
+        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
 
-// ==========================================
-// 6. APP BUILDING & DATA SEEDING
-// ==========================================
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("Jwt")
+);
 
+// Building and Seedings
 var app = builder.Build();
 
-// --- ROLE SEEDING ADDED HERE ---
+//seeding
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        string[] roleNames = { "Admin", "Guest", "KitchenChef", "Cashier", "User" };
+        string[] roleNames = { "Admin", "Guest", "KitchenChef", "Customer" };
         foreach (var roleName in roleNames)
         {
             var roleExist = await roleManager.RoleExistsAsync(roleName);
@@ -160,9 +163,7 @@ using (var scope = app.Services.CreateScope())
     //to dispose dbcontext , role manager objects to keep memory clean and avoid memory leaks
 }
 
-// ==========================================
-// 7. MIDDLEWARE PIPELINE (The Assembly Line)
-// ==========================================
+// Middlewares [API ]
 
 // 1. «·„Ìœ· ÊÌ— «·Œ«’ »ÌﬂÌ (√Ê· Õ«Ã… ⁄‘«‰ Ì·ﬁÿ √Ì Error „‰ «··Ì »⁄œÂ)
 app.UseMiddleware<RequestLoggerMiddleware>();
@@ -178,6 +179,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseRouting();
 

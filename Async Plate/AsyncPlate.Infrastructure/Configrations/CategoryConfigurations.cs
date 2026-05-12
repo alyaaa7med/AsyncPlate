@@ -14,6 +14,7 @@ namespace AsyncPlate.Infrastructure.Configrations
         public void Configure(EntityTypeBuilder<Category> builder)
         {
 
+            builder.HasKey(c => c.Id);
 
 
 

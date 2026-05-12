@@ -47,14 +47,14 @@ namespace AsyncPlate.API.Middlewares
                 _ => HttpStatusCode.InternalServerError
             };
 
-            context.Response.StatusCode = (int)statusCode;         ///for http not for the response body
+            context.Response.StatusCode = (int)statusCode;  ///for http not for the response body
 
 
             var response = new
             {
                 IsSuccess = false,
                 Message = exception.Message,
-                Errors = (exception as ValidationException)?.Errors
+                Errors = (exception as ValidationException)?.Errors//dictionary for validation errors or null for other exceptions
             };
 
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
