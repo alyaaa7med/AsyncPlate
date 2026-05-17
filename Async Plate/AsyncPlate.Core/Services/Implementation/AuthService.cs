@@ -1,22 +1,15 @@
-﻿using AsyncPlate.Core.Entities;
+﻿using AsyncPlate.Core.DTOs.Authentication;
+using AsyncPlate.Core.Entities;
+using AsyncPlate.Core.Exceptions;
+using AsyncPlate.Core.Interfaces;
+using AsyncPlate.Core.Interfaces.Services;
 using AsyncPlate.Core.Services.Interfaces;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AsyncPlate.Core.Exceptions;
-using AsyncPlate.Core.DTOs.Authentication;
+using Microsoft.AspNetCore.WebUtilities; 
 using Microsoft.Extensions.Logging;
-using AsyncPlate.Core.Interfaces.Repositories;
-using AsyncPlate.Core.Interfaces.Services;
-using AsyncPlate.Core.Interfaces;
-
+using System.Text;
 namespace AsyncPlate.Core.Services.Implementation
 {
     public class AuthService : IAuthService
@@ -28,6 +21,9 @@ namespace AsyncPlate.Core.Services.Implementation
         private readonly IValidator<SignupCustomerRequestDTO> _validator1;
         private readonly IValidator<SignupKitchenChefRequestDTO> _validator2;
         private readonly IValidator<LoginRequestDTO> _validator3;
+        private readonly IValidator<ForgetPasswordRequestDTO> _validator4;
+        private readonly IValidator<ResetPasswordRequestDTO> _validator5;
+        private readonly IValidator<RefreshTokenRequestDTO> _validator6;
         private readonly IEmailService _emailService;
         private readonly IMediaService _mediaService;
         private readonly ITokenService _tokenService;
@@ -39,6 +35,9 @@ namespace AsyncPlate.Core.Services.Implementation
             IValidator<SignupCustomerRequestDTO> validator1,
             IValidator<SignupKitchenChefRequestDTO> validator2,
             IValidator<LoginRequestDTO> validator3,
+            IValidator<ForgetPasswordRequestDTO> validator4,
+            IValidator<ResetPasswordRequestDTO> validator5,
+            IValidator<RefreshTokenRequestDTO> validator6,
             IEmailService emailService,
             IMediaService mediaService,
             ITokenService tokenService,
@@ -51,6 +50,9 @@ namespace AsyncPlate.Core.Services.Implementation
             _validator1 = validator1;
             _validator2 = validator2;
             _validator3 = validator3;
+            _validator4 = validator4;
+            _validator5 = validator5;
+            _validator6 = validator6;
             _emailService = emailService;
             _mediaService = mediaService;
             _tokenService = tokenService;
@@ -87,7 +89,7 @@ namespace AsyncPlate.Core.Services.Implementation
             // Safety check
             if (customer.AppUser == null)
             {
-                throw new BadRequestException("Customer AppUser mapping failed.");
+                throw new Exceptions.InternalServerException("Customer mapping failed.");
             }
             await _unitOfWork.BeginTransactionAsync();
             try
@@ -105,22 +107,23 @@ namespace AsyncPlate.Core.Services.Implementation
 
                 if (!result.Succeeded)
                 {
-                    await _unitOfWork.RollBackTransactionAsync();
                     var identityErrors = string.Join(", ", result.Errors.Select(e => e.Description));
                     _logger.LogWarning("User creation failed: {Errors}", identityErrors);
-                    throw new BadRequestException($"Failed to create user: {identityErrors}");
+                    throw new Exceptions.BadRequestException($"Failed to create user: {identityErrors}");//badrequest : email duplicate / weak password 
                 }
 
-                await _unitOfWork.customers.AddAsync(customer);
+                await _unitOfWork.customers.AddAsync(customer);//nav prop of user is already filled
+                                                               //so that no need to add fk manully to link customer 
+                                                               //with user
 
                 var roleResult = await _userManager.AddToRoleAsync(customer.AppUser, "Customer");//just one role
 
                 if (!roleResult.Succeeded)
                 {
-                    await _unitOfWork.RollBackTransactionAsync();
                     var roleErrors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
-                    throw new BadRequestException($"Failed to assign role: {roleErrors}");
+                    throw new Exceptions.InternalServerException($"Failed to assign role: {roleErrors}");
                 }
+
                 await _unitOfWork.CommitTransactionAsync();
                 _logger.LogInformation("New Customer user created with UserID: {UserId}", customer.AppUser.Id);
                 return _mapper.Map<SignupCustomerResponseDTO>(customer);
@@ -138,9 +141,9 @@ namespace AsyncPlate.Core.Services.Implementation
                 throw;
             }
         }
-       
 
-   
+
+
 
         public async Task<SignupKitchenChefResponseDTO> SignUpKitchenChefAsync(SignupKitchenChefRequestDTO requestDTO)
         {
@@ -166,7 +169,7 @@ namespace AsyncPlate.Core.Services.Implementation
             var chef = _mapper.Map<KitchenChef>(requestDTO);
             if (chef.AppUser == null)
             {
-                throw new BadRequestException("KitchenChef AppUser mapping failed.");
+                throw new Exceptions.InternalServerException("KitchenChef AppUser mapping failed.");
             }
             await _unitOfWork.BeginTransactionAsync();
 
@@ -185,21 +188,21 @@ namespace AsyncPlate.Core.Services.Implementation
 
                 if (!result.Succeeded)
                 {
-                    await _unitOfWork.RollBackTransactionAsync();
                     var identityErrors = string.Join(", ", result.Errors.Select(e => e.Description));
-                    _logger.LogWarning("Chef User creation failed: {Errors}", identityErrors);
-                    throw new BadRequestException($"Failed to create user: {identityErrors}");
+                    _logger.LogWarning("User creation failed: {Errors}", identityErrors);
+                    throw new Exceptions.BadRequestException($"Failed to create user: {identityErrors}");
                 }
 
-                await _unitOfWork.kitchenChefs.AddAsync(chef);
+                await _unitOfWork.kitchenChefs.AddAsync(chef);//nav prop of user is already filled
+                                                              //so that no need to add fk manully to link chef 
+                                                              //with user
 
                 var roleResult = await _userManager.AddToRoleAsync(chef.AppUser, "Chef");
 
                 if (!roleResult.Succeeded)
                 {
-                    await _unitOfWork.RollBackTransactionAsync();
                     var roleErrors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
-                    throw new BadRequestException($"Failed to assign role: {roleErrors}");
+                    throw new Exceptions.InternalServerException($"Failed to assign role: {roleErrors}");
                 }
 
                 await _unitOfWork.CommitTransactionAsync();
@@ -212,12 +215,12 @@ namespace AsyncPlate.Core.Services.Implementation
                 _logger.LogError(ex, "Unexpected error during Chef registration for email: {Email}", requestDTO.AppUser.Email);
                 if (!string.IsNullOrEmpty(chef.AppUser.ProfilePictureUrl))
                 {
-                     _mediaService.DeleteImage(chef.AppUser.ProfilePictureUrl);
+                    _mediaService.DeleteImage(chef.AppUser.ProfilePictureUrl);
                 }
 
                 throw;
             }
-        
+
         }
 
         public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO requestDTO)
@@ -246,32 +249,242 @@ namespace AsyncPlate.Core.Services.Implementation
 
             {
                 _logger.LogWarning("Failed login attempt: User with email {Email} not found.", requestDTO.Email);
-                throw new BadRequestException("Invalid email or password.");
+                throw new Exceptions.UnauthorizedException("Invalid email or password.");
             }
             var passwordValid = await _userManager.CheckPasswordAsync(user, requestDTO.Password);//how this works? it hashes the provided password and compares it to the stored hash in the database, returning true if they match and false otherwise.
             if (!passwordValid)
             {
                 _logger.LogWarning("Failed login attempt: Invalid password for email {Email}.", requestDTO.Email);
-                throw new BadRequestException("Invalid email or password.");
+                throw new Exceptions.UnauthorizedException("Invalid email or password.");
             }
 
             //how to get the type and generate token? 
             var accessToken = _tokenService.CreateAccessToken(user);
             var refreshToken = _tokenService.GenerateRefreshToken();
 
-            user.RefreshTokens.Add(new RefreshToken { RefreshTokenValue = refreshToken, });
-            await _userManager.UpdateAsync(user);
+            //user.RefreshTokens.Add(new RefreshToken { RefreshTokenValue = refreshToken, UserId= user.Id});
+            //await _userManager.UpdateAsync(user);  أنت بتضيف ريفريش جوا توكن لكن المنجر مش هيعرف يحفظ الا يوزر فقط
 
-            var responsedto = _mapper.Map<LoginResponseDTO>(user); 
+            await _unitOfWork.refreshtokens.AddAsync(new RefreshToken { RefreshTokenValue = refreshToken, UserId = user.Id }); //need to link userid fk here as i do not have nav prop to user in refresh token to link them directly
+            await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation( "User logged in successfully. UserId: {UserId}", user.Id);
+            var responsedto = _mapper.Map<LoginResponseDTO>(user);
             responsedto.AccessToken = accessToken;
             responsedto.RefreshToken = refreshToken;
             return responsedto;
         }
 
 
-        public async Task SendEmailAsync()
+        public async Task ForgetPasswordAsync(ForgetPasswordRequestDTO requestDTO)
         {
-            await _emailService.SendEmailAsync("alyaaahmed0643@gmail.com", "First Email", "it is a body");
+            //validate dto 
+            //check if email not found 
+            //invalidate and expire old token for the user to prevent reuse of old tokens if any
+            //create new token 
+            //send email 
+            var validationResult = await _validator4.ValidateAsync(requestDTO);
+
+            if (!validationResult.IsValid)
+            {
+                var errorsDictionary = validationResult.Errors
+                    .GroupBy(e => e.PropertyName)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                throw new Exceptions.ValidationException(errorsDictionary);
+            }
+
+            var user = await _userManager.FindByEmailAsync(requestDTO.Email); //i used _userrepo but it always invalid
+            if (user == null)
+
+            {
+                _logger.LogWarning("Failed find user: User with email {Email} not found.", requestDTO.Email);
+                throw new Exceptions.NotFoundException("If the email exists, a reset link has been sent.");
+            }
+
+            await _unitOfWork.BeginTransactionAsync();
+
+            //inactivate old token for the user to prevent reuse of old tokens if any
+            var token = await _unitOfWork.onetimetokens.GetActiveOneTimeTokenAsync(t => t.AppUserId == user.Id && t.IsActive);
+
+            if (token != null)
+            {
+                token.IsActive = false;
+                token.ExpiryDate = DateTime.UtcNow;
+                _unitOfWork.onetimetokens.Update(token);
+
+            }
+            //generate new token and save it to db
+            var ott = new OneTimeToken
+            {
+                Token = Guid.NewGuid().ToString(),
+                AppUserId = user.Id
+            };//i need to add the fk as i do not have nav, to link the 2 entities 
+
+            await _unitOfWork.onetimetokens.AddAsync(ott);
+            await _unitOfWork.SaveChangesAsync();
+            //new onetimetoken added for user with email 
+
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(ott.Token));
+            var resetLink = $"https://yourfrontend.com/reset-password?token={encodedToken}&email={user.Email}"; //to do in appsettings
+
+            //to do : try if email is sent or not 
+            await SendEmailAsync(user.Email!, "Reset Password", $"Click here to reset: <a href='{resetLink}'>Reset Link</a>");
+            _logger.LogInformation("Forget Password Email is sent to user with email {email}", user.Email);
+
+        }
+
+
+
+        public async Task ResetPasswordAsync(ResetPasswordRequestDTO requestDTO)
+        {
+            //validate dto 
+            //check if email not found
+            //check if ott is valid 
+            //reset password
+            //invalid the token to prevent reuse
+            //force logout 
+            //return response 
+            var validationResult = await _validator5.ValidateAsync(requestDTO);
+
+            if (!validationResult.IsValid)
+            {
+                var errorsDictionary = validationResult.Errors
+                    .GroupBy(e => e.PropertyName)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                throw new Exceptions.ValidationException(errorsDictionary);
+            }
+
+            var user = await _userManager.FindByEmailAsync(requestDTO.Email); //i used _userrepo but it always invalid
+            if (user == null)
+
+            {
+                _logger.LogWarning("Failed find user: User with email {Email} not found.", requestDTO.Email);
+                throw new Exceptions.NotFoundException("User", requestDTO.Email);
+            }
+            var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(requestDTO.OneTimeToken));
+
+            var ott = await _unitOfWork.onetimetokens.GetActiveOneTimeTokenAsync(t => t.Token == decodedToken
+                                                                && t.AppUserId == user.Id
+                                                                && t.ExpiryDate > DateTime.UtcNow
+                                                                && t.IsActive == true);
+
+            if (ott == null)
+            {
+                _logger.LogWarning("Invalid or expired one-time token for email {Email}.", requestDTO.Email);
+                throw new Exceptions.UnauthorizedException("Invalid or expired token.");
+            }
+            await _unitOfWork.BeginTransactionAsync(); 
+            try
+            {
+                var result = await _userManager.RemovePasswordAsync(user);
+                if (!result.Succeeded)
+                {
+                    throw new InternalServerException("Failed to reset password.");
+                }
+                var addResult = await _userManager.AddPasswordAsync(user, requestDTO.NewPassword);
+                if (!addResult.Succeeded)
+                {
+                    throw new InternalServerException("Failed to set new password.");
+                }
+                ott.IsActive = false;
+                ott.ExpiryDate = DateTime.UtcNow;
+                _unitOfWork.onetimetokens.Update(ott);
+
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitTransactionAsync();
+            }
+            catch
+            {
+                await _unitOfWork.RollBackTransactionAsync();
+                throw;
+            }
+           //force logout 
+            await LogoutAsync(user.Id);
+
+            _logger.LogInformation("User with email {email} is forced to logout after password reset", user.Email);
+        }
+
+        public async Task LogoutAsync (string userId)
+        {
+            //revoke all active tokens for the user to force logout from all sessions
+            var activeTokens = await _unitOfWork.refreshtokens.FindActiveTokensByUserIdAsync(userId);
+            foreach (var token in activeTokens) //enumeratingggg... 
+            {
+                token.IsRevoked = true;
+                token.ExpiredAt = DateTime.UtcNow; 
+                token.IsExpired = true;
+                _unitOfWork.refreshtokens.Update(token);
+            }
+            await _unitOfWork.SaveChangesAsync(); //save all not one by one to optimize performance as dbcontext is shared
+
+            _logger.LogInformation("User with ID {UserId} has been logged out and all active tokens revoked.", userId);
+        }
+
+        public async Task<RefreshTokenResponseDTO> RefreshTokenAsync(RefreshTokenRequestDTO requestDTO)
+        {
+            //validate dto 
+            //check if token is valid 
+            //generate new access token and refresh token
+            //revoke old refresh token 
+            //return new tokens
+            var validationResult = await _validator6.ValidateAsync(requestDTO);
+            if (!validationResult.IsValid)
+            {
+                var errorsDictionary = validationResult.Errors
+                    .GroupBy(e => e.PropertyName)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(e => e.ErrorMessage).ToArray()
+                    );
+                throw new Exceptions.ValidationException(errorsDictionary);
+            }
+
+            var existingToken = await _unitOfWork.refreshtokens.CheckRefreshTokenAsync( requestDTO.RefreshToken);
+            if (existingToken == null)
+            {
+                _logger.LogWarning("Invalid refresh token: {RefreshToken}", requestDTO.RefreshToken);
+                throw new Exceptions.UnauthorizedException("Invalid authentication.");
+            }
+            var user = await _userManager.FindByIdAsync(existingToken.UserId);
+            if (user == null)
+            {
+                _logger.LogWarning("User not found for refresh token: {RefreshToken}", requestDTO.RefreshToken);
+                throw new Exceptions.UnauthorizedException("Invalid authentication.");
+            }
+            var newAccessToken = _tokenService.CreateAccessToken(user);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+                        
+            existingToken.IsRevoked = true;
+            existingToken.IsExpired = true;
+            existingToken.ExpiredAt = DateTime.UtcNow;
+            _unitOfWork.refreshtokens.Update(existingToken);
+
+            await _unitOfWork.refreshtokens.AddAsync(new RefreshToken
+            {
+                RefreshTokenValue = newRefreshToken,
+                UserId = user.Id
+            });
+
+            await _unitOfWork.SaveChangesAsync(); //save once to optimize performance as dbcontext is shared
+            
+            return new RefreshTokenResponseDTO
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken
+            };
+        }
+
+        async Task SendEmailAsync(string email, string sub, string body)//function to be reusable
+        {
+            await _emailService.SendEmailAsync(email, sub, body);
         }
 
 

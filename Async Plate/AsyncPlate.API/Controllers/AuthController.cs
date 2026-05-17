@@ -1,8 +1,10 @@
-﻿using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using AsyncPlate.API.Models;
+﻿using AsyncPlate.API.Models;
 using AsyncPlate.Core.DTOs.Authentication;
+using AsyncPlate.Core.Entities;
+using AsyncPlate.Core.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AsyncPlate.API.Controllers
 {
@@ -10,6 +12,7 @@ namespace AsyncPlate.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
 
+    //no need for [authorize] Because the user does NOT have identity yet or may be recovering access except logout
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -18,7 +21,7 @@ namespace AsyncPlate.API.Controllers
         {
             _authService = authService;
         }
-
+        
         [HttpPost("signup-customer")]
         //accept the dto from body 
         //call service 
@@ -51,6 +54,40 @@ namespace AsyncPlate.API.Controllers
             var responseDto = await _authService.LoginAsync(requestDTO);
             return Ok(new ApiResponse<LoginResponseDTO>(true, "Login successful", responseDto));
         }
+        [HttpPost("forget-password")]
+        public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordRequestDTO requestDTO)
+        {
+             await _authService.ForgetPasswordAsync(requestDTO);
+
+            return Ok(new ApiResponse<object>(true, "If an account exists, a reset link has been sent.", null));
+        }
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO requestDTO)
+        {
+            await _authService.ResetPasswordAsync(requestDTO);
+            return Ok(new ApiResponse<object>(true, "Password reset successful", null));
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()  //no dto here , id is from the token 
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new ApiResponse<object>(false, "Invalid user ", null));
+            }
+
+            await _authService.LogoutAsync(userId);
+            return Ok(new ApiResponse<object>(true, "Logout from all sessions successful", null));
+        }
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDTO requestDTO)
+        {
+            var responseDto = await _authService.RefreshTokenAsync(requestDTO);
+            return Ok(new ApiResponse<RefreshTokenResponseDTO>(true, "Token refreshed successfully", responseDto));
+        }
+
 
         //[HttpPost("send-email")]
         //public async Task<IActionResult> SendEmailAsync()

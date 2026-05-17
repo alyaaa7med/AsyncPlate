@@ -15,15 +15,16 @@ namespace AsyncPlate.Infrastructure.Configrations
         {
             builder.HasKey(s => s.Id);
 
-            builder.Property(s => s.Name)
-                   .IsRequired()
-                   .HasMaxLength(100);
+          
 
-            builder.Property(s => s.ContactEmail)
-                   .HasMaxLength(100);
 
-            builder.Property(s => s.ContactPhone)
-                   .HasMaxLength(20);
+            builder.Property(s => s.ContactPhone).IsRequired().HasMaxLength(20);
+            builder.Property(s => s.Name).IsRequired().HasMaxLength(100);
+            builder.Property(s => s.ContactEmail).IsRequired().HasMaxLength(100);
+            builder.Property(s => s.ContactPhone).IsRequired().HasMaxLength(20);
+            builder.Property(s => s.Address).IsRequired().HasMaxLength(50);
+            builder.Property(s => s.City).IsRequired().HasMaxLength(50);
+
         }
     }
 }

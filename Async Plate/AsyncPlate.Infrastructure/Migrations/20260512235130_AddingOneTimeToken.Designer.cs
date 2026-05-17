@@ -4,6 +4,7 @@ using AsyncPlate.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AsyncPlate.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260512235130_AddingOneTimeToken")]
+    partial class AddingOneTimeToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,18 +115,15 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OfferId")
                         .HasColumnType("nvarchar(450)");
@@ -132,7 +132,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("OfferId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Customer", b =>
@@ -152,7 +152,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Inventory", b =>
@@ -168,8 +168,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PurchasedUnitPrice")
                         .HasColumnType("decimal(18,2)");
@@ -180,14 +179,13 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.Property<string>("Unit")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Inventories", (string)null);
+                    b.ToTable("Inventories");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.KitchenChef", b =>
@@ -204,7 +202,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Chefs", (string)null);
+                    b.ToTable("Chefs");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Notification", b =>
@@ -224,14 +222,13 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Offer", b =>
@@ -240,7 +237,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("DiscountPercentage")
-                        .HasColumnType("decimal(5,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
@@ -253,12 +250,11 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Offers", (string)null);
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.OneTimeToken", b =>
@@ -278,14 +274,13 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("OneTimeToken", (string)null);
+                    b.ToTable("OneTimeToken");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Order", b =>
@@ -298,8 +293,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KitchenChefId")
                         .HasColumnType("nvarchar(450)");
@@ -307,9 +301,8 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmountPrice")
                         .HasColumnType("decimal(18,2)");
@@ -326,7 +319,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("KitchenChefId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.OrderItem", b =>
@@ -354,7 +347,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Payment", b =>
@@ -371,7 +364,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[OrderId] IS NOT NULL");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Product", b =>
@@ -391,21 +384,19 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TotalTimesOrdered")
                         .HasColumnType("int");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.ProductExtra", b =>
@@ -423,7 +414,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("ExtraProductId");
 
-                    b.ToTable("ProductExtras", (string)null);
+                    b.ToTable("ProductExtra");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Recipe", b =>
@@ -441,7 +432,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("InventoryId");
 
-                    b.ToTable("Recipes", (string)null);
+                    b.ToTable("Recipes");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.RefreshToken", b =>
@@ -467,7 +458,8 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.Property<string>("RefreshTokenValue")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -477,7 +469,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshToken");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Review", b =>
@@ -487,8 +479,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrderId")
                         .HasColumnType("nvarchar(450)");
@@ -502,7 +493,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[OrderId] IS NOT NULL");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.Supplier", b =>
@@ -512,13 +503,11 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactEmail")
                         .IsRequired()
@@ -537,7 +526,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers", (string)null);
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -677,8 +666,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                 {
                     b.HasOne("AsyncPlate.Core.Entities.Offer", "CurrentOffer")
                         .WithMany("Categories")
-                        .HasForeignKey("OfferId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("OfferId");
 
                     b.Navigation("CurrentOffer");
                 });
@@ -699,7 +687,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasOne("AsyncPlate.Core.Entities.Supplier", "Supplier")
                         .WithMany("Inventories")
                         .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Supplier");
@@ -732,7 +720,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasOne("AsyncPlate.Core.Entities.AppUser", "AppUser")
                         .WithMany("OneTimeTokens")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");

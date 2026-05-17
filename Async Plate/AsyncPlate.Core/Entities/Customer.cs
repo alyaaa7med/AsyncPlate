@@ -13,9 +13,7 @@ namespace AsyncPlate.Core.Entities
         public int LoyaltyPoints { get; set; }
 
 
-        public string AppUserId { get; set; } = string.Empty;//zero length string & This prevents the
-                                                             //dreaded NullReferenceException
-                                                             //if you try to read  before assigning it
+        public string AppUserId { get; set; } = null!;
         public AppUser AppUser { get; set; } = null!;//must in the db mapping
 
         public ICollection<Order> Orders { get; set; } = new List<Order>();

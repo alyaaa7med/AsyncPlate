@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Core.DTOs.Authentication
 {
-    public class LoginRequestDTO
+    public class ForgetPasswordRequestDTO
     {
-
-        public string Email { get; set; } = string.Empty; 
-        public string Password { get; set; } = string.Empty; 
+        public string Email { get; set; } = string.Empty;
     }
 }

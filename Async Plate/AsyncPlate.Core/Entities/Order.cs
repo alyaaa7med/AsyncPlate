@@ -12,8 +12,8 @@ namespace AsyncPlate.Core.Entities
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
         public string Description { get; set; } = string.Empty;
-        public decimal TotalAmountPrice { get; set; }//e.g. 
-        public string Status { get; set; } = "Pending"; // e.g., Pending, Completed, Cancelled
+        public decimal TotalAmountPrice { get; set; }
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
         public decimal TotalFee { get; set; }
         public decimal TotalFeeTotal { get; set; }
 
@@ -26,5 +26,12 @@ namespace AsyncPlate.Core.Entities
         public string? KitchenChefId { get; set; }
         public KitchenChef? KitchenChef { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    }
+
+    public enum OrderStatus
+    {
+        Pending,
+        Completed,
+        Cancelled
     }
 }

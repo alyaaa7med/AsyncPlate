@@ -15,14 +15,22 @@ namespace AsyncPlate.Infrastructure.Configrations
         {
             builder.HasKey(i => i.Id);
 
-            builder.Property(i => i.PurchasedUnitPrice).HasColumnType("decimal(18,2)");
-            builder.Property(i => i.CurrentStock).HasColumnType("decimal(18,4)"); 
-            builder.Property(i=> i.MinStockLevel).HasColumnType("decimal(18,4)");
+            builder.Property(i => i.PurchasedUnitPrice).HasColumnType("decimal(18,2)").IsRequired();
+            builder.Property(i => i.CurrentStock).HasColumnType("decimal(18,4)").IsRequired(); 
+            builder.Property(i=> i.MinStockLevel).HasColumnType("decimal(18,4)").IsRequired();
+
+
+            builder.Property(i => i.Name).IsRequired().HasMaxLength(200);
+
+
+            builder.Property(i => i.Unit).IsRequired().HasMaxLength(50);
+
 
             builder.HasOne(i => i.Supplier)
                 .WithMany(s => s.Inventories)
                 .HasForeignKey(i => i.SupplierId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
 
         }

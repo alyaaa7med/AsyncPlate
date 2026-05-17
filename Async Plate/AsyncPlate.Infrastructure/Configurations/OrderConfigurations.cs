@@ -16,9 +16,16 @@ namespace AsyncPlate.Infrastructure.Configrations
 
             builder.HasKey(o => o.Id);
 
+            builder.Property(o => o.Description)
+            .HasMaxLength(500);
+
+            builder.Property(o => o.Status)
+                .HasConversion<string>();
+
             builder.Property(o => o.TotalAmountPrice).HasColumnType("decimal(18,2)");
             builder.Property(o => o.TotalFee).HasColumnType("decimal(18,2)");
             builder.Property(o => o.TotalFeeTotal).HasColumnType("decimal(18,2)");
+
             builder.HasOne(o => o.Customer)
                    .WithMany(c => c.Orders)
                    .HasForeignKey(o => o.CustomerId)

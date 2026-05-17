@@ -2,6 +2,7 @@
 using AsyncPlate.Core.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,17 @@ namespace AsyncPlate.Infrastructure.Data
         public ICustomerRepo customers { get; }
         public IKitchenChefRepo kitchenChefs { get; }
 
-        public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo)
+        public IRefreshTokenRepo refreshtokens { get; }
+        public IOneTimeTokenRepo onetimetokens { get; }
+        public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo,
+                IRefreshTokenRepo RefreshTokenRepo, IOneTimeTokenRepo onetimetokenRepo  )
         {
             _context = context;
             customers = customerRepo;
             kitchenChefs = kitchenChefRepo;
+            refreshtokens = RefreshTokenRepo;
+            onetimetokens = onetimetokenRepo;
+
         }
 
         public async Task<int> SaveChangesAsync()

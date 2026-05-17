@@ -16,12 +16,23 @@ namespace AsyncPlate.Infrastructure.Configrations
 
             builder.HasKey(c => c.Id);
 
+            //form gpt
+            builder.Property(c => c.Name)
+            .IsRequired()
+            .HasMaxLength(100);
+
+            builder.Property(c => c.Description)
+                .HasMaxLength(500);
+
+            builder.Property(c => c.ImageUrl)
+                .HasMaxLength(300);
 
 
             builder.HasOne(c => c.CurrentOffer)
                     .WithMany(o => o.Categories)
                     .HasForeignKey(c => c.OfferId)
-                    .IsRequired(false);
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.SetNull);
 
 
         }

@@ -18,6 +18,14 @@ namespace AsyncPlate.Infrastructure.Configrations
             builder.HasKey(p => p.Id);
 
             builder.Property(p => p.BasePrice).HasColumnType("decimal(18,2)");
+           
+            builder.Property(p => p.Name)
+            .IsRequired()
+            .HasMaxLength(200);
+
+          
+            builder.Property(p => p.Type)
+                .HasConversion<string>();
 
             builder.HasOne(g => g.Category)
                 .WithMany(g => g.Products)

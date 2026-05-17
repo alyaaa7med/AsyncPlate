@@ -15,21 +15,16 @@ namespace AsyncPlate.Infrastructure.Configrations
         {
             builder.HasKey(o => o.Id);
 
-            //builder.Property(o => o.Title)
-            //       .IsRequired()
-            //       .HasMaxLength(100);
+            builder.Property(o => o.Title).IsRequired().HasMaxLength(200);
 
-            //builder.Property(o => o.Description)
-            //       .HasMaxLength(500);
+            builder.Property(o => o.DiscountPercentage).IsRequired().HasColumnType("decimal(5,2)");
 
-            builder.Property(o => o.DiscountPercentage)
-                   .HasColumnType("decimal(18,2)");
+            builder.Property(o => o.StartDate).IsRequired();
 
-            //builder.Property(o => o.StartDate)
-            //       .IsRequired();
+            builder.Property(o => o.EndDate).IsRequired(false);
 
-            //builder.Property(o => o.EndDate)
-            //       .IsRequired();
+            builder.Property(o => o.IsActive).IsRequired();
+
         }
     }
 }

@@ -12,6 +12,7 @@ using AsyncPlate.Infrastructure;
 using AsyncPlate.Infrastructure.Data;
 using AsyncPlate.Infrastructure.Data.Repositories;
 using AsyncPlate.Infrastructure.Services;
+using AsyncPlate.Infrastructure.Services.Settings;
 using FluentValidation;
 using Jose;
 using Mailtrap;
@@ -35,6 +36,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
 builder.Services.AddScoped<IKitchenChefRepo, KitchenChefRepo>();
+builder.Services.AddScoped<IRefreshTokenRepo, RefreshTokenRepo>();
+builder.Services.AddScoped<IOneTimeTokenRepo, OneTimeTokenRepo>();
 builder.Services.AddScoped<IMediaService, MediaService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -47,6 +50,9 @@ builder.Services.AddScoped<IValidator<SignupAppUserRequestDTO>, SignupAppUserReq
 builder.Services.AddScoped<IValidator<SignupCustomerRequestDTO>, SignupCustomerRequestValidator>();
 builder.Services.AddScoped<IValidator<SignupKitchenChefRequestDTO>, SignupKitchenChefRequestValidator>();
 builder.Services.AddScoped<IValidator<LoginRequestDTO>, LoginRequestValidator>();
+builder.Services.AddScoped<IValidator<ForgetPasswordRequestDTO>, ForgetPasswordRequestValidator>();
+builder.Services.AddScoped<IValidator<ResetPasswordRequestDTO>, ResetPasswordRequestValidator>();
+builder.Services.AddScoped<IValidator<RefreshTokenRequestDTO>, RefreshTokenRequestValidator>();
 
 // Thrid Party and AutoMapper [infra + core ]
 
@@ -123,10 +129,10 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = builder.Configuration["Jwt:Issuer"]!,
+        ValidAudience = builder.Configuration["Jwt:Audience"]!,
         IssuerSigningKey = new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
     };
 });
 

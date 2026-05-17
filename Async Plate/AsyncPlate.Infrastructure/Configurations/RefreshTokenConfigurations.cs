@@ -16,11 +16,11 @@ namespace AsyncPlate.Infrastructure.Configrations
         {
             builder.HasKey(rt => rt.Id);
 
-            builder.Property(rt => rt.RefreshTokenValue)
-                .IsRequired()
-                .HasMaxLength(250);
-
-            
+            //builder.Property(rt => rt.RefreshTokenValue)
+            //    .IsRequired()
+            //    .HasMaxLength(500);
+            builder.Property(r => r.RefreshTokenValue)
+                   .HasColumnType("nvarchar(max)"); //to solve the error of max length of 4000 characters
 
             builder.Property(rt=> rt.IsExpired)
                 .IsRequired()

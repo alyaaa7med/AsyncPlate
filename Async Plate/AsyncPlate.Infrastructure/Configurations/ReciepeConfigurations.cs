@@ -21,7 +21,7 @@ namespace AsyncPlate.Infrastructure.Configrations
                  .WithMany(p => p.Recipes)
                  .HasForeignKey(r => r.ProductId)
                  .IsRequired()
-                 .OnDelete(DeleteBehavior.Restrict);//لو مسحت المنتج يمسح الوصفة لان ملهاش لازمة
+                 .OnDelete(DeleteBehavior.Restrict);//لو مسحت المنتج يمسح الوصفة لان ملهاش لازمة لكن الداتا بيز رقضت فخلتها ريستركت
 
             builder.HasOne(r => r.Inventory)
                   .WithMany(i => i.Recipes)

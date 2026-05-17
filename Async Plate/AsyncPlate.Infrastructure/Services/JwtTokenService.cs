@@ -22,30 +22,26 @@ namespace AsyncPlate.Infrastructure.Services
         public JwtTokenService(IConfiguration config) //iconfiguration is easer than the options pattern + i tried it in the mailtrap service
         {
             _config = config;
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         }
-    //     "Jwt": {
-    //    "Key": "dev-secret-key-must-be-at-least-32-characters-long!!",
-    //    "Issuer": "localhost",
-    //    "Audience": "localhost",
-    //    "ExpireMinutes": 20
-    //},
+   
         public string CreateAccessToken(AppUser user)
         {
+            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature);
+
             var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email!),
             new Claim(ClaimTypes.Role, user.UserType.ToString())//used as => role : chef
         };
 
-            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"])),
                 SigningCredentials = creds,
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]!)),
                 Issuer = _config["Jwt:Issuer"],
                 Audience = _config["Jwt:Audience"]
             };

@@ -18,6 +18,7 @@ namespace AsyncPlate.Infrastructure.Configrations
             builder.HasOne(k => k.AppUser)
                 .WithOne(a => a.KitchenChef)
                 .HasForeignKey<KitchenChef>(k => k.AppUserId)
+                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

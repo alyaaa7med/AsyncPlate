@@ -14,6 +14,11 @@ namespace AsyncPlate.Core.Services.Interfaces
         Task<SignupCustomerResponseDTO> SignUpCustomerAsync(SignupCustomerRequestDTO requestDTO);
         Task<SignupKitchenChefResponseDTO> SignUpKitchenChefAsync(SignupKitchenChefRequestDTO requestDTO);
         Task<LoginResponseDTO> LoginAsync(LoginRequestDTO requestDTO);
+        Task ForgetPasswordAsync(ForgetPasswordRequestDTO requestDTO);
+        Task ResetPasswordAsync(ResetPasswordRequestDTO requestDTO);
+        Task LogoutAsync(string userId);
+        Task<RefreshTokenResponseDTO> RefreshTokenAsync(RefreshTokenRequestDTO requestDTO);
+
         //Task SendEmailAsync();
     }
 }

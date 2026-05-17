@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Infrastructure.Services
+namespace AsyncPlate.Infrastructure.Services.Settings
 {
     //it is for the option pattern in the email service
     //this class is used to fill the settings from appsettings.json

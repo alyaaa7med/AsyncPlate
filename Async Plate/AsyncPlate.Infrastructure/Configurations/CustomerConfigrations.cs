@@ -22,6 +22,7 @@ namespace AsyncPlate.Infrastructure.Configrations
             builder.HasOne(c => c.AppUser)
                         .WithOne(a => a.Customer)
                         .HasForeignKey<Customer>(c => c.AppUserId)
+                        .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
 

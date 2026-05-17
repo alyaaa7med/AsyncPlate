@@ -16,7 +16,7 @@ namespace AsyncPlate.Core.Entities
         public int TotalTimesOrdered { get; set; } //to calculate best sellers
 
 
-        public string CategoryId { get; set; } = string.Empty;
+        public string CategoryId { get; set; } = null!;
         public Category Category { get; set; } = null!;
         public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();

@@ -16,17 +16,21 @@ namespace AsyncPlate.Infrastructure.Configrations
 
             builder.HasKey(oi => oi.Id);
 
+            builder.Property(x => x.Quantity).IsRequired();
+
             builder.Property(oi => oi.UnitPriceAtSale).HasColumnType("decimal(18,2)");
 
             builder.HasOne(oi => oi.Order)
                 .WithMany(o => o.OrderItems)
                 .HasForeignKey(oi => oi.OrderId)
+                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);//was cascade; //to clean up database from old orders
 
 
             builder.HasOne(oi => oi.Product)
                 .WithMany(p => p.OrderItems)
                 .HasForeignKey(oi => oi.ProductId)
+                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);//was cascade; //to clean up database from old products
         }
     }

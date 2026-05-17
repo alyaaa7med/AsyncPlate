@@ -10,8 +10,6 @@ namespace AsyncPlate.Core.Entities
     {
         public double Quantity { get; set; } //quantity of inventory needed 
 
-
-
         public string ProductId { get; set; } = null!;
         public Product Product { get; set; } = null!;
 

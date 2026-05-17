@@ -15,6 +15,12 @@ namespace AsyncPlate.Infrastructure.Configrations
         {
             builder.HasKey(r => r.Id);
 
+            builder.Property(r => r.Rating)
+                  .IsRequired();
+
+            builder.Property(r => r.Message)
+                .HasMaxLength(1000);
+
             builder.HasOne(r => r.Order)
                    .WithOne(o => o.Review)
                    .HasForeignKey<Review>(r => r.OrderId)

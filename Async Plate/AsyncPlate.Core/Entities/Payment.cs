@@ -10,8 +10,8 @@ namespace AsyncPlate.Core.Entities
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        public string? OrderId { get; set; } = null!;
-        public Order? Order { get; set; } = null!;
+        public string? OrderId { get; set; }
+        public Order? Order { get; set; } 
 
     }
 }
