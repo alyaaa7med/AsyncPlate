@@ -18,6 +18,8 @@ namespace AsyncPlate.Core.Interfaces
         IKitchenChefRepo kitchenChefs { get; }
         IRefreshTokenRepo refreshtokens { get; }
         IOneTimeTokenRepo onetimetokens { get; }
+        ISupplierRepo suppliers { get; }
+        IInventoryRepo inventories { get; }
 
         Task<int> SaveChangesAsync();//int : num of rows affected 
 

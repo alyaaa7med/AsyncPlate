@@ -5,19 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Entities
+namespace AsyncPlate.Core.DTOs.Inventory
 {
-    public class Inventory
+    public class AddInventoryRequestDTO
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; } = string.Empty;
         public decimal CurrentStock { get; set; }
         public decimal MinStockLevel { get; set; }
         public string Unit { get; set; } = string.Empty;
         public decimal PurchasedUnitPrice { get; set; }// price i purchased
-        public string SupplierId { get; set; } = null!;
-        public Supplier Supplier { get; set; } = null!;
+        public string SupplierId { get; set; } = string.Empty;
 
-        public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
+
     }
 }

@@ -18,7 +18,6 @@ namespace AsyncPlate.Infrastructure.Configrations
           
 
 
-            builder.Property(s => s.ContactPhone).IsRequired().HasMaxLength(20);
             builder.Property(s => s.Name).IsRequired().HasMaxLength(100);
             builder.Property(s => s.ContactEmail).IsRequired().HasMaxLength(100);
             builder.Property(s => s.ContactPhone).IsRequired().HasMaxLength(20);

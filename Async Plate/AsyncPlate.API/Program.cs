@@ -1,13 +1,18 @@
 using AsyncPlate.API.Middlewares;
 using AsyncPlate.Core.DTOs.Authentication;
+using AsyncPlate.Core.DTOs.Inventory;
+using AsyncPlate.Core.DTOs.Supplier;
 using AsyncPlate.Core.Entities;
 using AsyncPlate.Core.Interfaces;
 using AsyncPlate.Core.Interfaces.Repositories;
 using AsyncPlate.Core.Interfaces.Services;
+using AsyncPlate.Core.Mapping;
 using AsyncPlate.Core.Mapping.Authentication;
 using AsyncPlate.Core.Services.Implementation;
 using AsyncPlate.Core.Services.Interfaces;
+using AsyncPlate.Core.Validators;
 using AsyncPlate.Core.Validators.Authentication;
+using AsyncPlate.Core.Validators.Supplier;
 using AsyncPlate.Infrastructure;
 using AsyncPlate.Infrastructure.Data;
 using AsyncPlate.Infrastructure.Data.Repositories;
@@ -38,10 +43,14 @@ builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
 builder.Services.AddScoped<IKitchenChefRepo, KitchenChefRepo>();
 builder.Services.AddScoped<IRefreshTokenRepo, RefreshTokenRepo>();
 builder.Services.AddScoped<IOneTimeTokenRepo, OneTimeTokenRepo>();
+builder.Services.AddScoped<ISupplierRepo, SupplierRepo>();
+builder.Services.AddScoped<IInventoryRepo, InventoryRepo>();
 builder.Services.AddScoped<IMediaService, MediaService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<ISupplierService, SupplierService>();
 
 
 // Validations using FluentValidation [core ]
@@ -53,6 +62,11 @@ builder.Services.AddScoped<IValidator<LoginRequestDTO>, LoginRequestValidator>()
 builder.Services.AddScoped<IValidator<ForgetPasswordRequestDTO>, ForgetPasswordRequestValidator>();
 builder.Services.AddScoped<IValidator<ResetPasswordRequestDTO>, ResetPasswordRequestValidator>();
 builder.Services.AddScoped<IValidator<RefreshTokenRequestDTO>, RefreshTokenRequestValidator>();
+builder.Services.AddScoped<IValidator<AddInventoryRequestDTO>, AddInventoryRequestValidator>();
+builder.Services.AddScoped<IValidator<AddSupplierRequestDTO>, AddSupplierRequestValidator>();
+builder.Services.AddScoped<IValidator<UpdateSupplierRequestDTO>, UpdateSupplierRequestValidator>();
+
+
 
 // Thrid Party and AutoMapper [infra + core ]
 
@@ -80,6 +94,9 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<AuthProfile>();
     cfg.AddProfile<CustomerProfile>();
     cfg.AddProfile<KitchenChefProfile>();
+    cfg.AddProfile<SupplierProfile>();
+    cfg.AddProfile<InventoryProfile>();
+
 
 }, typeof(Program));
 

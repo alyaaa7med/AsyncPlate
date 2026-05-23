@@ -23,15 +23,20 @@ namespace AsyncPlate.Infrastructure.Data
 
         public IRefreshTokenRepo refreshtokens { get; }
         public IOneTimeTokenRepo onetimetokens { get; }
+
+        public ISupplierRepo suppliers { get;  }
+        public IInventoryRepo inventories { get; }
         public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo,
-                IRefreshTokenRepo RefreshTokenRepo, IOneTimeTokenRepo onetimetokenRepo  )
+                IRefreshTokenRepo RefreshTokenRepo, IOneTimeTokenRepo onetimetokenRepo,
+                ISupplierRepo supplierRepo, IInventoryRepo inventoryRepo)
         {
             _context = context;
             customers = customerRepo;
             kitchenChefs = kitchenChefRepo;
             refreshtokens = RefreshTokenRepo;
             onetimetokens = onetimetokenRepo;
-
+            suppliers = supplierRepo;
+            inventories = inventoryRepo;
         }
 
         public async Task<int> SaveChangesAsync()
@@ -45,7 +50,6 @@ namespace AsyncPlate.Infrastructure.Data
         }
         public async Task CommitTransactionAsync()
         {
-            await _context.SaveChangesAsync();
             if (_transaction != null) await _transaction.CommitAsync();
 
         }

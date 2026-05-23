@@ -66,7 +66,7 @@ namespace AsyncPlate.Core.Services.Implementation
             //create user
             //create customer 
             //assign role  
-            //return response
+            //return dto
 
 
             var validationResult = await _validator1.ValidateAsync(requestDTO);
@@ -86,11 +86,7 @@ namespace AsyncPlate.Core.Services.Implementation
 
             var customer = _mapper.Map<Customer>(requestDTO);
 
-            // Safety check
-            if (customer.AppUser == null)
-            {
-                throw new Exceptions.InternalServerException("Customer mapping failed.");
-            }
+            
             await _unitOfWork.BeginTransactionAsync();
             try
             {
@@ -167,10 +163,7 @@ namespace AsyncPlate.Core.Services.Implementation
             }
 
             var chef = _mapper.Map<KitchenChef>(requestDTO);
-            if (chef.AppUser == null)
-            {
-                throw new Exceptions.InternalServerException("KitchenChef AppUser mapping failed.");
-            }
+           
             await _unitOfWork.BeginTransactionAsync();
 
             try
@@ -302,11 +295,11 @@ namespace AsyncPlate.Core.Services.Implementation
 
             {
                 _logger.LogWarning("Failed find user: User with email {Email} not found.", requestDTO.Email);
-                throw new Exceptions.NotFoundException("If the email exists, a reset link has been sent.");
+                //not efficient//throw new Exceptions.NotFoundException("If the email exists, a reset link has been sent.");
+                return;
             }
 
-            await _unitOfWork.BeginTransactionAsync();
-
+          
             //inactivate old token for the user to prevent reuse of old tokens if any
             var token = await _unitOfWork.onetimetokens.GetActiveOneTimeTokenAsync(t => t.AppUserId == user.Id && t.IsActive);
 
@@ -347,7 +340,7 @@ namespace AsyncPlate.Core.Services.Implementation
             //reset password
             //invalid the token to prevent reuse
             //force logout 
-            //return response 
+            //return dto
             var validationResult = await _validator5.ValidateAsync(requestDTO);
 
             if (!validationResult.IsValid)
@@ -384,6 +377,7 @@ namespace AsyncPlate.Core.Services.Implementation
             await _unitOfWork.BeginTransactionAsync(); 
             try
             {
+
                 var result = await _userManager.RemovePasswordAsync(user);
                 if (!result.Succeeded)
                 {
@@ -399,6 +393,7 @@ namespace AsyncPlate.Core.Services.Implementation
                 _unitOfWork.onetimetokens.Update(ott);
 
                 await _unitOfWork.SaveChangesAsync();
+
                 await _unitOfWork.CommitTransactionAsync();
             }
             catch
@@ -416,7 +411,7 @@ namespace AsyncPlate.Core.Services.Implementation
         {
             //revoke all active tokens for the user to force logout from all sessions
             var activeTokens = await _unitOfWork.refreshtokens.FindActiveTokensByUserIdAsync(userId);
-            foreach (var token in activeTokens) //enumeratingggg... 
+            foreach (var token in activeTokens) 
             {
                 token.IsRevoked = true;
                 token.ExpiredAt = DateTime.UtcNow; 

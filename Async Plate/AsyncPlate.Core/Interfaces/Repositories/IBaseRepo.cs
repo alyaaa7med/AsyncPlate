@@ -12,8 +12,8 @@ namespace AsyncPlate.Core.Interfaces.Repositories
         //get all 
         //get by id 
         //add
-        Task<T?> GetByIdAsync(int id); 
-        Task<IEnumerable<T>> GetAllAsync() ;
+        Task<T?> GetByIdAsync(string id); 
+        IQueryable<T> GetAll() ;
         Task AddAsync(T entity);
 
 

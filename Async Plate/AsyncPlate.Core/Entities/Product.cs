@@ -22,10 +22,10 @@ namespace AsyncPlate.Core.Entities
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
 
-        // 1. The list of connections where THIS product is the MAIN product
+        //The list of connections where THIS product is the MAIN product
         public ICollection<ProductExtra> MainProducts { get; set; } = new List<ProductExtra>();
 
-        // 2. The list of connections where THIS product is the EXTRA product
+        //The list of connections where THIS product is the EXTRA product
         public ICollection<ProductExtra> ExtraProducts { get; set; } = new List<ProductExtra>();
 
 
