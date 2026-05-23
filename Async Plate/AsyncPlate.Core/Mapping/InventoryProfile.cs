@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AsyncPlate.Core.Entities;
 using AsyncPlate.Core.DTOs.Inventory;
-using AsyncPlate.Core.DTOs.Supplier;
 
 namespace AsyncPlate.Core.Mapping
 {

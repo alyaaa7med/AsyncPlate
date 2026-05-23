@@ -4,12 +4,14 @@ using AsyncPlate.Core.Common.DTOs;
 using AsyncPlate.Core.DTOs.Authentication;
 using AsyncPlate.Core.DTOs.Supplier;
 using AsyncPlate.Core.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AsyncPlate.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]s")]
+    [Authorize(Roles ="Admin")]
     public class SupplierController : ControllerBase
     {
         private readonly ISupplierService _supplierService;
@@ -19,7 +21,6 @@ namespace AsyncPlate.API.Controllers
             _supplierService = supplierService;
         }
 
-        //authorize should be for admin
         [HttpPost("add-supplier")]
         public async Task<IActionResult> AddSupplier([FromBody] AddSupplierRequestDTO requestDTO)
         {

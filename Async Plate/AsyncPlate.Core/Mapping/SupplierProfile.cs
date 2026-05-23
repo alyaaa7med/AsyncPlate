@@ -1,5 +1,4 @@
-﻿using AsyncPlate.Core.DTOs.Inventory;
-using AsyncPlate.Core.DTOs.Supplier;
+﻿using AsyncPlate.Core.DTOs.Supplier;
 using AsyncPlate.Core.Entities;
 using AutoMapper;
 using System;
