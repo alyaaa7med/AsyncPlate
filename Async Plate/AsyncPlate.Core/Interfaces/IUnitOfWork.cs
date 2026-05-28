@@ -16,6 +16,7 @@ namespace AsyncPlate.Core.Interfaces
 
         ICustomerRepo customers { get; }
         IKitchenChefRepo kitchenChefs { get; }
+        IAdminRepo admins { get; }
         IRefreshTokenRepo refreshtokens { get; }
         IOneTimeTokenRepo onetimetokens { get; }
         ISupplierRepo suppliers { get; }

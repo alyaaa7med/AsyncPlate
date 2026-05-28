@@ -21,18 +21,20 @@ namespace AsyncPlate.Infrastructure.Data
         public ICustomerRepo customers { get; }
         public IKitchenChefRepo kitchenChefs { get; }
 
+        public IAdminRepo admins { get; }
         public IRefreshTokenRepo refreshtokens { get; }
         public IOneTimeTokenRepo onetimetokens { get; }
 
         public ISupplierRepo suppliers { get;  }
         public IInventoryRepo inventories { get; }
-        public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo,
+        public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo,IAdminRepo adminRepo,
                 IRefreshTokenRepo RefreshTokenRepo, IOneTimeTokenRepo onetimetokenRepo,
                 ISupplierRepo supplierRepo, IInventoryRepo inventoryRepo)
         {
             _context = context;
             customers = customerRepo;
             kitchenChefs = kitchenChefRepo;
+            admins = adminRepo;
             refreshtokens = RefreshTokenRepo;
             onetimetokens = onetimetokenRepo;
             suppliers = supplierRepo;

@@ -4,6 +4,7 @@ using AsyncPlate.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AsyncPlate.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260525073109_AddingUniquenessConstraint")]
+    partial class AddingUniquenessConstraint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,23 +24,6 @@ namespace AsyncPlate.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AsyncPlate.Core.Entities.Admin", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId")
-                        .IsUnique();
-
-                    b.ToTable("Admins");
-                });
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.AppUser", b =>
                 {
@@ -176,11 +162,6 @@ namespace AsyncPlate.Infrastructure.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
 
                     b.Property<decimal>("CurrentStock")
                         .HasColumnType("decimal(18,4)");
@@ -698,17 +679,6 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AsyncPlate.Core.Entities.Admin", b =>
-                {
-                    b.HasOne("AsyncPlate.Core.Entities.AppUser", "AppUser")
-                        .WithOne("Admin")
-                        .HasForeignKey("AsyncPlate.Core.Entities.Admin", "AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-                });
-
             modelBuilder.Entity("AsyncPlate.Core.Entities.Category", b =>
                 {
                     b.HasOne("AsyncPlate.Core.Entities.Offer", "CurrentOffer")
@@ -943,8 +913,6 @@ namespace AsyncPlate.Infrastructure.Migrations
 
             modelBuilder.Entity("AsyncPlate.Core.Entities.AppUser", b =>
                 {
-                    b.Navigation("Admin");
-
                     b.Navigation("Customer");
 
                     b.Navigation("KitchenChef");

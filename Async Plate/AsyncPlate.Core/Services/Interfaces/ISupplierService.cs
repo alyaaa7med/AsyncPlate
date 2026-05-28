@@ -1,4 +1,5 @@
 ﻿using AsyncPlate.Core.Common.DTOs;
+using AsyncPlate.Core.DTOs.Inventory;
 using AsyncPlate.Core.DTOs.Supplier;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,8 @@ namespace AsyncPlate.Core.Services.Interfaces
         Task<SupplierResponseDTO> UpdateSupplierAsync (string supplierId, UpdateSupplierRequestDTO requestDTO);
         Task<SupplierResponseDTO> DeleteSupplierAsync (string supplierId); 
         Task<PagedResult<SupplierResponseDTO>> GetAllSuppliersAsync(SupplierFilterDTO filterDto);
-
+        Task<PagedResult<InventorySummaryDTO>> GetAllInventoriesBySupplierIdAsync(string supplierId, InventoryFilterDTO filterDto);
+        
 
 
     }

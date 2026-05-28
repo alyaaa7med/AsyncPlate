@@ -22,6 +22,7 @@ namespace AsyncPlate.Infrastructure
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<KitchenChef> Chefs { get; set; }
+        public DbSet<Admin> Admins { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Offer> Offers { get; set; }
         public DbSet<OneTimeToken> OneTimeToken { get; set; }

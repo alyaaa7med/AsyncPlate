@@ -1,4 +1,5 @@
 using AsyncPlate.API.Middlewares;
+using AsyncPlate.Core.DTOs.Admin;
 using AsyncPlate.Core.DTOs.Authentication;
 using AsyncPlate.Core.DTOs.Inventory;
 using AsyncPlate.Core.DTOs.Supplier;
@@ -10,8 +11,9 @@ using AsyncPlate.Core.Mapping;
 using AsyncPlate.Core.Mapping.Authentication;
 using AsyncPlate.Core.Services.Implementation;
 using AsyncPlate.Core.Services.Interfaces;
-using AsyncPlate.Core.Validators;
+using AsyncPlate.Core.Validators.Admin;
 using AsyncPlate.Core.Validators.Authentication;
+using AsyncPlate.Core.Validators.Inventory;
 using AsyncPlate.Core.Validators.Supplier;
 using AsyncPlate.Infrastructure;
 using AsyncPlate.Infrastructure.Data;
@@ -45,24 +47,28 @@ builder.Services.AddScoped<IRefreshTokenRepo, RefreshTokenRepo>();
 builder.Services.AddScoped<IOneTimeTokenRepo, OneTimeTokenRepo>();
 builder.Services.AddScoped<ISupplierRepo, SupplierRepo>();
 builder.Services.AddScoped<IInventoryRepo, InventoryRepo>();
+builder.Services.AddScoped<IAdminRepo, AdminRepo>();
 builder.Services.AddScoped<IMediaService, MediaService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 
 // Validations using FluentValidation [core ]
 
 builder.Services.AddScoped<IValidator<SignupAppUserRequestDTO>, SignupAppUserRequestValidator>();   
 builder.Services.AddScoped<IValidator<SignupCustomerRequestDTO>, SignupCustomerRequestValidator>();
+builder.Services.AddScoped<IValidator<CreateAdminRequestDTO>, SignupAdminRequestValidator>();
 builder.Services.AddScoped<IValidator<SignupKitchenChefRequestDTO>, SignupKitchenChefRequestValidator>();
 builder.Services.AddScoped<IValidator<LoginRequestDTO>, LoginRequestValidator>();
 builder.Services.AddScoped<IValidator<ForgetPasswordRequestDTO>, ForgetPasswordRequestValidator>();
 builder.Services.AddScoped<IValidator<ResetPasswordRequestDTO>, ResetPasswordRequestValidator>();
 builder.Services.AddScoped<IValidator<RefreshTokenRequestDTO>, RefreshTokenRequestValidator>();
 builder.Services.AddScoped<IValidator<AddInventoryRequestDTO>, AddInventoryRequestValidator>();
+builder.Services.AddScoped<IValidator<UpdateInventoryRequestDTO>, UpdateInventoryRequestValidator>();
 builder.Services.AddScoped<IValidator<AddSupplierRequestDTO>, AddSupplierRequestValidator>();
 builder.Services.AddScoped<IValidator<UpdateSupplierRequestDTO>, UpdateSupplierRequestValidator>();
 
@@ -96,6 +102,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<KitchenChefProfile>();
     cfg.AddProfile<SupplierProfile>();
     cfg.AddProfile<InventoryProfile>();
+    cfg.AddProfile<AdminProfile>();
 
 
 }, typeof(Program));
@@ -168,7 +175,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        string[] roleNames = { "Admin", "Guest", "KitchenChef", "Customer" };
+        string[] roleNames = { "SuperAdmin","Admin", "Guest", "KitchenChef", "Customer" };
         foreach (var roleName in roleNames)
         {
             var roleExist = await roleManager.RoleExistsAsync(roleName);

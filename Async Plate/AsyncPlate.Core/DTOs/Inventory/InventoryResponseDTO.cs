@@ -14,6 +14,7 @@ namespace AsyncPlate.Core.DTOs.Inventory
         public decimal MinStockLevel { get; set; }
         public string Unit { get; set; } = string.Empty;
         public decimal PurchasedUnitPrice { get; set; }
+        public string Currency { get; set; } = string.Empty;
         public SupplierSummaryDTO Supplier { get; set; } = new();
     }
 }

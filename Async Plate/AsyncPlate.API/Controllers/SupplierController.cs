@@ -2,6 +2,7 @@
 using AsyncPlate.Core;
 using AsyncPlate.Core.Common.DTOs;
 using AsyncPlate.Core.DTOs.Authentication;
+using AsyncPlate.Core.DTOs.Inventory;
 using AsyncPlate.Core.DTOs.Supplier;
 using AsyncPlate.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,7 @@ namespace AsyncPlate.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]s")]
-    [Authorize(Roles ="Admin")]
+    //[Authorize(Roles ="Admin")]
     public class SupplierController : ControllerBase
     {
         private readonly ISupplierService _supplierService;
@@ -21,7 +22,7 @@ namespace AsyncPlate.API.Controllers
             _supplierService = supplierService;
         }
 
-        [HttpPost("add-supplier")]
+        [HttpPost()]
         public async Task<IActionResult> AddSupplier([FromBody] AddSupplierRequestDTO requestDTO)
         {
             var responseDTO = await _supplierService.AddSupplierAsync(requestDTO);
@@ -54,6 +55,14 @@ namespace AsyncPlate.API.Controllers
         {
             var responseDTO = await _supplierService.DeleteSupplierAsync(supplierId);
             return Ok(new ApiResponse<SupplierResponseDTO>(true, "Supplier deleted successfully", responseDTO));
+        }
+
+        [HttpGet("{supplierId}/inventories")]
+
+        public async Task<IActionResult> GetInventoriesBySupplierId([FromRoute] string supplierId, [FromQuery] InventoryFilterDTO filterDto)
+        {
+            var responseDTO = await _supplierService.GetAllInventoriesBySupplierIdAsync(supplierId,filterDto);
+            return Ok(new ApiResponse<PagedResult<InventorySummaryDTO>>(true, "Inventories retrieved successfully", responseDTO));
         }
     }
 }

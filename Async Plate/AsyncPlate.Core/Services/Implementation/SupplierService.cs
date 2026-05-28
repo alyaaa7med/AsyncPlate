@@ -1,6 +1,7 @@
 ﻿using AsyncPlate.Core.Common.DTOs;
 using AsyncPlate.Core.Common.Extenstions;
 using AsyncPlate.Core.DTOs.Authentication;
+using AsyncPlate.Core.DTOs.Inventory;
 using AsyncPlate.Core.DTOs.Supplier;
 using AsyncPlate.Core.Entities;
 using AsyncPlate.Core.Interfaces;
@@ -60,10 +61,10 @@ namespace AsyncPlate.Core.Services.Implementation
             }
 
             var supplier = _mapper.Map<Supplier>(requestDTO);
-           
+
             var exists = await _unitOfWork.suppliers.AnySupplierAsync(requestDTO.ContactEmail);
 
-            if (exists )
+            if (exists)
                 throw new Exceptions.BadRequestException("Supplier already exists.");
 
             await _unitOfWork.suppliers.AddAsync(supplier);
@@ -84,7 +85,7 @@ namespace AsyncPlate.Core.Services.Implementation
                 throw new Exceptions.NotFoundException("Supplier not found.");
             }
             var responseDTO = _mapper.Map<SupplierResponseDTO>(supplier);
-             _logger.LogInformation("Supplier retrieved successfully: {Email}", supplier.ContactEmail);
+            _logger.LogInformation("Supplier retrieved successfully: {Email}", supplier.ContactEmail);
             return responseDTO;
         }
         public async Task<PagedResult<SupplierResponseDTO>> GetAllSuppliersAsync(SupplierFilterDTO filterDto)
@@ -95,7 +96,7 @@ namespace AsyncPlate.Core.Services.Implementation
             {
                 suppliersQuery = _unitOfWork.suppliers.FilterByName(filterDto.Name);
             }
-            var pagedResult = await QueryableExtensions.ToPagedResultAsync(suppliersQuery,filterDto.PageNumber, filterDto.PageSize);
+            var pagedResult = await QueryableExtensions.ToPagedResultAsync(suppliersQuery, filterDto.PageNumber, filterDto.PageSize);
 
             var responseDTOs = _mapper.Map<IEnumerable<SupplierResponseDTO>>(pagedResult.Items);
 
@@ -103,14 +104,14 @@ namespace AsyncPlate.Core.Services.Implementation
             return new PagedResult<SupplierResponseDTO>
             {
                 Items = responseDTOs,
-                TotalCount = pagedResult.TotalCount ,
+                TotalCount = pagedResult.TotalCount,
                 PageNumber = filterDto.PageNumber,
                 PageSize = filterDto.PageSize,
                 TotalPages = pagedResult.TotalPages
             };
 
         }
-       
+
         public async Task<SupplierResponseDTO> UpdateSupplierAsync(string supplierId, UpdateSupplierRequestDTO requestDTO)
         {
             var supplier = await _unitOfWork.suppliers.GetByIdAsync(supplierId);
@@ -136,7 +137,7 @@ namespace AsyncPlate.Core.Services.Implementation
             //_unitOfWork.suppliers.Update(updatedSupplier); // No need to call Update if using tracking entities as we use getbyid 
             await _unitOfWork.SaveChangesAsync();
 
-             _logger.LogInformation("Supplier updated successfully: {Email}", updatedSupplier.ContactEmail);
+            _logger.LogInformation("Supplier updated successfully: {Email}", updatedSupplier.ContactEmail);
             return _mapper.Map<SupplierResponseDTO>(updatedSupplier);
 
 
@@ -150,11 +151,35 @@ namespace AsyncPlate.Core.Services.Implementation
             }
             _unitOfWork.suppliers.Delete(supplier);
             await _unitOfWork.SaveChangesAsync();
-             _logger.LogInformation("Supplier deleted successfully: {Email}", supplier.ContactEmail);
+            _logger.LogInformation("Supplier deleted successfully: {Email}", supplier.ContactEmail);
 
             return _mapper.Map<SupplierResponseDTO>(supplier);
         }
-    
-      
+
+
+        public async Task<PagedResult<InventorySummaryDTO>> GetAllInventoriesBySupplierIdAsync(string supplierId, InventoryFilterDTO filterDTO)
+        {
+            var supplier = await _unitOfWork.suppliers.GetByIdAsync(supplierId);
+            if (supplier == null)
+            {
+                throw new Exceptions.NotFoundException("Supplier not found.");
+            }
+
+            var inventoriesQuery = _unitOfWork.inventories.GetInventoriesBySupplierId(supplierId);
+
+            var pagedResult = await QueryableExtensions.ToPagedResultAsync(inventoriesQuery, filterDTO.PageNumber, filterDTO.PageSize); 
+            
+            var responseDTOs = _mapper.Map<IEnumerable<InventorySummaryDTO>>(pagedResult.Items);
+
+            _logger.LogInformation("Retrieved {Count} inventories for supplier {Email}", responseDTOs.Count(), supplier.ContactEmail);
+            return new PagedResult<InventorySummaryDTO>
+            {
+                Items = responseDTOs,
+                TotalCount = pagedResult.TotalCount,
+                PageNumber = filterDTO.PageNumber,
+                PageSize = filterDTO.PageSize,
+                TotalPages = pagedResult.TotalPages
+            };
+        }
     }
 }

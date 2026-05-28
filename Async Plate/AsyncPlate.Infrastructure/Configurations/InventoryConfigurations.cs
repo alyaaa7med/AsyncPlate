@@ -18,9 +18,11 @@ namespace AsyncPlate.Infrastructure.Configrations
             builder.Property(i => i.PurchasedUnitPrice).HasColumnType("decimal(18,2)").IsRequired();
             builder.Property(i => i.CurrentStock).HasColumnType("decimal(18,4)").IsRequired(); 
             builder.Property(i=> i.MinStockLevel).HasColumnType("decimal(18,4)").IsRequired();
-
+            builder.Property(i=>i.Currency).IsRequired().HasMaxLength(10);
 
             builder.Property(i => i.Name).IsRequired().HasMaxLength(200);
+            builder.HasIndex(x => x.Name) //to add uniqueness constraint on Name ( it is by index and unique together)
+               .IsUnique();
 
 
             builder.Property(i => i.Unit).IsRequired().HasMaxLength(50);

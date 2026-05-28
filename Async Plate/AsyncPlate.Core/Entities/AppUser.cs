@@ -26,7 +26,8 @@ namespace AsyncPlate.Core.Entities
         //n+1 problem will not happen as we will load it when we need it and not all the time
         public virtual Customer? Customer { get; set; } //? => it is the may side in mapping
         public virtual KitchenChef? KitchenChef { get; set; }//? => it is the may side in
-                      
+        public virtual Admin? Admin { get; set; }//? => it is the may side in
+
         public virtual ICollection<OneTimeToken> OneTimeTokens { get; set; }= new List<OneTimeToken>();
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 

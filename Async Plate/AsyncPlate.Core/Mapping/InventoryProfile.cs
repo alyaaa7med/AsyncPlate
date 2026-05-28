@@ -1,11 +1,12 @@
-﻿using AutoMapper;
+﻿using AsyncPlate.Core.DTOs.Inventory;
+using AsyncPlate.Core.DTOs.Supplier;
+using AsyncPlate.Core.Entities;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.DTOs.Inventory;
 
 namespace AsyncPlate.Core.Mapping
 {
@@ -15,6 +16,8 @@ namespace AsyncPlate.Core.Mapping
         {
 
             CreateMap<AddInventoryRequestDTO, Inventory>();
+            CreateMap<UpdateInventoryRequestDTO, Inventory>();
+
             CreateMap<Supplier, SupplierSummaryDTO>();
             CreateMap<Inventory, InventoryResponseDTO>();
 

@@ -6,16 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Validators
+namespace AsyncPlate.Core.Validators.Inventory
 {
-    public class AddInventoryRequestValidator: AbstractValidator<AddInventoryRequestDTO>
+    public class UpdateInventoryRequestValidator : AbstractValidator<UpdateInventoryRequestDTO>
     {
-        public AddInventoryRequestValidator() {
-
+        public UpdateInventoryRequestValidator()
+        {
             RuleFor(x => x.Name)
-               .NotEmpty()
-               .WithMessage("Inventory name is required.")
-               .MaximumLength(200);
+                .NotEmpty()
+                .WithMessage("Inventory name is required.")
+                .MaximumLength(200);
 
             RuleFor(x => x.CurrentStock)
                 .GreaterThanOrEqualTo(0)

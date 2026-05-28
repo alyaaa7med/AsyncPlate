@@ -15,6 +15,8 @@ namespace AsyncPlate.Core.Entities
         public decimal MinStockLevel { get; set; }
         public string Unit { get; set; } = string.Empty;
         public decimal PurchasedUnitPrice { get; set; }// price i purchased
+        //currency 
+        public string Currency { get; set; } = string.Empty;
         public string SupplierId { get; set; } = null!;
         public Supplier Supplier { get; set; } = null!;
 
