@@ -1,6 +1,8 @@
 ﻿using AsyncPlate.Core.Common.DTOs;
+using AsyncPlate.Core.Common.Extenstions;
 using AsyncPlate.Core.DTOs.Authentication;
 using AsyncPlate.Core.DTOs.Recipe;
+using AsyncPlate.Core.DTOs.Supplier;
 using AsyncPlate.Core.Entities;
 using AsyncPlate.Core.Interfaces;
 using AsyncPlate.Core.Interfaces.Services;
@@ -170,9 +172,45 @@ namespace AsyncPlate.Core.Services.Implementation
         }
         public async Task<PagedResult<RecipeResponseDTO>> GetAllRecipesAsync(RecipeFilterDTO filterDto)
         {
-            throw new NotImplementedException();
-        }
+            var recipesQuery = _unitOfWork.recipes.GetAllRecipes();
 
+            if(!string.IsNullOrEmpty(filterDto.ProductName))
+                recipesQuery = recipesQuery.Where(r => r.Product.Name.Contains(filterDto.ProductName));
+
+            if(!string.IsNullOrEmpty(filterDto.InventoryName))
+                recipesQuery = recipesQuery.Where(r => r.Inventory.Name.Contains(filterDto.InventoryName));
+
+            var pagedResult = await QueryableExtensions.ToPagedResultAsync(recipesQuery, filterDto.PageNumber, filterDto.PageSize);
+
+            var responseDTOs = _mapper.Map<IEnumerable<RecipeResponseDTO>>(pagedResult.Items);
+
+
+            _logger.LogInformation("Retrieved {Count} recipes", responseDTOs.Count());
+            return new PagedResult<RecipeResponseDTO>
+            {
+                Items = responseDTOs,
+                TotalCount = pagedResult.TotalCount,
+                PageNumber = filterDto.PageNumber,
+                PageSize = filterDto.PageSize,
+                TotalPages = pagedResult.TotalPages
+            };
+        }
+        public async Task<IEnumerable<RecipeListDTO>> GetRecipeOfProductAsync(string productId)
+        {
+            //validate id 
+            //get recipes of product
+            //mapping 
+            var product = await _unitOfWork.products.GetByIdAsync(productId);
+            if (product == null)
+            {
+                _logger.LogWarning("Product with id {ProductId} not found", productId);
+                throw new Exceptions.NotFoundException("Product not found");
+            }
+            var recipeList = await _unitOfWork.recipes.GetRecipeByProductIdAsync(productId);
+            var responseDTOs = _mapper.Map<IEnumerable<RecipeListDTO>>(recipeList);
+            _logger.LogInformation("Retrieved {Count} recipes for product id {ProductId}", responseDTOs.Count(), productId);
+            return responseDTOs;
+        }
         //public async Task<MakeRecipeResponseDTO> CookProductAsync(MakeRecipeRequestDTO makeRecipeRequestDTO)
         //{
         //    //validate dto 

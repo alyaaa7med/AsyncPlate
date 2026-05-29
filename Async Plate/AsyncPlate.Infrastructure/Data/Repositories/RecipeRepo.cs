@@ -1,4 +1,7 @@
-﻿using AsyncPlate.Core.Entities;
+﻿using AsyncPlate.Core.DTOs;
+using AsyncPlate.Core.DTOs.Recipe;
+using AsyncPlate.Core.DTOs.Supplier;
+using AsyncPlate.Core.Entities;
 using AsyncPlate.Core.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,13 +26,34 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
                                    .Include(r => r.Inventory)
                                    .SingleOrDefaultAsync(r => r.InventoryId == inventoryId && r.ProductId == productId);
         }
-        public async Task<List<Recipe>> GetRecipeOfProductByIdWithInventoryAsync(string productId)
+
+        public async Task<IEnumerable<RecipeListDTO>> GetRecipeByProductIdAsync(string productId)
         {
-            return await _context.Recipes
-                                   .Include(r => r.Product)
-                                   .Include(r => r.Inventory)
-                                   .Where(r => r.ProductId == productId)
-                                   .ToListAsync();
+            return await _context.Recipes.Where(r => r.ProductId == productId)
+                                   .Select(r => new RecipeListDTO
+                                   {
+                                       InventoryName = r.Inventory.Name,
+                                       Quantity = r.Quantity
+                                   }).ToListAsync();
+
         }
+
+        public IQueryable<RecipeResponseDTO> GetAllRecipes()
+        {
+            return _context.Recipes.Select(r => new RecipeResponseDTO
+            {
+                Product = new ProductSummaryDTO
+                {
+                    Id = r.Product.Id,
+                    Name = r.Product.Name
+                },
+                Inventory = new InventorySummaryDTO
+                {
+                    Id = r.Inventory.Id,
+                    Name = r.Inventory.Name
+                }
+            });
+        }
+
     }
 }

@@ -8,8 +8,15 @@ namespace AsyncPlate.Core.DTOs.Recipe
 {
     public class RecipeFilterDTO
     {
-            public string? ProductName { get; set; }
-            public string? InventoryName { get; set; }
-       
+        //filtering
+
+        public string? ProductName { get; set; }
+        public string? InventoryName { get; set; }
+
+
+        //pagination
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
+
     }
 }

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Core.DTOs.Recipe
 {
-    internal class RecipeListDTO
+    public class RecipeListDTO
     {
+        public string InventoryName { get; set; }= string.Empty;
+        public decimal Quantity { get; set; }
     }
 }

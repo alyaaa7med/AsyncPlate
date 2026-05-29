@@ -12,13 +12,13 @@ namespace AsyncPlate.Core.Services.Interfaces
     public interface IRecipeService
     {
 
-        Task<PagedResult<RecipeResponseDTO>> GetAllRecipesAsync(RecipeFilterDTO filterDto);
         Task<RecipeResponseDTO> GetRecipeByIdAsync(string inventoryId, string productId);
         Task<RecipeResponseDTO> AddRecipeAsync(AddRecipeRequestDTO requestDTO);
         Task<RecipeResponseDTO> UpdateRecipeAsync(string productId, string inventoryId, UpdateRecipeRequestDTO requestDTO);
         Task<RecipeResponseDTO> DeleteRecipeAsync(string inventoryId, string productId);
+        Task<IEnumerable<RecipeListDTO>> GetRecipeOfProductAsync(string productId);
+        Task<PagedResult<RecipeResponseDTO>> GetAllRecipesAsync(RecipeFilterDTO filterDto);
 
-        //make a recipe 
         //Task<RecipeResponseDTO> CookProductAsync( AddRecipeRequestDTO cookRecipeRequestDTO);
     }
 }

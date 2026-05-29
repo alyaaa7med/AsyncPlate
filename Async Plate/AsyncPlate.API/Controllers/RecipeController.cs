@@ -1,4 +1,5 @@
 ﻿using AsyncPlate.API.Models;
+using AsyncPlate.Core.Common.DTOs;
 using AsyncPlate.Core.DTOs.Recipe;
 using AsyncPlate.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -45,6 +46,20 @@ namespace AsyncPlate.API.Controllers
         {
             var recipeResponseDTO = await recipeService.GetRecipeByIdAsync(inventoryId, productId);
             return Ok(new ApiResponse<RecipeResponseDTO>(true, "Recipe retrieved successfully", recipeResponseDTO));
+        }
+
+        [HttpGet("/api/product/{productId}/recipes")]
+        public async Task<IActionResult> GetRecipesByProductId([FromRoute] string productId)
+        {
+            var recipeListDTOs = await recipeService.GetRecipeOfProductAsync(productId);
+            return Ok(new ApiResponse<IEnumerable<RecipeListDTO>>(true, "Recipes retrieved successfully", recipeListDTOs));
+        }
+
+        [HttpGet()]
+        public async Task<IActionResult> GetAllRecipes([FromQuery] RecipeFilterDTO filterDto)
+        {
+            var pagedResult = await recipeService.GetAllRecipesAsync(filterDto);
+            return Ok(new ApiResponse<PagedResult<RecipeResponseDTO>>(true, "Recipes retrieved successfully", pagedResult));
         }
 
         //[HttpPost("cook")] //automatic calling not by any one 
