@@ -5,12 +5,12 @@ using Mailtrap.Emails.Requests;
 using Microsoft.Extensions.Options;
 namespace AsyncPlate.Infrastructure.Services
 {
-    public class MailTrapEmailService : IEmailService
+    public class MailTrapEmailJobService : IEmailJobService
     {
         private readonly IMailtrapClient _mailtrapClient; //will be injected using the line of configuration in the program.cs
         private readonly MailtarpMappingClass _settings;
 
-        public MailTrapEmailService(IMailtrapClient mailtrapClient, IOptions<MailtarpMappingClass> settings)
+        public MailTrapEmailJobService(IMailtrapClient mailtrapClient, IOptions<MailtarpMappingClass> settings)
         {
             _mailtrapClient = mailtrapClient;
             _settings = settings.Value;

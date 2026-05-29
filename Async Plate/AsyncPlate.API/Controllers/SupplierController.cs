@@ -27,7 +27,7 @@ namespace AsyncPlate.API.Controllers
         {
             var responseDTO = await _supplierService.AddSupplierAsync(requestDTO);
             return Created($"/suppliers/{responseDTO.Id}", new ApiResponse<SupplierResponseDTO>(true, "Supplier added successfully", responseDTO));
-
+            //createAtAction is the production standard 
         }
         [HttpGet("{supplierId}")]
         public async Task<IActionResult> GetSupplierById(string supplierId)

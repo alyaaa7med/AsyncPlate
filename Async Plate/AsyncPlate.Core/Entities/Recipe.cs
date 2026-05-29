@@ -8,8 +8,9 @@ namespace AsyncPlate.Core.Entities
 {
     public class Recipe
     {
-        public double Quantity { get; set; } //quantity of inventory needed 
+        public decimal Quantity { get; set; } //quantity of inventory needed 
 
+        public string Unit { get; set; } = null!; //unit of measurement for the quantity (e.g., grams, liters)
         public string ProductId { get; set; } = null!;
         public Product Product { get; set; } = null!;
 

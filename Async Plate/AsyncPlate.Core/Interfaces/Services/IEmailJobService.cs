@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Core.Interfaces.Services
 {
-    public interface IEmailService
+    public interface IEmailJobService
     {
         Task SendEmailAsync(string to, string subject, string body);
     }

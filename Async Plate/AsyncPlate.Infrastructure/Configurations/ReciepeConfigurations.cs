@@ -17,6 +17,10 @@ namespace AsyncPlate.Infrastructure.Configrations
         {
             builder.HasKey(r => new { r.ProductId, r.InventoryId });
 
+            builder.Property(r => r.Quantity).HasColumnType("decimal(18,2)").IsRequired();
+
+            builder.Property(r => r.Unit).HasMaxLength(50).IsRequired();
+
             builder.HasOne(r => r.Product)
                  .WithMany(p => p.Recipes)
                  .HasForeignKey(r => r.ProductId)

@@ -2,18 +2,19 @@ using AsyncPlate.API.Middlewares;
 using AsyncPlate.Core.DTOs.Admin;
 using AsyncPlate.Core.DTOs.Authentication;
 using AsyncPlate.Core.DTOs.Inventory;
+using AsyncPlate.Core.DTOs.Recipe;
 using AsyncPlate.Core.DTOs.Supplier;
 using AsyncPlate.Core.Entities;
 using AsyncPlate.Core.Interfaces;
 using AsyncPlate.Core.Interfaces.Repositories;
 using AsyncPlate.Core.Interfaces.Services;
 using AsyncPlate.Core.Mapping;
-using AsyncPlate.Core.Mapping.Authentication;
 using AsyncPlate.Core.Services.Implementation;
 using AsyncPlate.Core.Services.Interfaces;
 using AsyncPlate.Core.Validators.Admin;
 using AsyncPlate.Core.Validators.Authentication;
 using AsyncPlate.Core.Validators.Inventory;
+using AsyncPlate.Core.Validators.Recipe;
 using AsyncPlate.Core.Validators.Supplier;
 using AsyncPlate.Infrastructure;
 using AsyncPlate.Infrastructure.Data;
@@ -21,6 +22,7 @@ using AsyncPlate.Infrastructure.Data.Repositories;
 using AsyncPlate.Infrastructure.Services;
 using AsyncPlate.Infrastructure.Services.Settings;
 using FluentValidation;
+using Hangfire;
 using Jose;
 using Mailtrap;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,6 +50,8 @@ builder.Services.AddScoped<IOneTimeTokenRepo, OneTimeTokenRepo>();
 builder.Services.AddScoped<ISupplierRepo, SupplierRepo>();
 builder.Services.AddScoped<IInventoryRepo, InventoryRepo>();
 builder.Services.AddScoped<IAdminRepo, AdminRepo>();
+builder.Services.AddScoped<IRecipeRepo, RecipeRepo>();
+builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IMediaService, MediaService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -55,28 +59,29 @@ builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 
 // Validations using FluentValidation [core ]
 
-builder.Services.AddScoped<IValidator<SignupAppUserRequestDTO>, SignupAppUserRequestValidator>();   
-builder.Services.AddScoped<IValidator<SignupCustomerRequestDTO>, SignupCustomerRequestValidator>();
-builder.Services.AddScoped<IValidator<CreateAdminRequestDTO>, SignupAdminRequestValidator>();
-builder.Services.AddScoped<IValidator<SignupKitchenChefRequestDTO>, SignupKitchenChefRequestValidator>();
-builder.Services.AddScoped<IValidator<LoginRequestDTO>, LoginRequestValidator>();
-builder.Services.AddScoped<IValidator<ForgetPasswordRequestDTO>, ForgetPasswordRequestValidator>();
-builder.Services.AddScoped<IValidator<ResetPasswordRequestDTO>, ResetPasswordRequestValidator>();
-builder.Services.AddScoped<IValidator<RefreshTokenRequestDTO>, RefreshTokenRequestValidator>();
-builder.Services.AddScoped<IValidator<AddInventoryRequestDTO>, AddInventoryRequestValidator>();
-builder.Services.AddScoped<IValidator<UpdateInventoryRequestDTO>, UpdateInventoryRequestValidator>();
-builder.Services.AddScoped<IValidator<AddSupplierRequestDTO>, AddSupplierRequestValidator>();
-builder.Services.AddScoped<IValidator<UpdateSupplierRequestDTO>, UpdateSupplierRequestValidator>();
+builder.Services.AddTransient<IValidator<SignupAppUserRequestDTO>, SignupAppUserRequestValidator>();   
+builder.Services.AddTransient<IValidator<SignupCustomerRequestDTO>, SignupCustomerRequestValidator>();
+builder.Services.AddTransient<IValidator<CreateAdminRequestDTO>, CreateAdminRequestValidator>();
+builder.Services.AddTransient<IValidator<SignupKitchenChefRequestDTO>, SignupKitchenChefRequestValidator>();
+builder.Services.AddTransient<IValidator<LoginRequestDTO>, LoginRequestValidator>();
+builder.Services.AddTransient<IValidator<ForgetPasswordRequestDTO>, ForgetPasswordRequestValidator>();
+builder.Services.AddTransient<IValidator<ResetPasswordRequestDTO>, ResetPasswordRequestValidator>();
+builder.Services.AddTransient<IValidator<RefreshTokenRequestDTO>, RefreshTokenRequestValidator>();
+builder.Services.AddTransient<IValidator<AddInventoryRequestDTO>, AddInventoryRequestValidator>();
+builder.Services.AddTransient<IValidator<UpdateInventoryRequestDTO>, UpdateInventoryRequestValidator>();
+builder.Services.AddTransient<IValidator<AddSupplierRequestDTO>, AddSupplierRequestValidator>();
+builder.Services.AddTransient<IValidator<UpdateSupplierRequestDTO>, UpdateSupplierRequestValidator>();
+builder.Services.AddTransient<IValidator<AddRecipeRequestDTO>, AddRecipeRequestValidator>();
+builder.Services.AddTransient<IValidator<UpdateRecipeRequestDTO>, UpdateRecipeRequestValidator>();
 
+// Thrid Party and AutoMapper [infra + core + api ]
 
-
-// Thrid Party and AutoMapper [infra + core ]
-
-builder.Services.AddTransient<IEmailService, MailTrapEmailService>();
+builder.Services.AddTransient<IEmailJobService, MailTrapEmailJobService>();
 
 builder.Services.Configure<MailtarpMappingClass>(builder.Configuration.GetSection("Mailtrap"));//for option pattern 
 
@@ -103,10 +108,21 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<SupplierProfile>();
     cfg.AddProfile<InventoryProfile>();
     cfg.AddProfile<AdminProfile>();
+    cfg.AddProfile<RecipeProfile>();
 
 
 }, typeof(Program));
 
+
+//hang fire
+builder.Services.AddHangfire(config =>
+    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+          .UseSimpleAssemblyNameTypeSerializer()
+          .UseRecommendedSerializerSettings()
+          .UseSqlServerStorage(connectionString)
+);
+
+builder.Services.AddHangfireServer();
 
 
 // API Swagger [infra ]

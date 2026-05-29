@@ -20,7 +20,7 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         public async Task<OneTimeToken?> GetActiveOneTimeTokenAsync(Expression<Func<OneTimeToken, bool>> predicate)
         {
             return await _context.Set<OneTimeToken>()
-                .FirstOrDefaultAsync(predicate);
+                .SingleOrDefaultAsync(predicate);
         }
     }
 }

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Core.Validators.Admin
 {
-    public class SignupAdminRequestValidator : AbstractValidator< CreateAdminRequestDTO>
+    public class CreateAdminRequestValidator : AbstractValidator<CreateAdminRequestDTO>
     {
-        public SignupAdminRequestValidator()
+        public CreateAdminRequestValidator()
         {
             
         }

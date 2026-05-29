@@ -6,6 +6,7 @@ using AsyncPlate.Core.Interfaces.Services;
 using AsyncPlate.Core.Services.Interfaces;
 using AutoMapper;
 using FluentValidation;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities; 
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,7 @@ namespace AsyncPlate.Core.Services.Implementation
         private readonly IValidator<ForgetPasswordRequestDTO> _validator4;
         private readonly IValidator<ResetPasswordRequestDTO> _validator5;
         private readonly IValidator<RefreshTokenRequestDTO> _validator6;
-        private readonly IEmailService _emailService;
+        private readonly IEmailJobService _emailService;
         private readonly IMediaService _mediaService;
         private readonly ITokenService _tokenService;
         private readonly UserManager<AppUser> _userManager;
@@ -38,7 +39,7 @@ namespace AsyncPlate.Core.Services.Implementation
             IValidator<ForgetPasswordRequestDTO> validator4,
             IValidator<ResetPasswordRequestDTO> validator5,
             IValidator<RefreshTokenRequestDTO> validator6,
-            IEmailService emailService,
+            IEmailJobService emailService,
             IMediaService mediaService,
             ITokenService tokenService,
             UserManager<AppUser> userManager)
@@ -324,8 +325,14 @@ namespace AsyncPlate.Core.Services.Implementation
             var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(ott.Token));
             var resetLink = $"https://yourfrontend.com/reset-password?token={encodedToken}&email={user.Email}"; //to do in appsettings
 
-            //to do : try if email is sent or not 
-            await SendEmailAsync(user.Email!, "Reset Password", $"Click here to reset: <a href='{resetLink}'>Reset Link</a>");
+
+
+            BackgroundJob.Enqueue<IEmailJobService>(x => x.SendEmailAsync(
+            user.Email!,
+           "Reset Password",
+           $"Click here to reset your password: {resetLink}"
+       )
+   );
             _logger.LogInformation("Forget Password Email is sent to user with email {email}", user.Email);
 
         }
@@ -477,12 +484,7 @@ namespace AsyncPlate.Core.Services.Implementation
             };
         }
 
-        async Task SendEmailAsync(string email, string sub, string body)//function to be reusable
-        {
-            await _emailService.SendEmailAsync(email, sub, body);
-        }
-
-
+        
 
 
 

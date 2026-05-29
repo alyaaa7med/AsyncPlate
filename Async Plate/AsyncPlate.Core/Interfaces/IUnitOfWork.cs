@@ -21,6 +21,8 @@ namespace AsyncPlate.Core.Interfaces
         IOneTimeTokenRepo onetimetokens { get; }
         ISupplierRepo suppliers { get; }
         IInventoryRepo inventories { get; }
+        IRecipeRepo recipes { get; }
+         IProductRepo products { get; }
 
         Task<int> SaveChangesAsync();//int : num of rows affected 
 

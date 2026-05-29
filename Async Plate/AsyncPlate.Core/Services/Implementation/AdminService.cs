@@ -24,7 +24,7 @@ namespace AsyncPlate.Core.Services.Implementation
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<CreateAdminRequestDTO> _validator1;
-        private readonly IEmailService _emailService;
+        private readonly IEmailJobService _emailService;
         private readonly IMediaService _mediaService;
         private readonly UserManager<AppUser> _userManager;
         public AdminService(
@@ -32,7 +32,7 @@ namespace AsyncPlate.Core.Services.Implementation
             ILogger<AdminService> logger,
             IUnitOfWork unitOfWork,
             IValidator<CreateAdminRequestDTO> validator1,
-            IEmailService emailService,
+            IEmailJobService emailService,
             IMediaService mediaService,
             UserManager<AppUser> userManager)
         {
