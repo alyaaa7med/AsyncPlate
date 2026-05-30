@@ -16,10 +16,11 @@ namespace AsyncPlate.Infrastructure.Configrations
 
             builder.HasKey(c => c.Id);
 
-            //form gpt
             builder.Property(c => c.Name)
             .IsRequired()
             .HasMaxLength(100);
+            builder.HasIndex(x => x.Name).IsUnique();
+
 
             builder.Property(c => c.Description)
                 .HasMaxLength(500);

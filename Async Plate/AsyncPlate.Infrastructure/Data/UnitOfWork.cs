@@ -24,14 +24,16 @@ namespace AsyncPlate.Infrastructure.Data
         public IAdminRepo admins { get; }
         public IRefreshTokenRepo refreshtokens { get; }
         public IOneTimeTokenRepo onetimetokens { get; }
-
         public ISupplierRepo suppliers { get;  }
         public IInventoryRepo inventories { get; }
         public IProductRepo products { get; }
         public IRecipeRepo recipes { get; }
+        public IOfferRepo offers { get; }
+        public ICategoryRepo categories { get; }
         public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo,IAdminRepo adminRepo,
                 IRefreshTokenRepo RefreshTokenRepo, IOneTimeTokenRepo onetimetokenRepo,
-                ISupplierRepo supplierRepo, IInventoryRepo inventoryRepo, IProductRepo productRepo, IRecipeRepo recipeRepo)
+                ISupplierRepo supplierRepo, IInventoryRepo inventoryRepo, IProductRepo productRepo, IRecipeRepo recipeRepo,
+                IOfferRepo offerRepo, ICategoryRepo categoryRepo )
         {
             _context = context;
             customers = customerRepo;
@@ -43,6 +45,8 @@ namespace AsyncPlate.Infrastructure.Data
             inventories = inventoryRepo;
             recipes = recipeRepo;
             products = productRepo;
+            offers = offerRepo;
+            categories = categoryRepo;
         }
 
         public async Task<int> SaveChangesAsync()

@@ -22,7 +22,9 @@ namespace AsyncPlate.Core.Interfaces
         ISupplierRepo suppliers { get; }
         IInventoryRepo inventories { get; }
         IRecipeRepo recipes { get; }
-         IProductRepo products { get; }
+        IProductRepo products { get; }
+        ICategoryRepo categories { get; }
+        IOfferRepo offers { get; }
 
         Task<int> SaveChangesAsync();//int : num of rows affected 
 

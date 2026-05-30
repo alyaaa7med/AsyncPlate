@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Core.Interfaces.Repositories
 {
-    public interface IProductRepo : IBaseRepo<Product>
+    public interface IOfferRepo:IBaseRepo<Offer>
     {
-        Task<Product?> GetProductWithCategoryAsync(string productId);
-
     }
 }

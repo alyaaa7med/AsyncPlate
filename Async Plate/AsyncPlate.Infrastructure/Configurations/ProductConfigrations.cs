@@ -23,7 +23,7 @@ namespace AsyncPlate.Infrastructure.Configrations
             .IsRequired()
             .HasMaxLength(200);
 
-          
+
             builder.Property(p => p.Type)
                 .HasConversion<string>();
 

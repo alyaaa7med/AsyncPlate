@@ -1,5 +1,6 @@
 ﻿using AsyncPlate.Core.Entities;
 using AsyncPlate.Core.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,13 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
     {
         public ProductRepo(AppDbContext context) : base(context)
         {
+        }
+
+        public async Task<Product?> GetProductWithCategoryAsync(string productId)
+        {
+            return await _context.Products
+                .Include(p => p.Category)
+                .SingleOrDefaultAsync(p => p.Id == productId);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace AsyncPlate.Core.Entities
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Title { get; set; } = string.Empty;   //zero length string & This prevents the
-                                                            //dreaded NullReferenceException
+                                                            //NullReferenceException
                                                             //if you try to read  before assigning it
         public decimal DiscountPercentage { get; set; }
         public DateTime StartDate { get; set; }

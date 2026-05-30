@@ -1,0 +1,35 @@
+﻿using AsyncPlate.API.Models;
+using AsyncPlate.Core.DTOs.Product;
+using AsyncPlate.Core.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace AsyncPlate.API.Controllers
+{
+
+    [ApiController]
+    [Route("api/[controller]s")]
+    //[Authorize(Roles = "Admin")]
+    public class ProductController:ControllerBase
+    {
+        private readonly IProductService _productService;
+
+        public ProductController(IProductService productService)
+        {
+            _productService = productService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct([FromBody] AddProductRequestDTO productRequestDTO)
+        {
+            var responseDto = await _productService.AddProductAsync(productRequestDTO);
+            return Created($"/products/{responseDto.Id}", new ApiResponse<ProductResponseDTO>(true, "Product created successfully", responseDto));
+        }
+
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetProductById([FromRoute]string productId)
+        {
+            var responseDto = await _productService.GetProductByIdAsync(productId);
+            return Ok(new ApiResponse<ProductResponseDTO>(true, "Product retrieved successfully", responseDto));
+        }
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using AsyncPlate.Core.DTOs;
+using AsyncPlate.Core.DTOs.Product;
 using AsyncPlate.Core.DTOs.Recipe;
 using AsyncPlate.Core.DTOs.Supplier;
 using AsyncPlate.Core.Entities;
@@ -38,7 +39,7 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
 
         }
 
-        public IQueryable<RecipeResponseDTO> GetAllRecipes()
+        public IQueryable<RecipeResponseDTO> GetAllRecipes()//for projection 
         {
             return _context.Recipes.Select(r => new RecipeResponseDTO
             {
