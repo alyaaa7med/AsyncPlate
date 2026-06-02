@@ -12,25 +12,29 @@ namespace AsyncPlate.Core.Entities
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
         public string Description { get; set; } = string.Empty;
-        public decimal TotalAmountPrice { get; set; }
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
+
+        public decimal TotalAmountPrice { get; set; }
         public decimal TotalFee { get; set; }
         public decimal TotalFeeTotal { get; set; }
 
         public Review? Review { get; set; } 
+
         public Payment? Payment { get; set; }
 
         public string? CustomerId { get; set; } 
-        public Customer? Customer { get; set; }
+        public Customer? Customer { get; set; }//it should be appuser but it is ok 
 
         public string? KitchenChefId { get; set; }
         public KitchenChef? KitchenChef { get; set; }
+
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 
     public enum OrderStatus
     {
         Pending,
+        Confirmed,
         Completed,
         Cancelled
     }

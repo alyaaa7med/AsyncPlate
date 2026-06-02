@@ -14,5 +14,8 @@ namespace AsyncPlate.Core.Interfaces.Repositories
 
         Task<IEnumerable<RecipeListDTO>> GetRecipeByProductIdAsync(string productId);//i used dto for projection to avoid loading unnecessary data
         IQueryable<RecipeResponseDTO> GetAllRecipes();//i used dto for projection to avoid loading unnecessary data
+
+        Task<IEnumerable<Recipe>> GetRecipeByProductIdAsync2(string productId);
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AsyncPlate.Core.Interfaces;
 using AsyncPlate.Core.Interfaces.Repositories;
+using AsyncPlate.Core.Services.Implementation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Identity.Client;
@@ -30,10 +31,11 @@ namespace AsyncPlate.Infrastructure.Data
         public IRecipeRepo recipes { get; }
         public IOfferRepo offers { get; }
         public ICategoryRepo categories { get; }
+        public IOrderRepo orders { get; }
         public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo,IAdminRepo adminRepo,
                 IRefreshTokenRepo RefreshTokenRepo, IOneTimeTokenRepo onetimetokenRepo,
                 ISupplierRepo supplierRepo, IInventoryRepo inventoryRepo, IProductRepo productRepo, IRecipeRepo recipeRepo,
-                IOfferRepo offerRepo, ICategoryRepo categoryRepo )
+                IOfferRepo offerRepo, ICategoryRepo categoryRepo, IOrderRepo orderRepo )
         {
             _context = context;
             customers = customerRepo;
@@ -47,6 +49,7 @@ namespace AsyncPlate.Infrastructure.Data
             products = productRepo;
             offers = offerRepo;
             categories = categoryRepo;
+            orders = orderRepo;
         }
 
         public async Task<int> SaveChangesAsync()

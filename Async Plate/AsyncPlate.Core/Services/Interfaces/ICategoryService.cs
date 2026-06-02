@@ -12,5 +12,11 @@ namespace AsyncPlate.Core.Services.Interfaces
         Task<CategoryResponseDTO> AddCategoryAsync(AddCategoryRequestDTO categoryRequestDTO);
         Task<CategoryResponseDTO> GetCategoryByIdAsync(string categoryId);
         //Task<CategoryResponseDTO> UpdateCategoryAsync(int categoryId, UpdateCategoryRequestDTO categoryRequestDTO);
+
+        //delete 
+        //get all
+        //get offers per category
+
+
     }
 }

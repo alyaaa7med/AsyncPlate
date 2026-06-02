@@ -16,7 +16,6 @@ namespace AsyncPlate.Core.Services.Interfaces
         Task<RecipeResponseDTO> AddRecipeAsync(AddRecipeRequestDTO requestDTO);
         Task<RecipeResponseDTO> UpdateRecipeAsync(string productId, string inventoryId, UpdateRecipeRequestDTO requestDTO);
         Task<RecipeResponseDTO> DeleteRecipeAsync(string inventoryId, string productId);
-        Task<IEnumerable<RecipeListDTO>> GetRecipeOfProductAsync(string productId);
         Task<PagedResult<RecipeResponseDTO>> GetAllRecipesAsync(RecipeFilterDTO filterDto);
 
         //Task<RecipeResponseDTO> CookProductAsync( AddRecipeRequestDTO cookRecipeRequestDTO);

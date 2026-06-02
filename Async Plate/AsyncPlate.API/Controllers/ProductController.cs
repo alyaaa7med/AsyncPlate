@@ -1,5 +1,7 @@
 ﻿using AsyncPlate.API.Models;
 using AsyncPlate.Core.DTOs.Product;
+using AsyncPlate.Core.DTOs.Recipe;
+using AsyncPlate.Core.Services.Implementation;
 using AsyncPlate.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +32,16 @@ namespace AsyncPlate.API.Controllers
         {
             var responseDto = await _productService.GetProductByIdAsync(productId);
             return Ok(new ApiResponse<ProductResponseDTO>(true, "Product retrieved successfully", responseDto));
+        }
+
+
+
+
+        [HttpGet("{productId}/recipes")]
+        public async Task<IActionResult> GetRecipesByProductId([FromRoute] string productId)
+        {
+            var recipeListDTOs = await _productService.GetRecipeByProductIdAsync(productId);
+            return Ok(new ApiResponse<IEnumerable<RecipeListDTO>>(true, "Recipes retrieved successfully", recipeListDTOs));
         }
     }
 }

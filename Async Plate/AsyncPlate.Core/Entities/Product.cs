@@ -19,9 +19,13 @@ namespace AsyncPlate.Core.Entities
         public string CategoryId { get; set; } = null!;
         public Category Category { get; set; } = null!;
         public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
+
+        //what actually ordered main/extra product
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        public ICollection<OrderExtraItem> OrderItemExtras { get; set; }= new List<OrderExtraItem>();
 
 
+        //what i store main and its extra 
         //The list of connections where THIS product is the MAIN product
         public ICollection<ProductExtra> MainProducts { get; set; } = new List<ProductExtra>();
 

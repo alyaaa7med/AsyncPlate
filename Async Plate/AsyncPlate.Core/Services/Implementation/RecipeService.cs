@@ -78,14 +78,7 @@ namespace AsyncPlate.Core.Services.Implementation
             }
 
             var recipe = _mapper.Map<Recipe>(addRecipeRequestDTO);
-            if (recipe.Quantity > inventory.CurrentStock)
-            {
-                _logger.LogWarning("Not enough stock in inventory {InventoryId} for product {ProductId}", addRecipeRequestDTO.InventoryId, addRecipeRequestDTO.ProductId);
-                throw new Exceptions.ValidationException(new Dictionary<string, string[]>
-                {
-                    { "Quantity", new[] { "Not enough stock in inventory" }}
-                });
-            }
+        
 
             await _unitOfWork.recipes.AddAsync(recipe);
             await _unitOfWork.SaveChangesAsync();
@@ -195,22 +188,7 @@ namespace AsyncPlate.Core.Services.Implementation
                 TotalPages = pagedResult.TotalPages
             };
         }
-        public async Task<IEnumerable<RecipeListDTO>> GetRecipeOfProductAsync(string productId)
-        {
-            //validate id 
-            //get recipes of product
-            //mapping 
-            var product = await _unitOfWork.products.GetByIdAsync(productId);
-            if (product == null)
-            {
-                _logger.LogWarning("Product with id {ProductId} not found", productId);
-                throw new Exceptions.NotFoundException("Product not found");
-            }
-            var recipeList = await _unitOfWork.recipes.GetRecipeByProductIdAsync(productId);
-            var responseDTOs = _mapper.Map<IEnumerable<RecipeListDTO>>(recipeList);
-            _logger.LogInformation("Retrieved {Count} recipes for product id {ProductId}", responseDTOs.Count(), productId);
-            return responseDTOs;
-        }
+       
         //public async Task<MakeRecipeResponseDTO> CookProductAsync(MakeRecipeRequestDTO makeRecipeRequestDTO)
         //{
         //    //validate dto 

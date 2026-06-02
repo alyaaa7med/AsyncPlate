@@ -83,5 +83,22 @@ namespace AsyncPlate.Core.Services.Implementation
             var responseDTO = _mapper.Map<ProductResponseDTO>(product);
             return responseDTO;
         }
+
+        public async Task<IEnumerable<RecipeListDTO>> GetRecipeByProductIdAsync(string productId)
+        {
+            //validate id 
+            //get recipes of product
+            //mapping 
+            var product = await _unitOfWork.products.GetByIdAsync(productId);
+            if (product == null)
+            {
+                _logger.LogWarning("Product with id {ProductId} not found", productId);
+                throw new Exceptions.NotFoundException("Product not found");
+            }
+            var recipeList = await _unitOfWork.recipes.GetRecipeByProductIdAsync(productId);
+            var responseDTOs = _mapper.Map<IEnumerable<RecipeListDTO>>(recipeList);
+            _logger.LogInformation("Retrieved {Count} recipes for product id {ProductId}", responseDTOs.Count(), productId);
+            return responseDTOs;
+        }
     }
 }

@@ -3,6 +3,7 @@ using AsyncPlate.Core.DTOs.Admin;
 using AsyncPlate.Core.DTOs.Authentication;
 using AsyncPlate.Core.DTOs.Category;
 using AsyncPlate.Core.DTOs.Inventory;
+using AsyncPlate.Core.DTOs.Order;
 using AsyncPlate.Core.DTOs.Product;
 using AsyncPlate.Core.DTOs.Recipe;
 using AsyncPlate.Core.DTOs.Supplier;
@@ -17,6 +18,7 @@ using AsyncPlate.Core.Validators.Admin;
 using AsyncPlate.Core.Validators.Authentication;
 using AsyncPlate.Core.Validators.Category;
 using AsyncPlate.Core.Validators.Inventory;
+using AsyncPlate.Core.Validators.Order;
 using AsyncPlate.Core.Validators.Product;
 using AsyncPlate.Core.Validators.Recipe;
 using AsyncPlate.Core.Validators.Supplier;
@@ -55,9 +57,15 @@ builder.Services.AddScoped<ISupplierRepo, SupplierRepo>();
 builder.Services.AddScoped<IInventoryRepo, InventoryRepo>();
 builder.Services.AddScoped<IAdminRepo, AdminRepo>();
 builder.Services.AddScoped<IRecipeRepo, RecipeRepo>();
-builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
 builder.Services.AddScoped<IOfferRepo, OfferRepo>();
+builder.Services.AddScoped<IProductRepo, ProductRepo>();
+builder.Services.AddScoped<IProductExtraRepo, ProductExtraRepo>();
+builder.Services.AddScoped<IOrderRepo, OrderRepo>();
+builder.Services.AddScoped<IOrderRepo, OrderRepo>();
+builder.Services.AddScoped<IOrderItemRepo, OrderItemRepo>();
+builder.Services.AddScoped<IOrderExtraItemRepo, OrderExtraItemRepo>();
+
 builder.Services.AddScoped<IMediaService, MediaService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -69,6 +77,7 @@ builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 // Validations using FluentValidation [core ]
 
@@ -88,6 +97,11 @@ builder.Services.AddTransient<IValidator<AddRecipeRequestDTO>, AddRecipeRequestV
 builder.Services.AddTransient<IValidator<UpdateRecipeRequestDTO>, UpdateRecipeRequestValidator>();
 builder.Services.AddTransient<IValidator<AddCategoryRequestDTO>, AddCategoryRequestValidator>();
 builder.Services.AddTransient<IValidator<AddProductRequestDTO>, AddProductRequestValidator>();
+builder.Services.AddTransient<IValidator<MakeOrderRequestDTO>, MakeOrderRequestValidator>();
+builder.Services.AddTransient<IValidator<MakeOrderRequestDTO>, MakeOrderRequestValidator>();
+builder.Services.AddTransient<IValidator<OrderItemRequestDTO>, OrderItemRequestValidator>();
+builder.Services.AddTransient<IValidator<OrderExtraItemRequestDTO>, OrderExtraItemRequestValidator>();
+
 
 // Thrid Party and AutoMapper [infra + core + api ]
 
@@ -122,7 +136,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<ProductProfile>();
     cfg.AddProfile<CategoryProfile>();
     cfg.AddProfile<OfferProfile>();
-
+    cfg.AddProfile<OrderProfile>();
 }, typeof(Program));
 
 

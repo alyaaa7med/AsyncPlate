@@ -48,12 +48,6 @@ namespace AsyncPlate.API.Controllers
             return Ok(new ApiResponse<RecipeResponseDTO>(true, "Recipe retrieved successfully", recipeResponseDTO));
         }
 
-        [HttpGet("/api/product/{productId}/recipes")]
-        public async Task<IActionResult> GetRecipesByProductId([FromRoute] string productId)
-        {
-            var recipeListDTOs = await recipeService.GetRecipeOfProductAsync(productId);
-            return Ok(new ApiResponse<IEnumerable<RecipeListDTO>>(true, "Recipes retrieved successfully", recipeListDTOs));
-        }
 
         [HttpGet()]
         public async Task<IActionResult> GetAllRecipes([FromQuery] RecipeFilterDTO filterDto)

@@ -56,5 +56,9 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
             });
         }
 
+        public async Task<IEnumerable<Recipe>> GetRecipeByProductIdAsync2(string productId)
+        {
+            return await _context.Recipes.Where(r => r.ProductId == productId).ToListAsync();
+        }
     }
 }
