@@ -15,7 +15,7 @@ namespace AsyncPlate.Core.Interfaces.Repositories
         IQueryable<Inventory> GetAllWithSuppliers();
         IQueryable<Inventory> GetInventoriesBySupplierId(string supplierId);
         Task<Inventory?> GetInventoryWithSupplierAsync(string inventoryId);
-
         IQueryable<Inventory> GetLowStockInventory();
+        Task<List<Inventory>> GetInventoriesByIdsAsync(List<string> inventoryIds);
     }
 }

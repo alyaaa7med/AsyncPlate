@@ -1,5 +1,6 @@
 ﻿using AsyncPlate.Core.DTOs.Recipe;
 using AsyncPlate.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,6 @@ namespace AsyncPlate.Core.Interfaces.Repositories
         IQueryable<RecipeResponseDTO> GetAllRecipes();//i used dto for projection to avoid loading unnecessary data
 
         Task<IEnumerable<Recipe>> GetRecipeByProductIdAsync2(string productId);
-
+        Task<List<Recipe>> GetRecipesByProductIdsAsync(IEnumerable<string> productIds);
     }
 }

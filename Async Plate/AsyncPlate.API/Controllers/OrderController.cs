@@ -10,7 +10,6 @@ namespace AsyncPlate.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]s")]
-    //[Authorize(Roles = "Customers")]
 
     public class OrderController : ControllerBase
     {
@@ -22,6 +21,7 @@ namespace AsyncPlate.API.Controllers
         }
 
         [HttpPost]
+        //[Authorize(Roles = "Customers")]
         public async Task<IActionResult> MakeOrder([FromBody] MakeOrderRequestDTO makeOrderRequestDTO)
         {
             var responseDto = await _orderService.MakeOrderAsync(makeOrderRequestDTO);
@@ -29,6 +29,7 @@ namespace AsyncPlate.API.Controllers
         }
 
         [HttpPost("{orderId}/cook")]
+        //[Authorize(Roles = "Kitchen Chef")]
         public async Task<IActionResult> CookOrder([FromRoute] string orderId)
         {
             await _orderService.CookOrderAsync(orderId);
@@ -36,6 +37,7 @@ namespace AsyncPlate.API.Controllers
         }
 
         [HttpPost("{orderId}/confirm")]
+        //[Authorize(Roles = "Customers")]
         public async Task<IActionResult> ConfirmOrder([FromRoute] string orderId)
         {
             var responseDto = await _orderService.ConfirmOrderAsync(orderId);
@@ -44,6 +46,7 @@ namespace AsyncPlate.API.Controllers
 
 
         [HttpPost("{orderId}/cancel")]
+        //[Authorize(Roles = "Customers")]
         public async Task<IActionResult> CancelOrder([FromRoute] string orderId)
         {
             var responseDto = await _orderService.CancelOrderAsync(orderId);
@@ -51,12 +54,7 @@ namespace AsyncPlate.API.Controllers
         }
 
 
-        [HttpPost("{orderId}/complete")]
-        public async Task<IActionResult> CompleteOrder([FromRoute] string orderId)
-        {
-            var responseDto = await _orderService.CompleteOrderAsync(orderId);
-            return Ok(new ApiResponse<OrderResponseDTO>(true, "Order completed successfully", responseDto));
-        }
+     
 
 
     }

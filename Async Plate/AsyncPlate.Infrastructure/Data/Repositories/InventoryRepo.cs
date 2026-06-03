@@ -44,5 +44,9 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         {
             return _context.Inventories.Where(i => i.SupplierId == supplierId).Include(i => i.Supplier);
         }
+        public  async Task<List<Inventory>> GetInventoriesByIdsAsync(List<string> inventoryIds)
+        {
+            return await _context.Inventories.Where(i => inventoryIds.Contains(i.Id)).ToListAsync();
+        }
     }
 }

@@ -17,7 +17,6 @@ namespace AsyncPlate.Core.Services.Interfaces
         Task<OrderResponseDTO> MakeOrderAsync(MakeOrderRequestDTO requestDTO);
         Task<OrderResponseDTO> ConfirmOrderAsync(string OrderId);
         Task<OrderResponseDTO> CancelOrderAsync(string OrderId);
-        Task<OrderResponseDTO> CompleteOrderAsync(string orderId);
         Task CookOrderAsync(string OrderId);
 
 
