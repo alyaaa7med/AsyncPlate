@@ -19,7 +19,6 @@ namespace AsyncPlate.Core.Entities
         public decimal TotalFeeTotal { get; set; }
 
         public Review? Review { get; set; } 
-
         public Payment? Payment { get; set; }
 
         public string? CustomerId { get; set; } 

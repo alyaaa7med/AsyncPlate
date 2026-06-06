@@ -28,5 +28,10 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
                 .Include(c=> c.Products)
                 .SingleOrDefaultAsync(c => c.Id == categoryId);
         }
+
+        public async Task<List<Category>> GetCategoriesByIdsAsync(List<string> categoryIds)
+        {
+            return await _context.Categories.Where(c => categoryIds.Contains(c.Id)).ToListAsync();
+        }
     }
 }

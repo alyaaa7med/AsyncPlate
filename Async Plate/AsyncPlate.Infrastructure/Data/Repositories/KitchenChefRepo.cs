@@ -1,5 +1,6 @@
 ﻿using AsyncPlate.Core.Entities;
 using AsyncPlate.Core.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,11 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         public KitchenChefRepo(AppDbContext context) : base(context)
         {
             // create / update / get / delete are in the generic repo no need to re-implement them here
+        }
+
+        public async Task<KitchenChef?> GetChefByUserIdAsync(string userId)
+        {
+            return await _context.Chefs.FirstOrDefaultAsync(c => c.AppUserId == userId);
         }
     }
 }

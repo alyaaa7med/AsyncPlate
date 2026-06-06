@@ -18,8 +18,8 @@ namespace AsyncPlate.Core.DTOs.Order
         public decimal TotalFeeTotal { get; set; }
 
         public string CustomerId { get; set; } = string.Empty;
+        public string kitchenChefId { get; set; } = string.Empty;
 
-      
 
         public IEnumerable<OrderItemResponseDTO> OrderItems { get; set; } = new List<OrderItemResponseDTO>();
 

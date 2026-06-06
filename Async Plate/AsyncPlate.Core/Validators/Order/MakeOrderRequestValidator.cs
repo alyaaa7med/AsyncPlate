@@ -12,8 +12,8 @@ namespace AsyncPlate.Core.Validators.Order
         public MakeOrderRequestValidator()
         {
 
-            RuleFor(x => x.CustomerId)
-                .NotEmpty().WithMessage("CustomerId is required.");
+            //RuleFor(x => x.CustomerId)
+            //    .NotEmpty().WithMessage("CustomerId is required.");
 
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Description is required.");

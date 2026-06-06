@@ -9,5 +9,7 @@ namespace AsyncPlate.Core.Interfaces.Repositories
 {
     public interface ICustomerRepo : IBaseRepo<Customer>
     {
+        Task<Customer?> GetByUserIdAsync(string userId);
+
     }
 }

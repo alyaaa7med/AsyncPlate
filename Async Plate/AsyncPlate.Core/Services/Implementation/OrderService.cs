@@ -24,6 +24,7 @@ namespace AsyncPlate.Core.Services.Implementation
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<MakeOrderRequestDTO> _validator1;
         private readonly ICustomerRepo _customerRepo;
+        private readonly IKitchenChefRepo _chefRepo;
         private readonly IProductRepo _productRepo;
         private readonly IRecipeRepo _recipeRepo;
         private readonly IProductExtraRepo _productExtraRepo;
@@ -33,7 +34,7 @@ namespace AsyncPlate.Core.Services.Implementation
         private readonly IInventoryRepo _inventoryRepo;
 
         public OrderService(ILogger<IOrderService> logger, IMapper mapper, IUnitOfWork unitOfWork,
-            IValidator<MakeOrderRequestDTO> validator1, ICustomerRepo customerRepo
+            IValidator<MakeOrderRequestDTO> validator1, ICustomerRepo customerRepo,IKitchenChefRepo chefRepo
             , IProductRepo productRepo, IProductExtraRepo productExtraRepo, IRecipeRepo recipeRepo
             , IOrderRepo orderRepo, IOrderItemRepo orderItemRepo, IOrderExtraItemRepo orderExtraItemRepo, IInventoryRepo inventoryRepo)
         {
@@ -44,6 +45,7 @@ namespace AsyncPlate.Core.Services.Implementation
             _validator1 = validator1;
             //_validator2 = validator2; no need for this as faluent validation will automatically resolve the validator for OrderItemRequestDTO when validating the MakeOrderRequestDTO which contains a list of OrderItemRequestDTO
             _customerRepo = customerRepo;
+            _chefRepo = chefRepo;
             _productRepo = productRepo;
             _recipeRepo = recipeRepo;
             _productExtraRepo = productExtraRepo;
@@ -53,9 +55,9 @@ namespace AsyncPlate.Core.Services.Implementation
             _inventoryRepo = inventoryRepo;
 
         }
-        public async Task<OrderResponseDTO> MakeOrderAsync(MakeOrderRequestDTO makeOrderRequestDTO)
+        public async Task<OrderResponseDTO> MakeOrderAsync(MakeOrderRequestDTO makeOrderRequestDTO, string userId)
         {
-            //check customerid 
+            //check userid from jwt and get customerid from it and set it in the dto 
             //validate dto
             //chef if customer is found  
             //check if product is found
@@ -63,7 +65,7 @@ namespace AsyncPlate.Core.Services.Implementation
             //mapping 
             //save order 
             //map and return 
-
+           
             var validationResult = await _validator1.ValidateAsync(makeOrderRequestDTO);
 
             if (!validationResult.IsValid)
@@ -78,12 +80,6 @@ namespace AsyncPlate.Core.Services.Implementation
                 throw new Exceptions.ValidationException(errorsDictionary);
             }
 
-            var customer = await _customerRepo.GetByIdAsync(makeOrderRequestDTO.CustomerId);
-            if (customer == null)
-            {
-                _logger.LogWarning("Customer not found. CustomerId: {CustomerId}", makeOrderRequestDTO.CustomerId);
-                throw new Exceptions.NotFoundException($"Customer with id {makeOrderRequestDTO.CustomerId} not found");
-            }
             decimal totalprice = 0;
 
             foreach (var orderItem in makeOrderRequestDTO.OrderItems)
@@ -95,6 +91,7 @@ namespace AsyncPlate.Core.Services.Implementation
                     _logger.LogWarning("Product not found. ProductId: {ProductId}", orderItem.ProductId);
                     throw new Exceptions.NotFoundException($"Product with id {orderItem.ProductId} not found");
                 }
+                product.TotalTimesOrdered+= orderItem.Quantity;
                 totalprice += orderItem.UnitPriceAtSale * orderItem.Quantity;
 
                 foreach (var extraItem in orderItem.ExtraItems)
@@ -105,6 +102,8 @@ namespace AsyncPlate.Core.Services.Implementation
                         totalprice = 0;
                         throw new Exceptions.NotFoundException($"Extra product {extraItem.ProductId} not related to product {orderItem.ProductId}" );
                     }
+                    var extraProduct = await _productRepo.GetByIdAsync(extraItem.ProductId);
+                    extraProduct!.TotalTimesOrdered += extraItem.Quantity;
                     totalprice += extraItem.UnitPriceAtSale * extraItem.Quantity;
                 }}
 
@@ -116,13 +115,21 @@ namespace AsyncPlate.Core.Services.Implementation
 
             await _unitOfWork.orders.AddAsync(order);
             await _unitOfWork.SaveChangesAsync();
+
             _logger.LogInformation("Order created successfully. OrderId: {OrderId}, Total: {Total}", order.Id,order.TotalAmountPrice);
             var orderResponseDTO = _mapper.Map<OrderResponseDTO>(order);
             return orderResponseDTO;
         }
 
-        public async Task<OrderResponseDTO> ConfirmOrderAsync(string orderId)
+        public async Task<OrderResponseDTO> ConfirmOrderAsync(string orderId, string userId)
         {
+            var customer = await _unitOfWork.customers.GetByUserIdAsync(userId);
+            if (customer == null)
+            {
+                _logger.LogWarning("Customer not found. UserId: {UserId}", userId);
+                throw new Exceptions.NotFoundException($"Customer with user id {userId} not found");
+            }
+          
             var order = await _unitOfWork.orders.GetByIdAsync(orderId);
 
             if (order == null)
@@ -140,7 +147,12 @@ namespace AsyncPlate.Core.Services.Implementation
                 _logger.LogWarning("Cannot confirm confirmed order. OrderId: {OrderId}", orderId);
                 throw new Exceptions.BadRequestException("Order is already confirmed");
             }
+
+          
             order.Status = OrderStatus.Confirmed;
+            order.Customer = customer;
+            customer.LoyaltyPoints += (int)(order.TotalAmountPrice); // 1 point for every 1 currency units spent
+            //no need to update customer/order as it is tracked by getting them
 
             await _unitOfWork.SaveChangesAsync();
             _logger.LogInformation("Order confirmed successfully. OrderId: {OrderId}", orderId);
@@ -176,8 +188,9 @@ namespace AsyncPlate.Core.Services.Implementation
             return _mapper.Map<OrderResponseDTO>(order);
         }
 
-        public async Task CookOrderAsync(string orderId)
+        public async Task CookOrderAsync(string orderId, string userId)
         {
+
             var order = await _orderRepo.GetOrderWithOrderItemsAndExtraOrderItemsByIdAsync(orderId);
 
             if (order == null)
@@ -189,6 +202,9 @@ namespace AsyncPlate.Core.Services.Implementation
             {
                 throw new Exceptions.BadRequestException($"Cannot cook order with status {order.Status}");
             }
+
+            var chef = await _chefRepo.GetChefByUserIdAsync(userId);
+            order.KitchenChef = chef;
 
             //get all products main and extra and remove duplicates
             var productIds = order.OrderItems .Select(oi => oi.ProductId)

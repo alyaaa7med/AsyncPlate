@@ -11,5 +11,6 @@ namespace AsyncPlate.Core.Interfaces.Repositories
     {
         Task<bool> AnyCategoryAsync(string name);
         Task<Category?> GetCategoryWithRelatedDataAsync(string categoryId);
+        Task<List<Category>> GetCategoriesByIdsAsync(List<string> categoryIds);
     }
 }

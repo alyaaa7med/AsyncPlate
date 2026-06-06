@@ -28,7 +28,7 @@ namespace AsyncPlate.API.Controllers
 
         }
         [HttpGet("{inventoryId}")]
-        public async Task<IActionResult> GetInventoryById(string inventoryId)
+        public async Task<IActionResult> GetInventoryById([FromRoute]string inventoryId)
         {
             var responseDTO = await _inventoryService.GetInventoryByIdAsync(inventoryId);
             return Ok(new ApiResponse<InventoryResponseDTO>(true, "Inventory retrieved successfully", responseDTO));
@@ -49,7 +49,7 @@ namespace AsyncPlate.API.Controllers
             return Ok(new ApiResponse<InventoryResponseDTO>(true, "Inventory updated successfully", responseDTO));
         }
         [HttpDelete("{inventoryId}")]
-        public async Task<IActionResult> DeleteInventory(string inventoryId)
+        public async Task<IActionResult> DeleteInventory([FromRoute]string inventoryId)
         {
             var responseDTO = await _inventoryService.DeleteInventoryAsync(inventoryId);
             return Ok(new ApiResponse<InventoryResponseDTO>(true, "Inventory deleted successfully", responseDTO));

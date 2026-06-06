@@ -13,8 +13,12 @@ namespace AsyncPlate.Core.Mapping
     {
         public OfferProfile()
         {
-            //CreateMap<AddOfferRequestDTO, Offer>();
-            //CreateMap<Offer, OfferResponseDTO>();
+            CreateMap<AddOfferRequestDTO, Offer>();
+            CreateMap<UpdateOfferRequestDTO, Offer>();
+
+
+            CreateMap<Offer, OfferResponseDTO>();
+
             CreateMap<Offer, OfferSummaryDTO>();
         }
     }

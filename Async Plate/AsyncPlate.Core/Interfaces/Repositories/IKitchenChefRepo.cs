@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Core.Interfaces.Repositories
 {
-    public interface IKitchenChefRepo:IBaseRepo<KitchenChef>
+    public interface IKitchenChefRepo : IBaseRepo<KitchenChef>
     {
+        Task<KitchenChef?> GetChefByUserIdAsync(string userId);
+
     }
 }

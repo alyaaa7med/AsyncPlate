@@ -30,11 +30,11 @@ namespace AsyncPlate.Infrastructure.Services
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature);
 
             var claims = new List<Claim>
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+            {
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Email, user.Email!),
             new Claim(ClaimTypes.Role, user.UserType.ToString())//used as => role : chef
-        };
+            };
 
 
             var tokenDescriptor = new SecurityTokenDescriptor

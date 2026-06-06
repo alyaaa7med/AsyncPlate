@@ -3,6 +3,7 @@ using AsyncPlate.Core.DTOs.Admin;
 using AsyncPlate.Core.DTOs.Authentication;
 using AsyncPlate.Core.DTOs.Category;
 using AsyncPlate.Core.DTOs.Inventory;
+using AsyncPlate.Core.DTOs.Offer;
 using AsyncPlate.Core.DTOs.Order;
 using AsyncPlate.Core.DTOs.Product;
 using AsyncPlate.Core.DTOs.Recipe;
@@ -18,6 +19,7 @@ using AsyncPlate.Core.Validators.Admin;
 using AsyncPlate.Core.Validators.Authentication;
 using AsyncPlate.Core.Validators.Category;
 using AsyncPlate.Core.Validators.Inventory;
+using AsyncPlate.Core.Validators.Offer;
 using AsyncPlate.Core.Validators.Order;
 using AsyncPlate.Core.Validators.Product;
 using AsyncPlate.Core.Validators.Recipe;
@@ -101,6 +103,9 @@ builder.Services.AddTransient<IValidator<MakeOrderRequestDTO>, MakeOrderRequestV
 builder.Services.AddTransient<IValidator<MakeOrderRequestDTO>, MakeOrderRequestValidator>();
 builder.Services.AddTransient<IValidator<OrderItemRequestDTO>, OrderItemRequestValidator>();
 builder.Services.AddTransient<IValidator<OrderExtraItemRequestDTO>, OrderExtraItemRequestValidator>();
+builder.Services.AddTransient<IValidator<AddOfferRequestDTO>, AddOfferRequestValidator>();
+builder.Services.AddTransient<IValidator<UpdateOfferRequestDTO>, UpdateOfferRequestValidator>();
+
 
 
 // Thrid Party and AutoMapper [infra + core + api ]

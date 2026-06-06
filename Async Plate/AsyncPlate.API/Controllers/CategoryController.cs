@@ -8,7 +8,7 @@ namespace AsyncPlate.API.Controllers
 {
 
     [ApiController]
-    [Route("api/[controller]s")]
+    [Route("api/Categories")]
     //[Authorize(Roles = "Admin")]
     public class CategoryController : ControllerBase
     {

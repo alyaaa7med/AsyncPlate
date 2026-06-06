@@ -11,7 +11,7 @@ namespace AsyncPlate.Core.DTOs.Order
     {
         public string Description { get; set; } = string.Empty;
 
-        public string CustomerId { get; set; } = string.Empty;
+        //public string CustomerId { get; set; } = string.Empty; will be from jwt token
 
         public List<OrderItemRequestDTO> OrderItems { get; set; } = new();
     }

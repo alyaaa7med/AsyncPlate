@@ -9,5 +9,8 @@ namespace AsyncPlate.Core.Interfaces.Repositories
 {
     public interface IOfferRepo:IBaseRepo<Offer>
     {
+        Task<Offer?> GetOfferByCategoryAsync(string category);
+        IQueryable<Offer> GetOffersByPercentageAsync(decimal percentage);//will be paginated 
+        IQueryable<Offer> GetActiveOffers();
     }
 }
