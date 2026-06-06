@@ -27,6 +27,7 @@ using AsyncPlate.Core.Validators.Supplier;
 using AsyncPlate.Infrastructure;
 using AsyncPlate.Infrastructure.Data;
 using AsyncPlate.Infrastructure.Data.Repositories;
+using AsyncPlate.Infrastructure.Hubs;
 using AsyncPlate.Infrastructure.Services;
 using AsyncPlate.Infrastructure.Services.Settings;
 using FluentValidation;
@@ -80,6 +81,8 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<INotificationSender, SignalRNotificationSender>();
+builder.Services.AddSignalR();
 
 // Validations using FluentValidation [core ]
 
@@ -265,5 +268,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<NotificationHub>("/hubs/notifications");
+
 
 app.Run();

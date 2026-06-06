@@ -55,7 +55,7 @@ namespace AsyncPlate.Core.Services.Implementation
             _inventoryRepo = inventoryRepo;
 
         }
-        public async Task<OrderResponseDTO> MakeOrderAsync(MakeOrderRequestDTO makeOrderRequestDTO, string userId)
+        public async Task<OrderResponseDTO> MakeOrderAsync(MakeOrderRequestDTO makeOrderRequestDTO)
         {
             //check userid from jwt and get customerid from it and set it in the dto 
             //validate dto
@@ -156,6 +156,8 @@ namespace AsyncPlate.Core.Services.Implementation
 
             await _unitOfWork.SaveChangesAsync();
             _logger.LogInformation("Order confirmed successfully. OrderId: {OrderId}", orderId);
+
+            //we need to send realtime notifaction to the chef to cook 
             return _mapper.Map<OrderResponseDTO>(order);
 
         }
@@ -185,13 +187,14 @@ namespace AsyncPlate.Core.Services.Implementation
 
             await _unitOfWork.SaveChangesAsync();
             _logger.LogInformation("Order cancelled successfully. OrderId: {OrderId}", orderId);
+
             return _mapper.Map<OrderResponseDTO>(order);
         }
 
         public async Task CookOrderAsync(string orderId, string userId)
         {
 
-            var order = await _orderRepo.GetOrderWithOrderItemsAndExtraOrderItemsByIdAsync(orderId);
+            var order = await _unitOfWork.orders.GetOrderWithOrderItemsAndExtraOrderItemsByIdAsync(orderId);
 
             if (order == null)
             {
@@ -203,7 +206,7 @@ namespace AsyncPlate.Core.Services.Implementation
                 throw new Exceptions.BadRequestException($"Cannot cook order with status {order.Status}");
             }
 
-            var chef = await _chefRepo.GetChefByUserIdAsync(userId);
+            var chef = await _unitOfWork.kitchenChefs.GetChefByUserIdAsync(userId);
             order.KitchenChef = chef;
 
             //get all products main and extra and remove duplicates
