@@ -68,6 +68,8 @@ builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IOrderItemRepo, OrderItemRepo>();
 builder.Services.AddScoped<IOrderExtraItemRepo, OrderExtraItemRepo>();
+builder.Services.AddScoped<INotificationRepo, NotificationRepo>();
+
 
 builder.Services.AddScoped<IMediaService, MediaService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

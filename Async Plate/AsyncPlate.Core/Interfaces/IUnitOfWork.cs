@@ -26,6 +26,7 @@ namespace AsyncPlate.Core.Interfaces
         ICategoryRepo categories { get; }
         IOfferRepo offers { get; }
         IOrderRepo orders { get; }
+        INotificationRepo notifications { get; }
 
         Task<int> SaveChangesAsync();//int : num of rows affected 
 

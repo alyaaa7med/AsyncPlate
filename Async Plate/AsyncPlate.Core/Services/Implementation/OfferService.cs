@@ -23,14 +23,18 @@ namespace AsyncPlate.Core.Services.Implementation
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddOfferRequestDTO> _validator1;
         private readonly IValidator<UpdateOfferRequestDTO> _validator2;
+        private readonly INotificationSender  _notificationSender;
 
-        public OfferService(ILogger<IOfferService> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<AddOfferRequestDTO> validator1, IValidator<UpdateOfferRequestDTO> validator2)
+        public OfferService(ILogger<IOfferService> logger, IMapper mapper, IUnitOfWork unitOfWork,
+            IValidator<AddOfferRequestDTO> validator1, IValidator<UpdateOfferRequestDTO> validator2
+            ,INotificationSender notificationSender)
         {
             _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _validator1 = validator1;
             _validator2 = validator2;
+            _notificationSender = notificationSender;
         }
 
         public async Task<OfferResponseDTO> AddOfferAsync(AddOfferRequestDTO offerRequestDTO)
@@ -60,10 +64,27 @@ namespace AsyncPlate.Core.Services.Implementation
             //    throw new Exceptions.NotFoundException($"Categories with IDs {string.Join(", ", notFoundCategoryIds)} not found.");
             //}
             offer.Categories = categories;
-
             await _unitOfWork.offers.AddAsync(offer);
 
+            //get vipcustomers
+            var vipCustomerIds = await _unitOfWork.customers.GetVipCustomerIdsAsync();
+
+            //create a list of notifications for vip customers
+            var notifications = vipCustomerIds.Select(customerId => new Notification
+            {
+                CustomerId = customerId,
+                Message = $"New offer available: {offer.Title} with {offer.DiscountPercentage}% discount!",
+            }).ToList();
+
+            await _unitOfWork.notifications.AddRangeAsync(notifications);
+
             await _unitOfWork.SaveChangesAsync();
+
+            //personal realtime notification to vip customers one by one using SignalR hub
+            foreach (var customerId in vipCustomerIds)
+                await _notificationSender.SendToUserAsync(customerId, 
+                        $"New offer available: {offer.Title} with {offer.DiscountPercentage}% discount!");
+
 
             return _mapper.Map<OfferResponseDTO>(offer);
         }

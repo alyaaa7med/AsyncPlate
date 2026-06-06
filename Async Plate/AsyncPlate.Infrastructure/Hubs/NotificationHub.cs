@@ -18,11 +18,11 @@ namespace AsyncPlate.Infrastructure.Hubs
 
             //the user with a role will be added to 2 groups (global per role + personal group)
 
-            if (role == "Customer")
-                await Groups.AddToGroupAsync(Context.ConnectionId, "Customers");
+            //if (role == "Customer")
+            //    await Groups.AddToGroupAsync(Context.ConnectionId, "Customers");
 
-            if (role == "Chef")
-                await Groups.AddToGroupAsync(Context.ConnectionId, "Chefs");
+            //if (role == "Chef")
+            //    await Groups.AddToGroupAsync(Context.ConnectionId, "Chefs");
 
             if (userId != null)
                 await Groups.AddToGroupAsync(Context.ConnectionId, userId);
