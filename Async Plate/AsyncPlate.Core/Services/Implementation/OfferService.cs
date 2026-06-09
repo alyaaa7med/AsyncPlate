@@ -3,12 +3,10 @@ using AsyncPlate.Application.DTOs.Offer;
 using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Application.Interfaces.Services;
 using AsyncPlate.Application.Services.Interfaces;
-//using AsyncPlate.Core.DTOs.Inventory;
-//using AsyncPlate.Core.Entities;
-//using AsyncPlate.Core.Interfaces.Repositories;
 using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
+using Hangfire;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -26,10 +24,11 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IValidator<AddOfferRequestDTO> _validator1;
         private readonly IValidator<UpdateOfferRequestDTO> _validator2;
         private readonly INotificationSender _notificationSender;
+        private readonly IOfferJob _offerJob;
 
         public OfferService(ILogger<IOfferService> logger, IMapper mapper, IUnitOfWork unitOfWork,
             IValidator<AddOfferRequestDTO> validator1, IValidator<UpdateOfferRequestDTO> validator2
-            , INotificationSender notificationSender)
+            , INotificationSender notificationSender, IOfferJob offerJob)
         {
             _logger = logger;
             _mapper = mapper;
@@ -37,6 +36,7 @@ namespace AsyncPlate.Application.Services.Implementation
             _validator1 = validator1;
             _validator2 = validator2;
             _notificationSender = notificationSender;
+            _offerJob = offerJob;
         }
 
         public async Task<OfferResponseDTO> AddOfferAsync(AddOfferRequestDTO offerRequestDTO)
@@ -70,32 +70,15 @@ namespace AsyncPlate.Application.Services.Implementation
             */
             
             offer.Categories = categories;
+
             await _unitOfWork.offers.AddAsync(offer);
-
-            
-            // get vip users
-            var vipCustomerUserIds = await _unitOfWork.customers.GetVipCustomerUserIdsAsync();
-
-            // create notifications
-            var notifications = vipCustomerUserIds.Select(userId => new Notification
-            {
-                userId = userId,
-                Message = $"New offer available: {offer.Title} with {offer.DiscountPercentage}% discount!"
-            }).ToList();
-
-            await _unitOfWork.notifications.AddRangeAsync(notifications);
             await _unitOfWork.SaveChangesAsync();
 
-            // send realtime notifications
-            foreach (var userId in vipCustomerUserIds)
-            {
-                _logger.LogInformation("sending to user with ID: {UserId}", userId);
-                await _notificationSender.SendToUserAsync(
-                    userId,
-                    $"New offer available: {offer.Title} with {offer.DiscountPercentage}% discount!"
-                );
+            _logger.LogInformation("Offer with ID {OfferId} created successfully.", offer.Id);
 
-            }
+            //trigger the offer job to send notifications
+            BackgroundJob.Enqueue<IOfferJob>(job => job.SendOfferNotifications(offer.Id));
+
             return _mapper.Map<OfferResponseDTO>(offer);
         }
 

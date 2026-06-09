@@ -83,6 +83,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<INotificationSender, SignalRNotificationSender>();
+builder.Services.AddScoped<IOfferJob, OfferJob>();
 builder.Services.AddSignalR();
 
 // Validations using FluentValidation [core ]
