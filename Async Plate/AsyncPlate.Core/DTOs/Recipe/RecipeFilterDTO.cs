@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.DTOs.Recipe
+namespace AsyncPlate.Application.DTOs.Recipe
 {
     public class RecipeFilterDTO
     {

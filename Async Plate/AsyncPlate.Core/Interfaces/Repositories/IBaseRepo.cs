@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Interfaces.Repositories
+namespace AsyncPlate.Application.Interfaces.Repositories
 {
     public interface IBaseRepo<T> where T :class
     {

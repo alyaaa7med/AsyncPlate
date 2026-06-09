@@ -4,21 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Entities
+namespace AsyncPlate.Domain.Entities
 {
-    public  class OrderItem
+    public class OrderExtraItem //orderitem : orderextraitem 1:M 
     {
+        //order extra item to know extra items choosen by the userrrr 
         public string Id { get; set; } = Guid.NewGuid().ToString();
-        public int Quantity { get; set; } // of product 
+        public int Quantity { get; set; }
         public decimal UnitPriceAtSale { get; set; }
 
-        public string OrderId { get; set; } = null!;
-        public Order Order { get; set; } = null!;
+        public string OrderItemId { get; set; } = null!;
+        public OrderItem OrderItem { get; set; } = null!;
 
         public string ProductId { get; set; } = null!;
         public Product Product { get; set; } = null!;
 
-        public ICollection<OrderExtraItem> Extras { get; set; }= new List<OrderExtraItem>();
+
 
     }
 }

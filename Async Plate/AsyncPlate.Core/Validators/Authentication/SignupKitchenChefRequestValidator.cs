@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
-using AsyncPlate.Core.DTOs.Authentication;
+using AsyncPlate.Application.DTOs.Authentication;
 
 
-namespace AsyncPlate.Core.Validators.Authentication
+namespace AsyncPlate.Application.Validators.Authentication
 {
     public class SignupKitchenChefRequestValidator : AbstractValidator<SignupKitchenChefRequestDTO>
     {

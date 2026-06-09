@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.DTOs.Category;
+﻿using AsyncPlate.Application.DTOs.Category;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Validators.Category
+namespace AsyncPlate.Application.Validators.Category
 {
     public class AddCategoryRequestValidator :AbstractValidator<AddCategoryRequestDTO>
     {

@@ -1,9 +1,9 @@
 ﻿using AsyncPlate.API.Models;
-using AsyncPlate.Core.Common.DTOs;
-using AsyncPlate.Core.DTOs.Inventory;
-using AsyncPlate.Core.DTOs.Supplier;
-using AsyncPlate.Core.Services.Implementation;
-using AsyncPlate.Core.Services.Interfaces;
+using AsyncPlate.Application.Common.DTOs;
+using AsyncPlate.Application.DTOs.Inventory;
+using AsyncPlate.Application.Services.Interfaces;
+using AsyncPlate.Application.DTOs.Supplier;
+using AsyncPlate.Application.Services.Implementation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

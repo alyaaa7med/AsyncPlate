@@ -1,12 +1,12 @@
-﻿using AsyncPlate.Core.Common.DTOs;
-using AsyncPlate.Core.Common.Extenstions;
-using AsyncPlate.Core.DTOs.Authentication;
-using AsyncPlate.Core.DTOs.Inventory;
-using AsyncPlate.Core.DTOs.Supplier;
-using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Interfaces;
-using AsyncPlate.Core.Interfaces.Services;
-using AsyncPlate.Core.Services.Interfaces;
+﻿using AsyncPlate.Application.Common.DTOs;
+using AsyncPlate.Application.Common.Extenstions;
+using AsyncPlate.Application.DTOs.Inventory;
+using AsyncPlate.Application.DTOs.Supplier;
+using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Services;
+using AsyncPlate.Application.Services.Interfaces;
+//using AsyncPlate.Core.DTOs.Authentication;
+using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Services.Implementation
+namespace AsyncPlate.Application.Services.Implementation
 {
     public class SupplierService : ISupplierService
     {
@@ -96,7 +96,7 @@ namespace AsyncPlate.Core.Services.Implementation
             {
                 suppliersQuery = _unitOfWork.suppliers.FilterByName(filterDto.Name);
             }
-            var pagedResult = await QueryableExtensions.ToPagedResultAsync(suppliersQuery, filterDto.PageNumber, filterDto.PageSize);
+            var pagedResult = await suppliersQuery.ToPagedResultAsync(filterDto.PageNumber, filterDto.PageSize);
 
             var responseDTOs = _mapper.Map<IEnumerable<SupplierResponseDTO>>(pagedResult.Items);
 
@@ -167,7 +167,7 @@ namespace AsyncPlate.Core.Services.Implementation
 
             var inventoriesQuery = _unitOfWork.inventories.GetInventoriesBySupplierId(supplierId);
 
-            var pagedResult = await QueryableExtensions.ToPagedResultAsync(inventoriesQuery, filterDTO.PageNumber, filterDTO.PageSize); 
+            var pagedResult = await inventoriesQuery.ToPagedResultAsync(filterDTO.PageNumber, filterDTO.PageSize); 
             
             var responseDTOs = _mapper.Map<IEnumerable<InventorySummaryDTO>>(pagedResult.Items);
 

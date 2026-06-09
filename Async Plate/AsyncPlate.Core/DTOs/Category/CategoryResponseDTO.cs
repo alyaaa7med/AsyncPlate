@@ -1,13 +1,13 @@
-﻿using AsyncPlate.Core.DTOs.Offer;
-using AsyncPlate.Core.DTOs.Product;
-using AsyncPlate.Core.Entities;
+﻿using AsyncPlate.Application.DTOs.Offer;
+using AsyncPlate.Application.DTOs.Product;
+using AsyncPlate.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.DTOs.Category
+namespace AsyncPlate.Application.DTOs.Category
 {
     public class CategoryResponseDTO
     {

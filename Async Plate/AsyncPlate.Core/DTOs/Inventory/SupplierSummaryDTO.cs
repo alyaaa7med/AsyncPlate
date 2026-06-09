@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.DTOs.Inventory
+namespace AsyncPlate.Application.DTOs.Inventory
 {
     public class SupplierSummaryDTO
     {

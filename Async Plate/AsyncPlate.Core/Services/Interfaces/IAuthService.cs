@@ -1,13 +1,13 @@
 ﻿
-using AsyncPlate.Core.Entities;
+using AsyncPlate.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AsyncPlate.Core.DTOs.Authentication;
+using AsyncPlate.Application.DTOs.Authentication;
 
-namespace AsyncPlate.Core.Services.Interfaces
+namespace AsyncPlate.Application.Services.Interfaces
 {
     public interface IAuthService
     {

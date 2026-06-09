@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.Entities;
+﻿using AsyncPlate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Interfaces.Repositories
+namespace AsyncPlate.Application.Interfaces.Repositories
 {
     public interface IOneTimeTokenRepo : IBaseRepo<OneTimeToken>
     {

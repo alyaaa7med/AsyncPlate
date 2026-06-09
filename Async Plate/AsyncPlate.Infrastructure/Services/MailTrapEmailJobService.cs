@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.Interfaces.Services;
+﻿using AsyncPlate.Application.Interfaces.Services;
 using AsyncPlate.Infrastructure.Services.Settings;
 using Mailtrap;
 using Mailtrap.Emails.Requests;

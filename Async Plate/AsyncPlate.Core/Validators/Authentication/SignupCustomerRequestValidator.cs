@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using AsyncPlate.Core.DTOs.Authentication;
+using AsyncPlate.Application.DTOs.Authentication;
 
-namespace AsyncPlate.Core.Validators.Authentication
+namespace AsyncPlate.Application.Validators.Authentication
 {
     public class SignupCustomerRequestValidator : AbstractValidator<SignupCustomerRequestDTO>
     {

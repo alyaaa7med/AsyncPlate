@@ -1,9 +1,9 @@
-﻿using AsyncPlate.Core.DTOs;
-using AsyncPlate.Core.DTOs.Product;
-using AsyncPlate.Core.DTOs.Recipe;
-using AsyncPlate.Core.DTOs.Supplier;
-using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Interfaces.Repositories;
+﻿using AsyncPlate.Application.DTOs;
+using AsyncPlate.Application.DTOs.Product;
+using AsyncPlate.Application.DTOs.Recipe;
+using AsyncPlate.Application.DTOs.Supplier;
+using AsyncPlate.Application.Interfaces.Repositories;
+using AsyncPlate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AsyncPlate.Core.DTOs.Order;
+using AsyncPlate.Application.DTOs.Order;
+using AsyncPlate.Application.Validators.Order;
 using FluentValidation;
-namespace AsyncPlate.Core.Validators.Order
+namespace AsyncPlate.Application.Validators.Order
 {
     public class MakeOrderRequestValidator : AbstractValidator<MakeOrderRequestDTO>
     {

@@ -1,11 +1,11 @@
-﻿using AsyncPlate.Core.DTOs.Order;
+﻿using AsyncPlate.Application.DTOs.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Services.Interfaces
+namespace AsyncPlate.Application.Services.Interfaces
 {
     public interface IOrderService
     {

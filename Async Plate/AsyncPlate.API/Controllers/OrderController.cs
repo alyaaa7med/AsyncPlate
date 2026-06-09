@@ -1,8 +1,8 @@
 ﻿using AsyncPlate.API.Models;
-using AsyncPlate.Core.DTOs.Order;
-using AsyncPlate.Core.DTOs.Product;
-using AsyncPlate.Core.Services.Implementation;
-using AsyncPlate.Core.Services.Interfaces;
+using AsyncPlate.Application.DTOs.Order;
+using AsyncPlate.Application.Services.Interfaces;
+using AsyncPlate.Application.DTOs.Product;
+using AsyncPlate.Application.Services.Implementation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

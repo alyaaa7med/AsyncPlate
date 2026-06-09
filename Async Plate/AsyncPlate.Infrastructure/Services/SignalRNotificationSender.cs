@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.Services.Interfaces;
+﻿using AsyncPlate.Application.Interfaces.Services;
 using AsyncPlate.Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;

@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.DTOs.Product;
+﻿using AsyncPlate.Application.DTOs.Product;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Validators.Product
+namespace AsyncPlate.Application.Validators.Product
 {
     public class AddProductRequestValidator : AbstractValidator<AddProductRequestDTO>
     {

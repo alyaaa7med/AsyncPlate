@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AsyncPlate.Application.DTOs.Authentication;
+using AsyncPlate.Domain.Entities;
 
-using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.DTOs.Authentication;
-
-namespace AsyncPlate.Core.Mapping
+namespace AsyncPlate.Application.Mapping
 {
     public class CustomerProfile : Profile
     {

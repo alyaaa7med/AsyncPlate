@@ -28,7 +28,7 @@ namespace AsyncPlate.Infrastructure.Hubs
             if (role == "Chef")
                 await Groups.AddToGroupAsync(Context.ConnectionId, "Chefs");
 
-            // manually add authenticated user to personal group but signalr add this automatically 
+            // manually add authenticated user to personal group ((but)) signalr add this automatically 
 
             //var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             //if (userId != null)

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.DTOs.Offer
+namespace AsyncPlate.Application.DTOs.Offer
 {
     public class OfferSummaryDTO
     {

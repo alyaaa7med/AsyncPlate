@@ -1,17 +1,16 @@
-﻿using AsyncPlate.Core.DTOs.Authentication;
-using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Exceptions;
-using AsyncPlate.Core.Interfaces;
-using AsyncPlate.Core.Interfaces.Services;
-using AsyncPlate.Core.Services.Interfaces;
+﻿using AsyncPlate.Application.DTOs.Authentication;
+using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Services;
+using AsyncPlate.Application.Services.Interfaces;
+using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.WebUtilities; 
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System.Text;
-namespace AsyncPlate.Core.Services.Implementation
+namespace AsyncPlate.Application.Services.Implementation
 {
     public class AuthService : IAuthService
     {
@@ -388,12 +387,12 @@ namespace AsyncPlate.Core.Services.Implementation
                 var result = await _userManager.RemovePasswordAsync(user);
                 if (!result.Succeeded)
                 {
-                    throw new InternalServerException("Failed to reset password.");
+                    throw new Exceptions.InternalServerException("Failed to reset password.");
                 }
                 var addResult = await _userManager.AddPasswordAsync(user, requestDTO.NewPassword);
                 if (!addResult.Succeeded)
                 {
-                    throw new InternalServerException("Failed to set new password.");
+                    throw new Exceptions.InternalServerException("Failed to set new password.");
                 }
                 ott.IsActive = false;
                 ott.ExpiryDate = DateTime.UtcNow;

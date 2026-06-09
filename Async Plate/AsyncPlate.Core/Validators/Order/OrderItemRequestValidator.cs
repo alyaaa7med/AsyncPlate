@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.DTOs.Order;
+﻿using AsyncPlate.Application.DTOs.Order;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Validators.Order
+namespace AsyncPlate.Application.Validators.Order
 {
     public class OrderItemRequestValidator : AbstractValidator<OrderItemRequestDTO>
     {

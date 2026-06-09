@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.DTOs.Recipe;
+﻿using AsyncPlate.Application.DTOs.Recipe;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Validators.Recipe
+namespace AsyncPlate.Application.Validators.Recipe
 {
     public class AddRecipeRequestValidator : AbstractValidator<AddRecipeRequestDTO>
     {

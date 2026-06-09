@@ -15,7 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AsyncPlate.Core\AsyncPlate.Core.csproj" />
+		<ProjectReference Include="..\AsyncPlate.Core\AsyncPlate.Application.csproj" />
 		<ProjectReference Include="..\AsyncPlate.Infrastructure\AsyncPlate.Infrastructure.csproj" />
 	</ItemGroup>
 

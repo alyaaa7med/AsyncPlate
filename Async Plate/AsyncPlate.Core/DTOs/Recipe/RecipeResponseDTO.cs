@@ -1,14 +1,14 @@
-﻿using AsyncPlate.Core.DTOs.Inventory;
-using AsyncPlate.Core.DTOs.Product;
-using AsyncPlate.Core.DTOs.Supplier;
-using AsyncPlate.Core.Entities;
+﻿using AsyncPlate.Application.DTOs.Product;
+using AsyncPlate.Application.DTOs.Supplier;
+using AsyncPlate.Application.DTOs.Inventory;
+using AsyncPlate.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.DTOs.Recipe
+namespace AsyncPlate.Application.DTOs.Recipe
 {
     public class RecipeResponseDTO
     {

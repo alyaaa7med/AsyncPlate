@@ -1,6 +1,6 @@
-﻿using AsyncPlate.Core.DTOs.Inventory;
-using AsyncPlate.Core.DTOs.Supplier;
-using AsyncPlate.Core.Entities;
+﻿using AsyncPlate.Application.DTOs.Inventory;
+using AsyncPlate.Application.DTOs.Supplier;
+using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Mapping
+namespace AsyncPlate.Application.Mapping
 {
     public class InventoryProfile : Profile
     {

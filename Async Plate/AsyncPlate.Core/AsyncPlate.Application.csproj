@@ -15,5 +15,10 @@
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.25" />
 	  <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.27" />
   </ItemGroup>
+	
+
+  <ItemGroup>
+    <ProjectReference Include="..\AsyncPlate.Domain\AsyncPlate.Domain.csproj" />
+  </ItemGroup>
 
 </Project>

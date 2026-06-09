@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.DTOs.Supplier
+namespace AsyncPlate.Application.DTOs.Supplier
 {
     public class UpdateSupplierRequestDTO
     {

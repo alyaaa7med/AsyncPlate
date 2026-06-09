@@ -1,12 +1,12 @@
-﻿using AsyncPlate.Core.Common.DTOs;
-using AsyncPlate.Core.Common.Extenstions;
-using AsyncPlate.Core.DTOs.Authentication;
-using AsyncPlate.Core.DTOs.Inventory;
-using AsyncPlate.Core.DTOs.Supplier;
-using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Interfaces;
-using AsyncPlate.Core.Interfaces.Services;
-using AsyncPlate.Core.Services.Interfaces;
+﻿using AsyncPlate.Application.Common.DTOs;
+using AsyncPlate.Application.Common.Extenstions;
+using AsyncPlate.Application.DTOs.Inventory;
+using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Services.Interfaces;
+//using AsyncPlate.Core.DTOs.Authentication;
+//using AsyncPlate.Core.DTOs.Supplier;
+//using AsyncPlate.Core.Interfaces.Services;
+using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Services.Implementation
+namespace AsyncPlate.Application.Services.Implementation
 {
     public class InventoryService : IInventoryService
     {
@@ -106,7 +106,7 @@ namespace AsyncPlate.Core.Services.Implementation
             {
                 inventoriesQuery = _unitOfWork.inventories.FilterByName(filterDto.Name);
             }
-            var pagedResult = await QueryableExtensions.ToPagedResultAsync(inventoriesQuery, filterDto.PageNumber, filterDto.PageSize);
+            var pagedResult = await inventoriesQuery.ToPagedResultAsync(filterDto.PageNumber, filterDto.PageSize);
 
             var responseDTOs = _mapper.Map<IEnumerable<InventoryResponseDTO>>(pagedResult.Items);
             _logger.LogInformation("Retrieved {Count} inventories (Page {PageNumber} of {TotalPages})", responseDTOs.Count(), filterDto.PageNumber, pagedResult.TotalPages);
@@ -175,7 +175,7 @@ namespace AsyncPlate.Core.Services.Implementation
             {
                 inventoriesQuery = _unitOfWork.inventories.FilterByName(filterDto.Name);
             }
-            var pagedResult = await QueryableExtensions.ToPagedResultAsync(inventoriesQuery, filterDto.PageNumber, filterDto.PageSize);
+            var pagedResult = await inventoriesQuery.ToPagedResultAsync(filterDto.PageNumber, filterDto.PageSize);
             
             var responseDTOs = _mapper.Map<IEnumerable<InventoryResponseDTO>>(pagedResult.Items);
             _logger.LogInformation("Retrieved {Count} low stock inventories (Page {PageNumber} of {TotalPages})", responseDTOs.Count(), filterDto.PageNumber, pagedResult.TotalPages);

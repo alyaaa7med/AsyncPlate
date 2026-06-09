@@ -1,5 +1,5 @@
-﻿using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Interfaces.Services;
+﻿using AsyncPlate.Application.Interfaces.Services;
+using AsyncPlate.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;

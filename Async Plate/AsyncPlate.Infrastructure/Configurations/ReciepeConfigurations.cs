@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.Entities;
+﻿using AsyncPlate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Infrastructure.Configrations
+namespace AsyncPlate.Infrastructure.Configurations
 {
     public class RecipeConfigurations : IEntityTypeConfiguration<Recipe>
     {

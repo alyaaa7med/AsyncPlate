@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Services.Interfaces
+namespace AsyncPlate.Application.Interfaces.Services
 {
     public interface INotificationSender
     {

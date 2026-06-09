@@ -1,7 +1,7 @@
 ﻿using AsyncPlate.API.Models;
-using AsyncPlate.Core.DTOs.Category;
-using AsyncPlate.Core.DTOs.Offer;
-using AsyncPlate.Core.Services.Interfaces;
+using AsyncPlate.Application.DTOs.Offer;
+using AsyncPlate.Application.Services.Interfaces;
+using AsyncPlate.Application.DTOs.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

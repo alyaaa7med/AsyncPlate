@@ -1,13 +1,13 @@
-﻿using AsyncPlate.Core.Common.DTOs;
-using AsyncPlate.Core.DTOs.Inventory;
-using AsyncPlate.Core.DTOs.Supplier;
+﻿using AsyncPlate.Application.Common.DTOs;
+using AsyncPlate.Application.DTOs.Inventory;
+using AsyncPlate.Application.DTOs.Supplier;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Services.Interfaces
+namespace AsyncPlate.Application.Services.Interfaces
 {
     public interface ISupplierService
     {

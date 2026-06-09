@@ -1,10 +1,9 @@
-﻿using AsyncPlate.Core.DTOs.Inventory;
-using AsyncPlate.Core.DTOs.Order;
-using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Exceptions;
-using AsyncPlate.Core.Interfaces;
-using AsyncPlate.Core.Interfaces.Repositories;
-using AsyncPlate.Core.Services.Interfaces;
+﻿using AsyncPlate.Application.DTOs.Order;
+using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Repositories;
+using AsyncPlate.Application.Services.Interfaces;
+//using AsyncPlate.Application.Exceptions;
+using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -15,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Services.Implementation
+namespace AsyncPlate.Application.Services.Implementation
 {
     public class OrderService : IOrderService
     {
@@ -151,7 +150,7 @@ namespace AsyncPlate.Core.Services.Implementation
           
             order.Status = OrderStatus.Confirmed;
             order.Customer = customer;
-            customer.LoyaltyPoints += (int)(order.TotalAmountPrice); // 1 point for every 1 currency units spent
+            customer.LoyaltyPoints += (int)order.TotalAmountPrice; // 1 point for every 1 currency units spent
             //no need to update customer/order as it is tracked by getting them
 
             await _unitOfWork.SaveChangesAsync();

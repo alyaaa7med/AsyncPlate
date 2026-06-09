@@ -1,6 +1,6 @@
-﻿using AsyncPlate.Core.Interfaces;
-using AsyncPlate.Core.Interfaces.Repositories;
-using AsyncPlate.Core.Services.Implementation;
+﻿using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Repositories;
+using AsyncPlate.Application.Services.Implementation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Identity.Client;

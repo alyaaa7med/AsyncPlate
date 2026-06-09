@@ -1,7 +1,7 @@
 ﻿using AsyncPlate.API.Models;
-using AsyncPlate.Core.Common.DTOs;
-using AsyncPlate.Core.DTOs.Recipe;
-using AsyncPlate.Core.Services.Interfaces;
+using AsyncPlate.Application.Common.DTOs;
+using AsyncPlate.Application.DTOs.Recipe;
+using AsyncPlate.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;

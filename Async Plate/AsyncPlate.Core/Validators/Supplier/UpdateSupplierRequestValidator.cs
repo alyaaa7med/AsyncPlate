@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.DTOs.Supplier;
+﻿using AsyncPlate.Application.DTOs.Supplier;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Validators.Supplier
+namespace AsyncPlate.Application.Validators.Supplier
 {
     public class UpdateSupplierRequestValidator : AbstractValidator<UpdateSupplierRequestDTO>
     {

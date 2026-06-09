@@ -1,10 +1,12 @@
-﻿using AsyncPlate.Core.Common.DTOs;
-using AsyncPlate.Core.DTOs.Inventory;
-using AsyncPlate.Core.DTOs.Offer;
-using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Interfaces;
-using AsyncPlate.Core.Interfaces.Repositories;
-using AsyncPlate.Core.Services.Interfaces;
+﻿using AsyncPlate.Application.Common.DTOs;
+using AsyncPlate.Application.DTOs.Offer;
+using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Services;
+using AsyncPlate.Application.Services.Interfaces;
+//using AsyncPlate.Core.DTOs.Inventory;
+//using AsyncPlate.Core.Entities;
+//using AsyncPlate.Core.Interfaces.Repositories;
+using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -14,20 +16,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Services.Implementation
+namespace AsyncPlate.Application.Services.Implementation
 {
-    public class OfferService:IOfferService
+    public class OfferService : IOfferService
     {
         private readonly ILogger<IOfferService> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddOfferRequestDTO> _validator1;
         private readonly IValidator<UpdateOfferRequestDTO> _validator2;
-        private readonly INotificationSender  _notificationSender;
+        private readonly INotificationSender _notificationSender;
 
         public OfferService(ILogger<IOfferService> logger, IMapper mapper, IUnitOfWork unitOfWork,
             IValidator<AddOfferRequestDTO> validator1, IValidator<UpdateOfferRequestDTO> validator2
-            ,INotificationSender notificationSender)
+            , INotificationSender notificationSender)
         {
             _logger = logger;
             _mapper = mapper;
@@ -49,6 +51,7 @@ namespace AsyncPlate.Core.Services.Implementation
                         g => g.Key,
                         g => g.Select(e => e.ErrorMessage).ToArray()
                     );
+                _logger.LogWarning("Validation failed for AddOfferRequestDTO: {Errors}", errorsDictionary);
                 throw new Exceptions.ValidationException(errorsDictionary);
             }
 
@@ -56,6 +59,7 @@ namespace AsyncPlate.Core.Services.Implementation
             var offer = _mapper.Map<Offer>(offerRequestDTO);
 
             var categories = await _unitOfWork.categories.GetCategoriesByIdsAsync(offerRequestDTO.CategoryIds);
+            /*
             //chef if categories count is less than categoryIds count then some categories are not found
             if (categories.Count() < offerRequestDTO.CategoryIds.Count)
             {
@@ -63,10 +67,12 @@ namespace AsyncPlate.Core.Services.Implementation
                 var notFoundCategoryIds = offerRequestDTO.CategoryIds.Where(id => !foundCategoryIds.Contains(id));
                 throw new Exceptions.NotFoundException($"Categories with IDs {string.Join(", ", notFoundCategoryIds)} not found.");
             }
-
+            */
+            
             offer.Categories = categories;
             await _unitOfWork.offers.AddAsync(offer);
 
+            
             // get vip users
             var vipCustomerUserIds = await _unitOfWork.customers.GetVipCustomerUserIdsAsync();
 
@@ -83,7 +89,7 @@ namespace AsyncPlate.Core.Services.Implementation
             // send realtime notifications
             foreach (var userId in vipCustomerUserIds)
             {
-                //_logger.LogInformation("sending to user with ID: {UserId}", userId);
+                _logger.LogInformation("sending to user with ID: {UserId}", userId);
                 await _notificationSender.SendToUserAsync(
                     userId,
                     $"New offer available: {offer.Title} with {offer.DiscountPercentage}% discount!"
@@ -93,7 +99,8 @@ namespace AsyncPlate.Core.Services.Implementation
             return _mapper.Map<OfferResponseDTO>(offer);
         }
 
-        public async Task<OfferResponseDTO> GetOfferByIdAsync(string id){
+        public async Task<OfferResponseDTO> GetOfferByIdAsync(string id)
+        {
             throw new NotImplementedException();
         }
 
@@ -101,12 +108,13 @@ namespace AsyncPlate.Core.Services.Implementation
         {
             throw new NotImplementedException();
         }
-        public async Task<PagedResult<OfferResponseDTO>> GetAllOffersAsync(OfferFilterDTO offerFilter)        {
+        public async Task<PagedResult<OfferResponseDTO>> GetAllOffersAsync(OfferFilterDTO offerFilter)
+        {
             throw new NotImplementedException();
         }
-        
 
-public async Task<OfferResponseDTO> UpdateOfferAsync(UpdateOfferRequestDTO offerRequestDTO)
+
+        public async Task<OfferResponseDTO> UpdateOfferAsync(UpdateOfferRequestDTO offerRequestDTO)
         {
             throw new NotImplementedException();
         }

@@ -1,11 +1,11 @@
-﻿using AsyncPlate.Core.Interfaces.Repositories;
+﻿using AsyncPlate.Application.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Interfaces
+namespace AsyncPlate.Application.Interfaces
 {
     public interface IUnitOfWork
     {

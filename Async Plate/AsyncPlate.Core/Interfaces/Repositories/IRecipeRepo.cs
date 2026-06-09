@@ -1,5 +1,5 @@
-﻿using AsyncPlate.Core.DTOs.Recipe;
-using AsyncPlate.Core.Entities;
+﻿using AsyncPlate.Application.DTOs.Recipe;
+using AsyncPlate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Interfaces.Repositories
+namespace AsyncPlate.Application.Interfaces.Repositories
 {
     public interface IRecipeRepo : IBaseRepo<Recipe>
     {

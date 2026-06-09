@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.Common.DTOs;
+﻿using AsyncPlate.Application.Common.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Common.Extenstions
+namespace AsyncPlate.Application.Common.Extenstions
 {
 
     public static class QueryableExtensions
@@ -27,7 +27,7 @@ namespace AsyncPlate.Core.Common.Extenstions
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalCount = totalCount,
-                TotalPages = (int)(Math.Ceiling(totalCount / (double)pageSize))
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
             };
         }
     }

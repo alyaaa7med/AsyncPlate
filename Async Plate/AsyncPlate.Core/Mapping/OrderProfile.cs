@@ -1,6 +1,6 @@
-﻿using AsyncPlate.Core.DTOs.Order;
-using AsyncPlate.Core.DTOs.Product;
-using AsyncPlate.Core.Entities;
+﻿using AsyncPlate.Application.DTOs.Order;
+using AsyncPlate.Application.DTOs.Product;
+using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Mapping
+namespace AsyncPlate.Application.Mapping
 {
     public class OrderProfile : Profile
     {

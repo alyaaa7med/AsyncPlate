@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.Interfaces.Repositories;
+﻿using AsyncPlate.Application.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.DTOs.Offer;
+﻿using AsyncPlate.Application.DTOs.Offer;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Validators.Offer
+namespace AsyncPlate.Application.Validators.Offer
 {
     public class AddOfferRequestValidator : AbstractValidator<AddOfferRequestDTO>
     {

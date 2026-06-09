@@ -1,5 +1,5 @@
-﻿using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Interfaces.Repositories;
+﻿using AsyncPlate.Application.Interfaces.Repositories;
+using AsyncPlate.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

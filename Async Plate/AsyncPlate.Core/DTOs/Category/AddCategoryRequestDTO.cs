@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.DTOs.Category
+namespace AsyncPlate.Application.DTOs.Category
 {
     public class AddCategoryRequestDTO
     {

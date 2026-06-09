@@ -1,7 +1,7 @@
 ﻿using AsyncPlate.API.Models;
-using AsyncPlate.Core.DTOs.Authentication;
-using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Services.Interfaces;
+using AsyncPlate.Application.DTOs.Authentication;
+using AsyncPlate.Application.Services.Interfaces;
+using AsyncPlate.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

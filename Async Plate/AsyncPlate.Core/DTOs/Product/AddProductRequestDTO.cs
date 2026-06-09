@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.DTOs.Product
+namespace AsyncPlate.Application.DTOs.Product
 {
     public class AddProductRequestDTO
     {

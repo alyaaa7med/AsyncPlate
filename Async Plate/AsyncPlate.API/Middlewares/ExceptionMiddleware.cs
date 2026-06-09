@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.Exceptions;
+﻿using AsyncPlate.Application.Exceptions;
 using System.ComponentModel;
 using System.Net;
 using System.Text.Json;

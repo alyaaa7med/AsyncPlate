@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.DTOs.Authentication;
+﻿using AsyncPlate.Application.DTOs.Authentication;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Validators.Authentication
+namespace AsyncPlate.Application.Validators.Authentication
 {
     public class ForgetPasswordRequestValidator : AbstractValidator<ForgetPasswordRequestDTO>
     {

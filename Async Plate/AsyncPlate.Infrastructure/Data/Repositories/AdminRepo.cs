@@ -1,4 +1,5 @@
-﻿using AsyncPlate.Core.Interfaces.Repositories;
+﻿using AsyncPlate.Application.Interfaces.Repositories;
+using AsyncPlate.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Infrastructure.Data.Repositories
 {
-    public class AdminRepo : GenericRepo<Core.Entities.Admin>, IAdminRepo
+    public class AdminRepo : GenericRepo<Admin>, IAdminRepo
     {
         public AdminRepo(AppDbContext context) : base(context)
         {

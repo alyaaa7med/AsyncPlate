@@ -1,9 +1,9 @@
-﻿using AsyncPlate.Core.DTOs.Product;
-using AsyncPlate.Core.DTOs.Recipe;
-using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Interfaces;
-using AsyncPlate.Core.Interfaces.Services;
-using AsyncPlate.Core.Services.Interfaces;
+﻿using AsyncPlate.Application.DTOs.Product;
+using AsyncPlate.Application.DTOs.Recipe;
+using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Services;
+using AsyncPlate.Application.Services.Interfaces;
+using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Services.Implementation
+namespace AsyncPlate.Application.Services.Implementation
 {
     public class ProductService : IProductService
     {

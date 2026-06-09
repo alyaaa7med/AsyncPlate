@@ -1,11 +1,11 @@
-﻿using AsyncPlate.Core.DTOs.Authentication;
+﻿using AsyncPlate.Application.DTOs.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.DTOs.Admin
+namespace AsyncPlate.Application.DTOs.Admin
 {
     public class CreateAdminRequestDTO
     {

@@ -1,13 +1,13 @@
-﻿using AsyncPlate.Core.Common.DTOs;
-using AsyncPlate.Core.DTOs.Category;
-using AsyncPlate.Core.DTOs.Offer;
+﻿using AsyncPlate.Application.Common.DTOs;
+using AsyncPlate.Application.DTOs.Offer;
+//using AsyncPlate.Application.DTOs.Category;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.Services.Interfaces
+namespace AsyncPlate.Application.Services.Interfaces
 {
     public interface IOfferService
     {

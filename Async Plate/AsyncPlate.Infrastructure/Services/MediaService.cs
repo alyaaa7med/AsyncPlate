@@ -1,4 +1,4 @@
-﻿using AsyncPlate.Core.Interfaces.Services;
+﻿using AsyncPlate.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncPlate.Core.DTOs.Authentication
+namespace AsyncPlate.Application.DTOs.Authentication
 {
     public class LoginRequestDTO
     {

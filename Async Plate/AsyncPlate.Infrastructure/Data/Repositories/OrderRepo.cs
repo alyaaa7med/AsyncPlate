@@ -1,6 +1,6 @@
-﻿using AsyncPlate.Core.DTOs.Order;
-using AsyncPlate.Core.Entities;
-using AsyncPlate.Core.Interfaces.Repositories;
+﻿using AsyncPlate.Application.Interfaces.Repositories;
+using AsyncPlate.Application.DTOs.Order;
+using AsyncPlate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

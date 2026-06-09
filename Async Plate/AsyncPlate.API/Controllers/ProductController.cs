@@ -1,8 +1,8 @@
 ﻿using AsyncPlate.API.Models;
-using AsyncPlate.Core.DTOs.Product;
-using AsyncPlate.Core.DTOs.Recipe;
-using AsyncPlate.Core.Services.Implementation;
-using AsyncPlate.Core.Services.Interfaces;
+using AsyncPlate.Application.DTOs.Product;
+using AsyncPlate.Application.DTOs.Recipe;
+using AsyncPlate.Application.Services.Interfaces;
+using AsyncPlate.Application.Services.Implementation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AsyncPlate.API.Controllers
