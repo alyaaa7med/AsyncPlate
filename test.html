@@ -1,0 +1,19 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+
+<script>
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyOGNhMDJkYi0zYWE3LTQzYTAtOTA2NC1jZGJhNGE1YjNkYmEiLCJlbWFpbCI6ImFseWFhQGdtYWlsLmNvbSIsInJvbGUiOiJDdXN0b21lciIsIm5iZiI6MTc4MDk5NjA1NywiZXhwIjoxNzgxMDAzMjU3LCJpYXQiOjE3ODA5OTYwNTcsImlzcyI6ImxvY2FsaG9zdCIsImF1ZCI6ImxvY2FsaG9zdCJ9.SKCECMn4PnVI4zO-FP0A7-uRNQzSkaMfomvoKo_Z2K4";
+
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("https://localhost:51499/hubs/notifications", {
+        accessTokenFactory: () => token
+    })
+    .build();
+
+connection.on("ReceiveNotification", msg => {
+    console.log("📩 Notification received:", msg);
+});
+
+connection.start()
+    .then(() => console.log("✅ Connected to SignalR"))
+    .catch(err => console.error("❌ Connection error:", err));
+</script>

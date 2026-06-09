@@ -57,35 +57,39 @@ namespace AsyncPlate.Core.Services.Implementation
 
             var categories = await _unitOfWork.categories.GetCategoriesByIdsAsync(offerRequestDTO.CategoryIds);
             //chef if categories count is less than categoryIds count then some categories are not found
-            //if (categories.Count() < offerRequestDTO.CategoryIds.Count)
-            //{
-            //    var foundCategoryIds = categories.Select(c => c.Id).ToHashSet();
-            //    var notFoundCategoryIds = offerRequestDTO.CategoryIds.Where(id => !foundCategoryIds.Contains(id));
-            //    throw new Exceptions.NotFoundException($"Categories with IDs {string.Join(", ", notFoundCategoryIds)} not found.");
-            //}
+            if (categories.Count() < offerRequestDTO.CategoryIds.Count)
+            {
+                var foundCategoryIds = categories.Select(c => c.Id).ToHashSet();
+                var notFoundCategoryIds = offerRequestDTO.CategoryIds.Where(id => !foundCategoryIds.Contains(id));
+                throw new Exceptions.NotFoundException($"Categories with IDs {string.Join(", ", notFoundCategoryIds)} not found.");
+            }
+
             offer.Categories = categories;
             await _unitOfWork.offers.AddAsync(offer);
 
-            //get vipcustomers
-            var vipCustomerIds = await _unitOfWork.customers.GetVipCustomerIdsAsync();
+            // get vip users
+            var vipCustomerUserIds = await _unitOfWork.customers.GetVipCustomerUserIdsAsync();
 
-            //create a list of notifications for vip customers
-            var notifications = vipCustomerIds.Select(customerId => new Notification
+            // create notifications
+            var notifications = vipCustomerUserIds.Select(userId => new Notification
             {
-                CustomerId = customerId,
-                Message = $"New offer available: {offer.Title} with {offer.DiscountPercentage}% discount!",
+                userId = userId,
+                Message = $"New offer available: {offer.Title} with {offer.DiscountPercentage}% discount!"
             }).ToList();
 
             await _unitOfWork.notifications.AddRangeAsync(notifications);
-
             await _unitOfWork.SaveChangesAsync();
 
-            //personal realtime notification to vip customers one by one using SignalR hub
-            foreach (var customerId in vipCustomerIds)
-                await _notificationSender.SendToUserAsync(customerId, 
-                        $"New offer available: {offer.Title} with {offer.DiscountPercentage}% discount!");
+            // send realtime notifications
+            foreach (var userId in vipCustomerUserIds)
+            {
+                //_logger.LogInformation("sending to user with ID: {UserId}", userId);
+                await _notificationSender.SendToUserAsync(
+                    userId,
+                    $"New offer available: {offer.Title} with {offer.DiscountPercentage}% discount!"
+                );
 
-
+            }
             return _mapper.Map<OfferResponseDTO>(offer);
         }
 
@@ -100,23 +104,7 @@ namespace AsyncPlate.Core.Services.Implementation
         public async Task<PagedResult<OfferResponseDTO>> GetAllOffersAsync(OfferFilterDTO offerFilter)        {
             throw new NotImplementedException();
         }
-        //{
-  //"isSuccess": true,
-  //"message": "Offer created successfully",
-  //"data": {
-  //  "id": "c738aacc-2dac-4275-a106-3693204d044a",
-  //  "title": "",
-  //  "discountPercentage": 10,
-  //  "startDate": "2026-06-04T17:43:33.867Z",
-  //  "endDate": "2026-06-05T16:43:59",
-  //  "isActive": true,
-  //  "categories": [
-  //    {
-  //      "id": "cefecc1e-c622-4eff-b354-8f2d911de78a",
-  //      "name": "cakes"
-  //    }
-  //  ]
-  //}
+        
 
 public async Task<OfferResponseDTO> UpdateOfferAsync(UpdateOfferRequestDTO offerRequestDTO)
         {

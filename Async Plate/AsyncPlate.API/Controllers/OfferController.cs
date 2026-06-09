@@ -2,6 +2,7 @@
 using AsyncPlate.Core.DTOs.Category;
 using AsyncPlate.Core.DTOs.Offer;
 using AsyncPlate.Core.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AsyncPlate.API.Controllers
@@ -20,6 +21,7 @@ namespace AsyncPlate.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddOffer([FromBody] AddOfferRequestDTO offerRequestDTO)
         {
             var responseDto = await _offerService.AddOfferAsync(offerRequestDTO);

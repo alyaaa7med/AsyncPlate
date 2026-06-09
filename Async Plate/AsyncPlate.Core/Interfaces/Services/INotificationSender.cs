@@ -10,5 +10,6 @@ namespace AsyncPlate.Core.Services.Interfaces
     {
         Task SendToGroupAsync(string group, string message);
         Task SendToUserAsync(string userId, string message);
+        Task SendToAllAsync(string message);
     }
 }

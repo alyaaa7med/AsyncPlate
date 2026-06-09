@@ -22,11 +22,13 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
             return await _context.Customers.FirstOrDefaultAsync(c => c.AppUserId == userId);
         }
 
-        public async Task<IEnumerable<string>> GetVipCustomerIdsAsync()
+        public async Task<IEnumerable<string>> GetVipCustomerUserIdsAsync()
         {
-            return await _context.Customers.Where(u => u.LoyaltyPoints > 1220)
-                                           .Select(u => u.Id)
-                                           .ToListAsync();
+            return await _context.Customers
+                //.AsNoTracking()
+                .Where(c => c.LoyaltyPoints > 1220)
+                .Select(c => c.AppUserId) 
+                .ToListAsync();
         }
     }
 

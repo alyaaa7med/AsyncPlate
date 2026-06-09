@@ -21,9 +21,9 @@ namespace AsyncPlate.Infrastructure.Configrations
 
             builder.Property(n => n.IsRead).IsRequired();
 
-            builder.HasOne(n => n.Customer)
+            builder.HasOne(n => n.User)
                    .WithMany(c => c.Notifications)
-                   .HasForeignKey(n => n.CustomerId)
+                   .HasForeignKey(n => n.userId)
                    .IsRequired()
                    .OnDelete(DeleteBehavior.Restrict);//was cascade
         }

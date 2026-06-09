@@ -18,7 +18,6 @@ namespace AsyncPlate.Core.Entities
 
         public ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     }
 }

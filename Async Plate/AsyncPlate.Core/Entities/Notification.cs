@@ -13,7 +13,7 @@ namespace AsyncPlate.Core.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsRead { get; set; } = false;
 
-        public string CustomerId { get; set; } = null!;
-        public Customer Customer { get; set; } = null!;
+        public string userId { get; set; } = null!;
+        public AppUser User { get; set; } = null!;
     }
 }

@@ -149,6 +149,18 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<OrderProfile>();
 }, typeof(Program));
 
+//signalR
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("cors", policy =>
+    {
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .SetIsOriginAllowed(_ => true);
+    });
+});
 
 //hang fire
 builder.Services.AddHangfire(config =>
@@ -205,10 +217,33 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = builder.Configuration["Jwt:Issuer"]!,
-        ValidAudience = builder.Configuration["Jwt:Audience"]!,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+        )
+    };
+    // it is for signalR to allow passing token in query string for websocket
+    // connections (because headers are not supported in websocket)
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            if (!string.IsNullOrEmpty(accessToken) &&
+                context.HttpContext.Request.Path.StartsWithSegments("/hubs/notifications"))
+            {
+                context.Token = accessToken;
+            }
+
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -268,7 +303,7 @@ app.UseRouting();
 // 3. «·√„«‰ (·«“„ »⁄œ «·‹ Routing Êﬁ»· «·‹ Endpoints)
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseCors("cors");
 app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notifications");
 
