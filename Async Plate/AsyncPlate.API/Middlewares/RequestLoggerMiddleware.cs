@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Azure.Core;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace AsyncPlate.API.Middlewares
@@ -14,29 +15,27 @@ namespace AsyncPlate.API.Middlewares
             _logger = logger;
         }
 
-
+        //RequestLogger → logs request, response time, status code for successful requests.
 
         public async Task InvokeAsync(HttpContext context)
         {
-
             var stopwatch = Stopwatch.StartNew();
-            try
-            {
-                _logger.LogInformation("HTTP {Method} {Path} requested",
-            context.Request.Method, context.Request.Path);
 
-                await _next(context);
-            }
-            finally // This runs even if a crash happens! ( exmiddleware: try (loggmid: try   finally)  catch)
-            {
-                stopwatch.Stop();
-                _logger.LogInformation(
-                        "Request {Method} {Path} took {Elapsed}ms. Status: {StatusCode}",
-                        context.Request.Method,
-                        context.Request.Path,
-                        stopwatch.ElapsedMilliseconds,
-                        context.Response.StatusCode);
-            }
+            _logger.LogInformation(
+                "HTTP {Method} {Path} requested",
+                context.Request.Method,
+                context.Request.Path);
+
+            await _next(context);
+
+            stopwatch.Stop();
+
+            _logger.LogInformation(
+                "HTTP {Method} {Path} completed in {Elapsed}ms. Status: {StatusCode}",
+                context.Request.Method,
+                context.Request.Path,
+                stopwatch.ElapsedMilliseconds,
+                context.Response.StatusCode);
         }
     }
 

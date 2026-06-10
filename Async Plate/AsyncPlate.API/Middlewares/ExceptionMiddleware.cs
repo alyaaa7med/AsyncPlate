@@ -1,7 +1,11 @@
 ﻿using AsyncPlate.Application.Exceptions;
+using Azure;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System;
 using System.ComponentModel;
 using System.Net;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AsyncPlate.API.Middlewares
 {
@@ -19,6 +23,7 @@ namespace AsyncPlate.API.Middlewares
             _logger = logger;
         }
 
+        // Logs all exceptions and creates the error response.
         public async Task InvokeAsync(HttpContext context)
         {
             try

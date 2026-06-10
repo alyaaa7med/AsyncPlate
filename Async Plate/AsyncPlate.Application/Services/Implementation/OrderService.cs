@@ -2,7 +2,6 @@
 using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Application.Interfaces.Repositories;
 using AsyncPlate.Application.Services.Interfaces;
-//using AsyncPlate.Application.Exceptions;
 using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
@@ -212,7 +211,7 @@ namespace AsyncPlate.Application.Services.Implementation
             var productIds = order.OrderItems .Select(oi => oi.ProductId)
                 .Concat(order.OrderItems.SelectMany(oi => oi.Extras).Select(e => e.ProductId)).Distinct().ToList();
 
-            //load all recipes in 1 query for all products to avoid calling in loop
+            //load all recipes in 1 query for all products to avoid calling in loop (n+1 problem)
             var recipes = await _recipeRepo.GetRecipesByProductIdsAsync(productIds);
 
             //select all inventory ids and remove duplicates 

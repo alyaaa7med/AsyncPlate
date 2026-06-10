@@ -36,14 +36,13 @@ using Mailtrap;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Database and Repositories from [infra + core ]
+// Database and Repositories from [infra + application ]
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -86,7 +85,7 @@ builder.Services.AddScoped<INotificationSender, SignalRNotificationSender>();
 builder.Services.AddScoped<IOfferJob, OfferJob>();
 builder.Services.AddSignalR();
 
-// Validations using FluentValidation [core ]
+// Validations using FluentValidation [application ]
 
 builder.Services.AddTransient<IValidator<SignupAppUserRequestDTO>, SignupAppUserRequestValidator>();   
 builder.Services.AddTransient<IValidator<SignupCustomerRequestDTO>, SignupCustomerRequestValidator>();
@@ -113,7 +112,7 @@ builder.Services.AddTransient<IValidator<UpdateOfferRequestDTO>, UpdateOfferRequ
 
 
 
-// Thrid Party and AutoMapper [infra + core + api ]
+// Thrid Party and AutoMapper [infra + application + api ]
 
 builder.Services.AddTransient<IEmailJobService, MailTrapEmailJobService>();
 
@@ -251,11 +250,9 @@ builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("Jwt")
 );
 
-// Building and Seedings
 var app = builder.Build();
 
-//seeding
-
+//seeding instead of make seprate role service 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -282,9 +279,8 @@ using (var scope = app.Services.CreateScope())
 
 // Middlewares [API ]
 
-// 1. «·„Ìœ· ÊÌ— «·Œ«’ »ÌﬂÌ (√Ê· Õ«Ã… ⁄‘«‰ Ì·ﬁÿ √Ì Error „‰ «··Ì »⁄œÂ)
-app.UseMiddleware<RequestLoggerMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<RequestLoggerMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
@@ -299,11 +295,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 // 3. «·√„«‰ (·«“„ »⁄œ «·‹ Routing Êﬁ»· «·‹ Endpoints)
+app.UseCors("cors");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("cors");
 app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notifications");
 
