@@ -1,12 +1,6 @@
 ﻿using AsyncPlate.Application.Interfaces.Repositories;
-using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AsyncPlate.Infrastructure.Data.Repositories
 {
