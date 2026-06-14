@@ -18,6 +18,9 @@ namespace AsyncPlate.Application.Services.Interfaces
         Task<OrderResponseDTO> ConfirmOrderAsync(string OrderId, string userId);
         Task<OrderResponseDTO> CancelOrderAsync(string OrderId);
         Task CookOrderAsync(string OrderId, string userId);
+        Task CompleteOrderAsync(string OrderId);
+
+        //get confrimed orders , not cooked yet
 
 
     }

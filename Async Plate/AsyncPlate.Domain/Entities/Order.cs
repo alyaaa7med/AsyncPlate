@@ -12,7 +12,8 @@ namespace AsyncPlate.Domain.Entities
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
         public string Description { get; set; } = string.Empty;
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
-
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        
         public decimal TotalAmountPrice { get; set; }
         public decimal TotalFee { get; set; }
         public decimal TotalFeeTotal { get; set; }
@@ -21,7 +22,7 @@ namespace AsyncPlate.Domain.Entities
         public Payment? Payment { get; set; }
 
         public string? CustomerId { get; set; } 
-        public Customer? Customer { get; set; }//it should be appuser but it is ok 
+        public Customer? Customer { get; set; }
 
         public string? KitchenChefId { get; set; }
         public KitchenChef? KitchenChef { get; set; }
@@ -33,6 +34,7 @@ namespace AsyncPlate.Domain.Entities
     {
         Pending,
         Confirmed,
+        Cooking,
         Completed,
         Cancelled
     }

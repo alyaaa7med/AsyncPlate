@@ -10,6 +10,7 @@ namespace AsyncPlate.Application.Interfaces.Repositories
     public interface IKitchenChefRepo : IBaseRepo<KitchenChef>
     {
         Task<KitchenChef?> GetChefByUserIdAsync(string userId);
+        Task<List<string>> GetChefUserIdsAsync();
 
     }
 }

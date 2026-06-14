@@ -10,6 +10,7 @@ namespace AsyncPlate.Application.Interfaces.Repositories
     public interface IProductRepo : IBaseRepo<Product>
     {
         Task<Product?> GetProductWithCategoryAsync(string productId);
+        Task<List<Product>> GetTopSellingProductsAsync();
 
     }
 }

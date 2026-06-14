@@ -1,4 +1,5 @@
 ﻿using AsyncPlate.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,6 @@ namespace AsyncPlate.Application.Interfaces.Repositories
         Task<Inventory?> GetInventoryWithSupplierAsync(string inventoryId);
         IQueryable<Inventory> GetLowStockInventory();
         Task<List<Inventory>> GetInventoriesByIdsAsync(List<string> inventoryIds);
+
     }
 }

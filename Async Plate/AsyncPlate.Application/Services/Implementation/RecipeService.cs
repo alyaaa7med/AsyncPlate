@@ -25,9 +25,9 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddRecipeRequestDTO> _validator1;
         private readonly IValidator<UpdateRecipeRequestDTO> _validator2;
-        private readonly IEmailJobService _emailService;
+        private readonly IEmailService _emailService;
 
-        public RecipeService(ILogger<RecipeService> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<AddRecipeRequestDTO> validator1, IValidator<UpdateRecipeRequestDTO> validator2   , IEmailJobService emailService)
+        public RecipeService(ILogger<RecipeService> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<AddRecipeRequestDTO> validator1, IValidator<UpdateRecipeRequestDTO> validator2   , IEmailService emailService)
         {
             _logger = logger;
             _mapper = mapper;

@@ -1,17 +1,13 @@
 ﻿using AsyncPlate.Application.DTOs.Order;
 using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Application.Interfaces.Repositories;
+using AsyncPlate.Application.Jobs;
 using AsyncPlate.Application.Services.Interfaces;
 using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
+using Hangfire;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AsyncPlate.Application.Services.Implementation
 {
@@ -30,11 +26,13 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IOrderItemRepo _orderItemRepo;
         private readonly IOrderExtraItemRepo _orderExtraItemRepo;
         private readonly IInventoryRepo _inventoryRepo;
-
+        private readonly IOrderJob _orderJob;
         public OrderService(ILogger<IOrderService> logger, IMapper mapper, IUnitOfWork unitOfWork,
             IValidator<MakeOrderRequestDTO> validator1, ICustomerRepo customerRepo,IKitchenChefRepo chefRepo
             , IProductRepo productRepo, IProductExtraRepo productExtraRepo, IRecipeRepo recipeRepo
-            , IOrderRepo orderRepo, IOrderItemRepo orderItemRepo, IOrderExtraItemRepo orderExtraItemRepo, IInventoryRepo inventoryRepo)
+            , IOrderRepo orderRepo, IOrderItemRepo orderItemRepo, IOrderExtraItemRepo orderExtraItemRepo, IInventoryRepo inventoryRepo,
+            IOrderJob orderJob
+            )
         {
 
             _logger = logger;
@@ -51,7 +49,7 @@ namespace AsyncPlate.Application.Services.Implementation
             _orderItemRepo = orderItemRepo;
             _orderExtraItemRepo = orderExtraItemRepo;
             _inventoryRepo = inventoryRepo;
-
+            _orderJob = orderJob;
         }
         public async Task<OrderResponseDTO> MakeOrderAsync(MakeOrderRequestDTO makeOrderRequestDTO)
         {
@@ -155,7 +153,10 @@ namespace AsyncPlate.Application.Services.Implementation
             await _unitOfWork.SaveChangesAsync();
             _logger.LogInformation("Order confirmed successfully. OrderId: {OrderId}", orderId);
 
-            //we need to send realtime notifaction to the chef to cook 
+            //we need to send realtime notifaction to the chefs to cook => background job 
+            BackgroundJob.Enqueue<IOrderJob>(job => job.SendNewOrderNotificationAsync(order.Id));
+
+
             return _mapper.Map<OrderResponseDTO>(order);
 
         }
@@ -186,6 +187,7 @@ namespace AsyncPlate.Application.Services.Implementation
             await _unitOfWork.SaveChangesAsync();
             _logger.LogInformation("Order cancelled successfully. OrderId: {OrderId}", orderId);
 
+
             return _mapper.Map<OrderResponseDTO>(order);
         }
 
@@ -212,20 +214,23 @@ namespace AsyncPlate.Application.Services.Implementation
                 .Concat(order.OrderItems.SelectMany(oi => oi.Extras).Select(e => e.ProductId)).Distinct().ToList();
 
             //load all recipes in 1 query for all products to avoid calling in loop (n+1 problem)
-            var recipes = await _recipeRepo.GetRecipesByProductIdsAsync(productIds);
+            var recipes = await _unitOfWork.recipes.GetRecipesByProductIdsAsync(productIds);
 
             //select all inventory ids and remove duplicates 
             var inventoryIds = recipes.Select(r => r.InventoryId).Distinct().ToList();
 
             //load all inventories in 1 query to avoid n+1 
-            var inventories = await _inventoryRepo.GetInventoriesByIdsAsync(inventoryIds);
+            var inventories = await _unitOfWork.inventories.GetInventoriesByIdsAsync(inventoryIds);
 
            //dictiories for o(1) lookup (= search)
-            var recipesByProduct = recipes.GroupBy(r => r.ProductId).ToDictionary( g => g.Key,g => g.ToList());
-            //["pizza", ["tomato sauce", "cheese"]]
-            var inventoriesById = inventories.ToDictionary(i => i.Id);
-            //["tomato sauce id", Inventory { Id = "tomato sauce id",  CurrentStock = 100 }]
 
+            var recipesByProduct = recipes.GroupBy(r => r.ProductId).ToDictionary( g => g.Key,g => g.ToList());
+            //{"pizza proudct id", Recipe ["tomato sauce", "cheese"]}
+            var inventoriesById = inventories.ToDictionary(i => i.Id);
+            //{"tomato sauce id", Inventory [Id = "tomato sauce id",  CurrentStock = 100 ]}
+
+            //for background low stock inventories
+            var lowStockInventories = new HashSet<string>();
 
             foreach (var orderItem in order.OrderItems)
             {
@@ -241,6 +246,12 @@ namespace AsyncPlate.Application.Services.Implementation
                         }
                         inventory.CurrentStock -= required;
                         //no need to update as the inventory is tracked already in memory and the update is reflected in memory 
+
+
+                        if (inventory.CurrentStock < inventory.MinStockLevel)
+                        {
+                            lowStockInventories.Add(inventory.Id);
+                        }
                     }
                 }
                 //extras
@@ -260,18 +271,36 @@ namespace AsyncPlate.Application.Services.Implementation
                             }
                             inventory.CurrentStock -= required;
                             //no need to update as the inventory is tracked already in memory and the update is reflected in memory 
+
+                            if (inventory.CurrentStock < inventory.MinStockLevel)
+                            {
+                                lowStockInventories.Add(inventory.Id);
+                            }
                         }
                     }
                 }
+                //no need for transaction as if the extra failed the updated quantity will be still in memory but for that order only
+                //no affect the other orders
             }
 
-            order.Status = OrderStatus.Completed;
+            order.Status = OrderStatus.Cooking;
 
             await _unitOfWork.SaveChangesAsync();
+
+            //send notification to customer that order is cooking by a chef
+            BackgroundJob.Enqueue<IOrderJob>(job => job.SendCookingOrderNotificationAsync(order.Id));
+
+            //send notification to admin and chef for low stock inventory 
+            foreach (var inventoryid in lowStockInventories) {
+                BackgroundJob.Enqueue<IInventoryJob>(job => job.SendLowStockInventoryNotification(inventoryid));
+            }
+
+
+
         }
 
-        /*
-        //still N+1 problem by getting all the data we need in one query and then do the operations in memory without making multiple calls to the database which is costly in terms of performance
+        /*still N+1 problem 
+        by getting all the data we need in one query and then do the operations in memory without making multiple calls to the database which is costly in terms of performance
         public async Task CookOrderAsync(string orderId)
         {
             var order = await _orderRepo.GetOrderWithOrderItemsAndExtraOrderItemsByIdAsync(orderId);
@@ -390,5 +419,22 @@ namespace AsyncPlate.Application.Services.Implementation
             
         }
         */
+
+        public async Task CompleteOrderAsync(string orderId)
+        {
+            //check if the chef is the assgined chef for that order 
+
+            var order = await _unitOfWork.orders.GetByIdAsync(orderId);
+            if (order == null)
+            {
+                throw new Exceptions.NotFoundException("Order not found");
+
+            }
+            order.Status = OrderStatus.Completed;
+            await _unitOfWork.SaveChangesAsync();
+
+            BackgroundJob.Enqueue<IOrderJob>(job => job.SendCompleteOrderNotificationAsync(order.Id));
+
+        }
     }
 }

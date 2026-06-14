@@ -22,8 +22,8 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddProductRequestDTO> _validator1;
-        private readonly IEmailJobService _emailService;
-        public ProductService(ILogger<RecipeService> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<AddProductRequestDTO> validator1, IEmailJobService emailService)
+        private readonly IEmailService _emailService;
+        public ProductService(ILogger<RecipeService> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<AddProductRequestDTO> validator1, IEmailService emailService)
         {
             _logger = logger;
             _mapper = mapper;

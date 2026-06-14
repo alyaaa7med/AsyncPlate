@@ -9,6 +9,9 @@ namespace AsyncPlate.Application.Interfaces.Repositories
 {
     public interface IAdminRepo : IBaseRepo<Admin>
     {
+        Task<List<string>> GetAdminUserIdsAsync();
+
+        Task<List<string?>> GetAdminsEmailsAsync();
 
     }
 }

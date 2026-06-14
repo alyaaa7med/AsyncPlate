@@ -68,4 +68,18 @@ namespace AsyncPlate.API.Controllers
     }
 }
 
- 
+/*
+ POST /api/orders
+GET  /api/orders/my
+GET  /api/orders/{id}
+PUT  /api/orders/{id}/cancel
+
+GET /api/chef/orders/live
+PUT /api/chef/orders/{id}/start-cooking
+PUT /api/chef/orders/{id}/ready
+
+GET /api/admin/orders
+GET /api/admin/orders/history
+GET /api/admin/dashboard/stats
+GET /api/admin/reports/revenue
+ */

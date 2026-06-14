@@ -24,10 +24,10 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddSupplierRequestDTO> _validator1;
         private readonly IValidator<UpdateSupplierRequestDTO> _validator2;
-        private readonly IEmailJobService _emailService;
+        private readonly IEmailService _emailService;
 
 
-        public SupplierService(ILogger<SupplierService> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<AddSupplierRequestDTO> validator1, IValidator<UpdateSupplierRequestDTO> validator2, IEmailJobService emailService)
+        public SupplierService(ILogger<SupplierService> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<AddSupplierRequestDTO> validator1, IValidator<UpdateSupplierRequestDTO> validator2, IEmailService emailService)
         {
             _logger = logger;
             _mapper = mapper;

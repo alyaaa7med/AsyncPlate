@@ -12,7 +12,7 @@ namespace AsyncPlate.Application.DTOs.Order
         public string Id { get; set; } = string.Empty;
         public DateTime OrderDate { get; set; }
         public string Description { get; set; } = string.Empty;
-        public string Status { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty; //should be realtime
         public decimal TotalAmountPrice { get; set; }
         public decimal TotalFee { get; set; }
         public decimal TotalFeeTotal { get; set; }

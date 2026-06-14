@@ -23,10 +23,10 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddCategoryRequestDTO> _validator1;
-        private readonly IEmailJobService _emailService;
+        private readonly IEmailService _emailService;
         private readonly IMediaService _mediaService;
         public CategoryService(ILogger<RecipeService> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<AddCategoryRequestDTO> validator1, 
-            IMediaService mediaService, IEmailJobService emailService)
+            IMediaService mediaService, IEmailService emailService)
         {
             _logger = logger;
             _mapper = mapper;

@@ -1,4 +1,5 @@
-﻿using AsyncPlate.Application.Interfaces.Repositories;
+﻿using AsyncPlate.Application.DTOs.Product;
+using AsyncPlate.Application.Interfaces.Repositories;
 using AsyncPlate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,5 +22,14 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
                 .Include(p => p.Category)
                 .SingleOrDefaultAsync(p => p.Id == productId);
         }
+
+        public async Task<List<Product>> GetTopSellingProductsAsync()
+        {
+            return await _context.Products
+                .OrderByDescending(p=>p.TotalTimesOrdered)
+                .Take(5)
+                .ToListAsync();
+        }
+
     }
 }

@@ -24,7 +24,7 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IValidator<ForgetPasswordRequestDTO> _validator4;
         private readonly IValidator<ResetPasswordRequestDTO> _validator5;
         private readonly IValidator<RefreshTokenRequestDTO> _validator6;
-        private readonly IEmailJobService _emailService;
+        private readonly IEmailService _emailService;
         private readonly IMediaService _mediaService;
         private readonly ITokenService _tokenService;
         private readonly UserManager<AppUser> _userManager;
@@ -38,7 +38,7 @@ namespace AsyncPlate.Application.Services.Implementation
             IValidator<ForgetPasswordRequestDTO> validator4,
             IValidator<ResetPasswordRequestDTO> validator5,
             IValidator<RefreshTokenRequestDTO> validator6,
-            IEmailJobService emailService,
+            IEmailService emailService,
             IMediaService mediaService,
             ITokenService tokenService,
             UserManager<AppUser> userManager)
@@ -326,7 +326,7 @@ namespace AsyncPlate.Application.Services.Implementation
 
 
 
-            BackgroundJob.Enqueue<IEmailJobService>(x => x.SendEmailAsync(
+            BackgroundJob.Enqueue<IEmailService>(x => x.SendEmailAsync(
             user.Email!,
            "Reset Password",
            $"Click here to reset your password: {resetLink}"

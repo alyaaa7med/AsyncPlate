@@ -20,5 +20,21 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         {
             return await _context.Chefs.FirstOrDefaultAsync(c => c.AppUserId == userId);
         }
+
+        public async Task<List<string>> GetChefUserIdsAsync()
+        {
+            return await _context.Chefs
+                //.AsNoTracking()
+                .Select(c => c.AppUserId)
+                .ToListAsync();
+        }
+        //public async Task<List<string>> GetOtherChefUserIdsAsync(string userId)
+        //{
+        //    return await _context.Chefs
+        //        //.AsNoTracking()
+        //        .Where(c=>c.AppUserId != userId)
+        //        .Select(c => c.AppUserId)
+        //        .ToListAsync();
+        //}
     }
 }

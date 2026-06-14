@@ -1,4 +1,5 @@
-﻿using AsyncPlate.Application.Interfaces.Services;
+﻿using AsyncPlate.Application.DTOs.Notification;
+using AsyncPlate.Application.Interfaces.Services;
 using AsyncPlate.Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
@@ -19,18 +20,19 @@ namespace AsyncPlate.Infrastructure.Services
             _logger = logger;
         }
 
-        public async Task SendToGroupAsync(string group, string message)
+        public async Task SendToGroupAsync(string group,  NotificationResponseDTO notificationResponseDTO )
         {
             await _hub.Clients.Group(group)
-                .SendAsync("ReceiveNotification", message);
+                .SendAsync("ReceiveNotification", notificationResponseDTO);
         }
 
-        public async Task SendToUserAsync(string userId, string message)
+        public async Task SendToUserAsync(string userId, NotificationResponseDTO notificationResponseDTO)
         {
             //_logger.LogInformation($"Sending to user: {userId}");
 
             await _hub.Clients.User(userId)
-                .SendAsync("ReceiveNotification", message);
+                .SendAsync("ReceiveNotification", notificationResponseDTO); 
+            //ReceiveNotification is the SignalR event name that the client subscribes to, and it is already suitable for sending notifications to chefs when a new order is confirmed.
         }
        
         public async Task SendToAllAsync(string message)
@@ -38,6 +40,8 @@ namespace AsyncPlate.Infrastructure.Services
             await _hub.Clients.All
                 .SendAsync("ReceiveNotification", message);
         }
+
+        
     }
     
 }

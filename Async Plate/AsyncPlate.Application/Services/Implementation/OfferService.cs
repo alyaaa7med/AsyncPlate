@@ -2,6 +2,7 @@
 using AsyncPlate.Application.DTOs.Offer;
 using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Application.Interfaces.Services;
+using AsyncPlate.Application.Jobs;
 using AsyncPlate.Application.Services.Interfaces;
 using AsyncPlate.Domain.Entities;
 using AutoMapper;
@@ -77,7 +78,7 @@ namespace AsyncPlate.Application.Services.Implementation
             _logger.LogInformation("Offer with ID {OfferId} created successfully.", offer.Id);
 
             //trigger the offer job to send notifications
-            BackgroundJob.Enqueue<IOfferJob>(job => job.SendOfferNotifications(offer.Id));
+            BackgroundJob.Enqueue<IOfferJob>(job => job.SendnNewOfferNotificationsAsync(offer.Id));
 
             return _mapper.Map<OfferResponseDTO>(offer);
         }

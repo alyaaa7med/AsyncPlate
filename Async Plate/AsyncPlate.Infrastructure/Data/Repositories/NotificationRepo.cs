@@ -18,5 +18,7 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         {
             await _context.Set<Notification>().AddRangeAsync(notifications);
         }
+
+        
     }
 }

@@ -11,6 +11,7 @@ using AsyncPlate.Application.DTOs.Supplier;
 using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Application.Interfaces.Repositories;
 using AsyncPlate.Application.Interfaces.Services;
+using AsyncPlate.Application.Jobs;
 using AsyncPlate.Application.Mapping;
 using AsyncPlate.Application.Services.Implementation;
 using AsyncPlate.Application.Services.Interfaces;
@@ -28,6 +29,7 @@ using AsyncPlate.Infrastructure.Data;
 using AsyncPlate.Infrastructure.Data.Repositories;
 using AsyncPlate.Infrastructure.Hubs;
 using AsyncPlate.Infrastructure.Services;
+using AsyncPlate.Infrastructure.Services.Jobs;
 using AsyncPlate.Infrastructure.Services.Settings;
 using FluentValidation;
 using Hangfire;
@@ -81,8 +83,12 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<INotificationSender, SignalRNotificationSender>();
 builder.Services.AddScoped<IOfferJob, OfferJob>();
+builder.Services.AddScoped<IOrderJob, OrderJob>();
+
 builder.Services.AddSignalR();
 
 // Validations using FluentValidation [application ]
@@ -114,7 +120,7 @@ builder.Services.AddTransient<IValidator<UpdateOfferRequestDTO>, UpdateOfferRequ
 
 // Thrid Party and AutoMapper [infra + application + api ]
 
-builder.Services.AddTransient<IEmailJobService, MailTrapEmailJobService>();
+builder.Services.AddTransient<IEmailService, MailTrapEmailService>();
 
 builder.Services.Configure<MailtarpMappingClass>(builder.Configuration.GetSection("Mailtrap"));//for option pattern 
 
@@ -161,7 +167,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-//hang fire
+//hangfire
 builder.Services.AddHangfire(config =>
     config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
           .UseSimpleAssemblyNameTypeSerializer()
@@ -275,6 +281,16 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while seeding roles.");
     }
     //to dispose dbcontext , role manager objects to keep memory clean and avoid memory leaks
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var recurringJob = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+
+    recurringJob.AddOrUpdate<ReportJob>(
+        "daily-report",
+        job => job.ExecuteAsync(),
+        Cron.Daily(21, 0));
 }
 
 // Middlewares [API ]
