@@ -15,16 +15,17 @@ namespace AsyncPlate.Infrastructure.Services.Jobs
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly INotificationSender _notificationSender;
-
-        public InventoryJob(IUnitOfWork unitOfWork, INotificationSender notificationSender)
+        private readonly IEmailService _emailService;
+        public InventoryJob(IUnitOfWork unitOfWork, INotificationSender notificationSender , IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
             _notificationSender = notificationSender;
+            _emailService = emailService;
         }
 
         public async Task SendLowStockInventoryNotification(string inventoryId)
         {
-            var inventory = await _unitOfWork.orders.GetByIdAsync(inventoryId);
+            var inventory = await _unitOfWork.inventories.GetByIdAsync(inventoryId);
             if (inventory == null)
             {
                 throw new Application.Exceptions.NotFoundException($"Inventory with id = {inventoryId} not found");
@@ -57,6 +58,63 @@ namespace AsyncPlate.Infrastructure.Services.Jobs
             await _notificationSender.SendToGroupAsync("Chefs", notificationDto);
             await _notificationSender.SendToGroupAsync("Admins", notificationDto);
 
+        }
+
+
+        public async Task SendLowStockSuppliersEmail()
+        {
+            var lowStockSuppliers = (await _unitOfWork.inventories.GetLowStockWithSuppliersAsync())
+                .GroupBy(i => i.Supplier.ContactEmail)
+                .ToDictionary(g => g.Key, g => g.ToList()); //{supplieremail, [list of his related inventory]}
+
+            foreach (var dictionary in lowStockSuppliers)
+            {
+                var supplierEmail = dictionary.Key;
+                string body = CreateBody(dictionary.Value);
+
+                await _emailService.SendEmailAsync(
+                    supplierEmail,
+                    "Low Stock Items Email",
+                    body
+                );
+            }
+
+
+        }
+
+        private string CreateBody(List<Inventory> inventories)
+        {
+            var builder = new StringBuilder();
+
+            builder.AppendLine("<h2>Daily Inventory Replenishment Request</h2>");
+
+            builder.AppendLine("<p>Please provide the following quantities:</p>");
+
+            builder.AppendLine(@"
+                 <table border='1' cellpadding='5'>
+                 <tr>
+                <th>Item</th>
+                <th>Needed Quantity</th>
+            </tr>");
+
+            foreach (var inventory in inventories)
+            {
+                var neededQuantity =
+                Math.Max(0, inventory.MinStockLevel - inventory.CurrentStock);
+
+                builder.AppendLine($@"
+            <tr>
+                <td>{inventory.Name}</td>
+                <td>{neededQuantity}</td>
+            </tr>");
+            }
+
+            builder.AppendLine("</table>");
+
+            builder.AppendLine("<p>Thank you.</p>");
+            builder.AppendLine("<p>AsyncPlate Team</p>");
+
+            return builder.ToString();
         }
 
     }

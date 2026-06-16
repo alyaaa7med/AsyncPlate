@@ -9,6 +9,7 @@ namespace AsyncPlate.Application.Jobs
     public interface IInventoryJob
     {
         Task SendLowStockInventoryNotification(string inventoryId);
+        Task SendLowStockSuppliersEmail();
 
     }
 }

@@ -48,5 +48,12 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         {
             return await _context.Inventories.Where(i => inventoryIds.Contains(i.Id)).ToListAsync();
         }
+
+        public async Task<List<Inventory>> GetLowStockWithSuppliersAsync()
+        {
+
+            return await _context.Inventories .Where(i => i.CurrentStock < i.MinStockLevel)
+                        .Include(i => i.Supplier).ToListAsync();
+        }
     }
 }

@@ -25,5 +25,8 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         {
             return _context.Suppliers.Where(x => x.Name.Contains(name));
         }
+
+       
     }
+
 }

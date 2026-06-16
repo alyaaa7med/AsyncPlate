@@ -3,9 +3,6 @@ using AsyncPlate.Application.Common.Extenstions;
 using AsyncPlate.Application.DTOs.Inventory;
 using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Application.Services.Interfaces;
-//using AsyncPlate.Core.DTOs.Authentication;
-//using AsyncPlate.Core.DTOs.Supplier;
-//using AsyncPlate.Core.Interfaces.Services;
 using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
@@ -176,7 +173,7 @@ namespace AsyncPlate.Application.Services.Implementation
                 inventoriesQuery = _unitOfWork.inventories.FilterByName(filterDto.Name);
             }
             var pagedResult = await inventoriesQuery.ToPagedResultAsync(filterDto.PageNumber, filterDto.PageSize);
-            
+
             var responseDTOs = _mapper.Map<IEnumerable<InventoryResponseDTO>>(pagedResult.Items);
             _logger.LogInformation("Retrieved {Count} low stock inventories (Page {PageNumber} of {TotalPages})", responseDTOs.Count(), filterDto.PageNumber, pagedResult.TotalPages);
             return new PagedResult<InventoryResponseDTO>
@@ -205,7 +202,7 @@ namespace AsyncPlate.Application.Services.Implementation
             _logger.LogInformation("Supplier retrieved successfully for Inventory: {InventoryName}", inventory.Name);
             return responseDTO;
         }
-    
-    }
 
+   
+    }
 }

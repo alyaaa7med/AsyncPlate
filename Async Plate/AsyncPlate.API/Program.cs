@@ -293,6 +293,17 @@ using (var scope = app.Services.CreateScope())
         Cron.Daily(21, 0));
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var recurringJob = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+
+    recurringJob.AddOrUpdate<IInventoryJob>(
+    "daily-low-stock-email",
+    job => job.SendLowStockSuppliersEmail(),
+    Cron.Daily(21, 0));
+
+}
+
 // Middlewares [API ]
 
 app.UseMiddleware<ExceptionMiddleware>();

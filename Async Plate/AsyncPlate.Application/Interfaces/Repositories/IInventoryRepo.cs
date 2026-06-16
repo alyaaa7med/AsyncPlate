@@ -19,5 +19,7 @@ namespace AsyncPlate.Application.Interfaces.Repositories
         IQueryable<Inventory> GetLowStockInventory();
         Task<List<Inventory>> GetInventoriesByIdsAsync(List<string> inventoryIds);
 
+        Task<List<Inventory>> GetLowStockWithSuppliersAsync();
+            
     }
 }

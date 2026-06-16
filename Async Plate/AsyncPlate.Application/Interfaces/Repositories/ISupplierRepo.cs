@@ -1,4 +1,5 @@
 ﻿using AsyncPlate.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Application.Interfaces.Repositories
 {
-    public interface ISupplierRepo:IBaseRepo<Supplier>  
+    public interface ISupplierRepo : IBaseRepo<Supplier>
     {
         Task<bool> AnySupplierAsync(string email);
         IQueryable<Supplier> FilterByName(string name);
 
     }
+
 }
