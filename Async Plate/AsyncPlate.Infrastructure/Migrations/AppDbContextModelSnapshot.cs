@@ -36,7 +36,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Admins");
+                    b.ToTable("Admins", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.AppUser", b =>
@@ -152,7 +152,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("OfferId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.Customer", b =>
@@ -172,7 +172,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.Inventory", b =>
@@ -215,7 +215,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Inventories");
+                    b.ToTable("Inventories", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.KitchenChef", b =>
@@ -232,7 +232,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Chefs");
+                    b.ToTable("Chefs", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.Notification", b =>
@@ -267,7 +267,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.Offer", b =>
@@ -294,7 +294,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Offers");
+                    b.ToTable("Offers", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.OneTimeToken", b =>
@@ -321,7 +321,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("OneTimeToken");
+                    b.ToTable("OneTimeToken", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.Order", b =>
@@ -365,7 +365,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("KitchenChefId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.OrderExtraItem", b =>
@@ -393,7 +393,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderExtraItem");
+                    b.ToTable("OrderExtraItem", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.OrderItem", b =>
@@ -421,7 +421,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.Payment", b =>
@@ -438,7 +438,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[OrderId] IS NOT NULL");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.Product", b =>
@@ -472,7 +472,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.ProductExtra", b =>
@@ -487,7 +487,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("ExtraProductId");
 
-                    b.ToTable("ProductExtras");
+                    b.ToTable("ProductExtras", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.Recipe", b =>
@@ -510,7 +510,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("InventoryId");
 
-                    b.ToTable("Recipes");
+                    b.ToTable("Recipes", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.RefreshToken", b =>
@@ -546,7 +546,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.Review", b =>
@@ -571,7 +571,7 @@ namespace AsyncPlate.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[OrderId] IS NOT NULL");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("AsyncPlate.Domain.Entities.Supplier", b =>
@@ -606,7 +606,7 @@ namespace AsyncPlate.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
