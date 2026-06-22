@@ -58,7 +58,7 @@ namespace AsyncPlate.Application.Services.Implementation
             }
 
             var product = _mapper.Map<Product>(productRequestDTO);
-            await _unitOfWork.products.AddAsync(product);
+             _unitOfWork.products.Add(product);
             await _unitOfWork.SaveChangesAsync();
             _logger.LogInformation("Product with id {ProductId} created successfully", product.Id);
             //reolad the product with category details

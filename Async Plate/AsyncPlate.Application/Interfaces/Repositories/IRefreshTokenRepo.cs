@@ -10,7 +10,7 @@ namespace AsyncPlate.Application.Interfaces.Repositories
     public interface IRefreshTokenRepo : IBaseRepo<RefreshToken>
     {
 
-        Task<IEnumerable<RefreshToken>> FindActiveTokensByUserIdAsync(string userId);//the tokens all aready in memory but enumerated to remove list features 
+        Task<List<RefreshToken>> FindActiveTokensByUserIdAsync(string userId);//the tokens all aready in memory but enumerated to remove list features 
         Task<RefreshToken?> CheckRefreshTokenAsync(string tokenValue);
 
         //remove refreshtokens to logout from all devices 

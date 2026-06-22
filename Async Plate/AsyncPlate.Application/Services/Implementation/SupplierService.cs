@@ -66,7 +66,7 @@ namespace AsyncPlate.Application.Services.Implementation
             if (exists)
                 throw new Exceptions.BadRequestException("Supplier already exists.");
 
-            await _unitOfWork.suppliers.AddAsync(supplier);
+             _unitOfWork.suppliers.Add(supplier);
             await _unitOfWork.SaveChangesAsync();
 
             _logger.LogInformation("Supplier created successfully: {Email}", supplier.ContactEmail);

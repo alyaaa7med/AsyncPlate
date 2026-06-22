@@ -28,6 +28,7 @@ namespace AsyncPlate.Infrastructure.Data
         public DbSet<OneTimeToken> OneTimeToken { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<OrderExtraItem> OrderExtraItems { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductExtra> ProductExtras { get; set; }
@@ -48,7 +49,7 @@ namespace AsyncPlate.Infrastructure.Data
         {
             
             base.OnModelCreating(builder);
-            // Configuration السطر السحري ده بيقرأ كل ملفات الـ  
+            // Configurations بيقرأ كل ملفات الـ  
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
 

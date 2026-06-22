@@ -1,8 +1,8 @@
 ﻿using AsyncPlate.Application.Common.DTOs;
 using AsyncPlate.Application.DTOs.Offer;
 using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Jobs;
 using AsyncPlate.Application.Interfaces.Services;
-using AsyncPlate.Application.Jobs;
 using AsyncPlate.Application.Services.Interfaces;
 using AsyncPlate.Domain.Entities;
 using AutoMapper;
@@ -72,7 +72,7 @@ namespace AsyncPlate.Application.Services.Implementation
             
             offer.Categories = categories;
 
-            await _unitOfWork.offers.AddAsync(offer);
+             _unitOfWork.offers.Add(offer);
             await _unitOfWork.SaveChangesAsync();
 
             _logger.LogInformation("Offer with ID {OfferId} created successfully.", offer.Id);

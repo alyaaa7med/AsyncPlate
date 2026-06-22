@@ -1,7 +1,7 @@
 ﻿using AsyncPlate.Application.DTOs.Order;
 using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Jobs;
 using AsyncPlate.Application.Interfaces.Repositories;
-using AsyncPlate.Application.Jobs;
 using AsyncPlate.Application.Services.Interfaces;
 using AsyncPlate.Domain.Entities;
 using AutoMapper;
@@ -109,7 +109,7 @@ namespace AsyncPlate.Application.Services.Implementation
             order.TotalFeeTotal = (order.TotalFee / 100m + 1) * order.TotalAmountPrice;
 
 
-            await _unitOfWork.orders.AddAsync(order);
+             _unitOfWork.orders.Add(order);
             await _unitOfWork.SaveChangesAsync();
 
             _logger.LogInformation("Order created successfully. OrderId: {OrderId}, Total: {Total}", order.Id,order.TotalAmountPrice);

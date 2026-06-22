@@ -1,8 +1,8 @@
 ﻿using AsyncPlate.Application.DTOs.Notification;
 using AsyncPlate.Application.Exceptions;
 using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Jobs;
 using AsyncPlate.Application.Interfaces.Services;
-using AsyncPlate.Application.Jobs;
 using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using System;
@@ -83,7 +83,7 @@ namespace AsyncPlate.Infrastructure.Services.Jobs
                 Url = $"Orders/{order.Id}"
             };
 
-            await _unitOfWork.notifications.AddAsync(notification);
+             _unitOfWork.notifications.Add(notification);
             await _unitOfWork.SaveChangesAsync();
 
             var notificationDTO = _mapper.Map<NotificationResponseDTO>(notification);
@@ -114,7 +114,7 @@ namespace AsyncPlate.Infrastructure.Services.Jobs
                 Url = $"Orders/{order.Id}"
             };
 
-            await _unitOfWork.notifications.AddAsync(notification);
+             _unitOfWork.notifications.Add(notification);
             await _unitOfWork.SaveChangesAsync();
 
             var notificationDTO = _mapper.Map<NotificationResponseDTO>(notification);

@@ -49,6 +49,7 @@ namespace AsyncPlate.API.Middlewares
                 NotFoundException => HttpStatusCode.NotFound,
                 ValidationException => HttpStatusCode.BadRequest,
                 BadRequestException => HttpStatusCode.BadRequest,
+                UnauthorizedException => HttpStatusCode.Unauthorized,
                 _ => HttpStatusCode.InternalServerError
             };
 

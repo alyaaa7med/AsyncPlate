@@ -108,16 +108,17 @@ namespace AsyncPlate.Application.Services.Implementation
                     throw new Exceptions.BadRequestException($"Failed to create user: {identityErrors}");//badrequest : email duplicate / weak password 
                 }
 
-                await _unitOfWork.customers.AddAsync(customer);//nav prop of user is already filled
+                 _unitOfWork.customers.Add(customer);          //nav prop of user is already filled
                                                                //so that no need to add fk manully to link customer 
                                                                //with user
+                await _unitOfWork.SaveChangesAsync();
 
                 var roleResult = await _userManager.AddToRoleAsync(customer.AppUser, "Customer");//just one role
 
                 if (!roleResult.Succeeded)
                 {
                     var roleErrors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
-                    throw new Exceptions.InternalServerException($"Failed to assign role: {roleErrors}");
+                    throw new Exceptions.BadRequestException($"Failed to assign role: {roleErrors}");
                 }
 
                 await _unitOfWork.CommitTransactionAsync();
@@ -131,7 +132,7 @@ namespace AsyncPlate.Application.Services.Implementation
 
                 if (!string.IsNullOrEmpty(customer.AppUser.ProfilePictureUrl))
                 {
-                    _mediaService.DeleteImage(customer.AppUser.ProfilePictureUrl);
+                     _mediaService.DeleteImage(customer.AppUser.ProfilePictureUrl);
                 }
 
                 throw;
@@ -163,7 +164,7 @@ namespace AsyncPlate.Application.Services.Implementation
             }
 
             var chef = _mapper.Map<KitchenChef>(requestDTO);
-           
+
             await _unitOfWork.BeginTransactionAsync();
 
             try
@@ -174,10 +175,7 @@ namespace AsyncPlate.Application.Services.Implementation
                     chef.AppUser.ProfilePictureUrl = imageUrl;
                 }
 
-                var result = await _userManager.CreateAsync(
-                    chef.AppUser,
-                    requestDTO.AppUser.Password
-                );
+                var result = await _userManager.CreateAsync(chef.AppUser, requestDTO.AppUser.Password);
 
                 if (!result.Succeeded)
                 {
@@ -186,16 +184,18 @@ namespace AsyncPlate.Application.Services.Implementation
                     throw new Exceptions.BadRequestException($"Failed to create user: {identityErrors}");
                 }
 
-                await _unitOfWork.kitchenChefs.AddAsync(chef);//nav prop of user is already filled
-                                                              //so that no need to add fk manully to link chef 
-                                                              //with user
+                _unitOfWork.kitchenChefs.Add(chef);          //nav prop of user is already filled
+                                                             //so that no need to add fk manully to link chef 
+                                                             //with user
+
+                await _unitOfWork.SaveChangesAsync();
 
                 var roleResult = await _userManager.AddToRoleAsync(chef.AppUser, "Chef");
 
                 if (!roleResult.Succeeded)
                 {
                     var roleErrors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
-                    throw new Exceptions.InternalServerException($"Failed to assign role: {roleErrors}");
+                    throw new Exceptions.BadRequestException($"Failed to assign role: {roleErrors}");
                 }
 
                 await _unitOfWork.CommitTransactionAsync();
@@ -258,10 +258,10 @@ namespace AsyncPlate.Application.Services.Implementation
             //user.RefreshTokens.Add(new RefreshToken { RefreshTokenValue = refreshToken, UserId= user.Id});
             //await _userManager.UpdateAsync(user);  أنت بتضيف ريفريش جوا توكن لكن المنجر مش هيعرف يحفظ الا يوزر فقط
 
-            await _unitOfWork.refreshtokens.AddAsync(new RefreshToken { RefreshTokenValue = refreshToken, UserId = user.Id }); //need to link userid fk here as i do not have nav prop to user in refresh token to link them directly
+            _unitOfWork.refreshtokens.Add(new RefreshToken { RefreshTokenValue = refreshToken, UserId = user.Id }); //need to link userid fk here as i do not have nav prop to user in refresh token to link them directly
             await _unitOfWork.SaveChangesAsync();
 
-            _logger.LogInformation( "User logged in successfully. UserId: {UserId}", user.Id);
+            _logger.LogInformation("User logged in successfully. UserId: {UserId}", user.Id);
             var responsedto = _mapper.Map<LoginResponseDTO>(user);
             responsedto.AccessToken = accessToken;
             responsedto.RefreshToken = refreshToken;
@@ -299,7 +299,7 @@ namespace AsyncPlate.Application.Services.Implementation
                 return;
             }
 
-          
+
             //inactivate old token for the user to prevent reuse of old tokens if any
             var token = await _unitOfWork.onetimetokens.GetActiveOneTimeTokenAsync(t => t.AppUserId == user.Id && t.IsActive);
 
@@ -307,7 +307,6 @@ namespace AsyncPlate.Application.Services.Implementation
             {
                 token.IsActive = false;
                 token.ExpiryDate = DateTime.UtcNow;
-                _unitOfWork.onetimetokens.Update(token);
 
             }
             //generate new token and save it to db
@@ -317,7 +316,7 @@ namespace AsyncPlate.Application.Services.Implementation
                 AppUserId = user.Id
             };//i need to add the fk as i do not have nav, to link the 2 entities 
 
-            await _unitOfWork.onetimetokens.AddAsync(ott);
+            _unitOfWork.onetimetokens.Add(ott);
             await _unitOfWork.SaveChangesAsync();
             //new onetimetoken added for user with email 
 
@@ -380,34 +379,25 @@ namespace AsyncPlate.Application.Services.Implementation
                 _logger.LogWarning("Invalid or expired one-time token for email {Email}.", requestDTO.Email);
                 throw new Exceptions.UnauthorizedException("Invalid or expired token.");
             }
-            await _unitOfWork.BeginTransactionAsync(); 
-            try
+
+            var result = await _userManager.RemovePasswordAsync(user);
+            if (!result.Succeeded)
             {
-
-                var result = await _userManager.RemovePasswordAsync(user);
-                if (!result.Succeeded)
-                {
-                    throw new Exceptions.InternalServerException("Failed to reset password.");
-                }
-                var addResult = await _userManager.AddPasswordAsync(user, requestDTO.NewPassword);
-                if (!addResult.Succeeded)
-                {
-                    throw new Exceptions.InternalServerException("Failed to set new password.");
-                }
-                ott.IsActive = false;
-                ott.ExpiryDate = DateTime.UtcNow;
-                _unitOfWork.onetimetokens.Update(ott);
-
-                await _unitOfWork.SaveChangesAsync();
-
-                await _unitOfWork.CommitTransactionAsync();
+                throw new Exceptions.BadRequestException("Failed to reset password.");
             }
-            catch
+
+            var addResult = await _userManager.AddPasswordAsync(user, requestDTO.NewPassword);
+            if (!addResult.Succeeded)
             {
-                await _unitOfWork.RollBackTransactionAsync();
-                throw;
+                throw new Exceptions.BadRequestException("Failed to set new password.");
             }
-           //force logout 
+            ott.IsActive = false;
+            ott.ExpiryDate = DateTime.UtcNow;
+
+            await _unitOfWork.SaveChangesAsync();
+
+
+            //force logout 
             await LogoutAsync(user.Id);
 
             _logger.LogInformation("User with email {email} is forced to logout after password reset", user.Email);
@@ -416,13 +406,12 @@ namespace AsyncPlate.Application.Services.Implementation
         public async Task LogoutAsync (string userId)
         {
             //revoke all active tokens for the user to force logout from all sessions
-            var activeTokens = await _unitOfWork.refreshtokens.FindActiveTokensByUserIdAsync(userId);
+            var activeTokens = await _unitOfWork.refreshtokens.FindActiveTokensByUserIdAsync(userId); 
             foreach (var token in activeTokens) 
             {
                 token.IsRevoked = true;
                 token.ExpiredAt = DateTime.UtcNow; 
                 token.IsExpired = true;
-                _unitOfWork.refreshtokens.Update(token);
             }
             await _unitOfWork.SaveChangesAsync(); //save all not one by one to optimize performance as dbcontext is shared
 
@@ -448,7 +437,7 @@ namespace AsyncPlate.Application.Services.Implementation
                 throw new Exceptions.ValidationException(errorsDictionary);
             }
 
-            var existingToken = await _unitOfWork.refreshtokens.CheckRefreshTokenAsync( requestDTO.RefreshToken);
+            var existingToken = await _unitOfWork.refreshtokens.CheckRefreshTokenAsync(requestDTO.RefreshToken);
             if (existingToken == null)
             {
                 _logger.LogWarning("Invalid refresh token: {RefreshToken}", requestDTO.RefreshToken);
@@ -462,20 +451,19 @@ namespace AsyncPlate.Application.Services.Implementation
             }
             var newAccessToken = _tokenService.CreateAccessToken(user);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
-                        
+
             existingToken.IsRevoked = true;
             existingToken.IsExpired = true;
             existingToken.ExpiredAt = DateTime.UtcNow;
-            _unitOfWork.refreshtokens.Update(existingToken);
 
-            await _unitOfWork.refreshtokens.AddAsync(new RefreshToken
+            _unitOfWork.refreshtokens.Add(new RefreshToken
             {
                 RefreshTokenValue = newRefreshToken,
                 UserId = user.Id
             });
 
             await _unitOfWork.SaveChangesAsync(); //save once to optimize performance as dbcontext is shared
-            
+
             return new RefreshTokenResponseDTO
             {
                 AccessToken = newAccessToken,
@@ -483,10 +471,6 @@ namespace AsyncPlate.Application.Services.Implementation
             };
         }
 
-        
-
-
-
-
+     
     }
 }

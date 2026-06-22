@@ -94,7 +94,7 @@ namespace AsyncPlate.Application.Services.Implementation
                     throw new Exceptions.BadRequestException($"Failed to create user: {identityErrors}");//badrequest : email duplicate / weak password 
                 }
 
-                await _unitOfWork.admins.AddAsync(admin);//nav prop of user is already filled
+                 _unitOfWork.admins.Add(admin);//nav prop of user is already filled
                                                          //so that no need to add fk manully to link customer 
                                                          //with user
 

@@ -11,7 +11,7 @@ namespace AsyncPlate.Application.Interfaces.Repositories
     public interface ICustomerRepo : IBaseRepo<Customer>
     {
         Task<Customer?> GetByUserIdAsync(string userId);
-        Task<IEnumerable<string>> GetVipCustomerUserIdsAsync();
+        Task<List<string>> GetVipCustomerUserIdsAsync();
 
     }
 }

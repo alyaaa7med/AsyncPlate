@@ -44,7 +44,7 @@ namespace AsyncPlate.Infrastructure.Services
             return $"/uploads/{folderName}/{fileName}"; //save on disk
         }
 
-        public void DeleteImage(string filePath)
+        public void DeleteImage(string filePath) 
         {
             var fullPath = Path.Combine(
                 Directory.GetCurrentDirectory(),
@@ -54,7 +54,7 @@ namespace AsyncPlate.Infrastructure.Services
 
             if (File.Exists(fullPath))
             {
-                File.Delete(fullPath);
+                 File.Delete(fullPath);
             }
         }
 

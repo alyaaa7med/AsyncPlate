@@ -1,7 +1,7 @@
 ﻿using AsyncPlate.Application.DTOs.Notification;
 using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Jobs;
 using AsyncPlate.Application.Interfaces.Services;
-using AsyncPlate.Application.Jobs;
 using AsyncPlate.Domain.Entities;
 using System;
 using System.Collections.Generic;

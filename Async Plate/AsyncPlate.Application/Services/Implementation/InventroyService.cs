@@ -69,7 +69,7 @@ namespace AsyncPlate.Application.Services.Implementation
             if (supplier == null)
                 throw new Exceptions.BadRequestException("Supplier not found with the provided ID.");
 
-            await _unitOfWork.inventories.AddAsync(inventory);
+             _unitOfWork.inventories.Add(inventory);
 
             await _unitOfWork.SaveChangesAsync();
 

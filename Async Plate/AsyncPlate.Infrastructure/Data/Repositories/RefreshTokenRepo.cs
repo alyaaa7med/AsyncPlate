@@ -15,9 +15,10 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         {
         }
 
-        public async Task<IEnumerable<RefreshToken>> FindActiveTokensByUserIdAsync(string userId)//i only need enumerating (abstraction of list) no need for list specifications 
+        public async Task<List<RefreshToken>> FindActiveTokensByUserIdAsync(string userId)
         {
-            return await _context.RefreshTokens.Where(t => t.UserId == userId && !t.IsRevoked && !t.IsExpired).ToListAsync();
+            return await _context.RefreshTokens
+                .Where(t => t.UserId == userId && !t.IsRevoked && !t.IsExpired).ToListAsync();
         }
 
 

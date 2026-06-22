@@ -2,9 +2,9 @@
 using AsyncPlate.Application.DTOs.Notification;
 using AsyncPlate.Application.DTOs.Offer;
 using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Jobs;
 using AsyncPlate.Application.Interfaces.Repositories;
 using AsyncPlate.Application.Interfaces.Services;
-using AsyncPlate.Application.Jobs;
 using AsyncPlate.Application.Services.Interfaces;
 using AsyncPlate.Domain.Entities;
 using AutoMapper;

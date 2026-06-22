@@ -77,7 +77,7 @@ namespace AsyncPlate.Application.Services.Implementation
             var recipe = _mapper.Map<Recipe>(addRecipeRequestDTO);
         
 
-            await _unitOfWork.recipes.AddAsync(recipe);
+             _unitOfWork.recipes.Add(recipe);
             await _unitOfWork.SaveChangesAsync();
 
             //reload recipe with inventory and product

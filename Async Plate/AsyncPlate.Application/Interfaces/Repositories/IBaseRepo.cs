@@ -6,22 +6,19 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Application.Interfaces.Repositories
 {
-    public interface IBaseRepo<T> where T :class
+    public interface IBaseRepo<T> where T : class
     {
         //async :  actually wait for the Database
-        //get all 
-        //get by id 
-        //add
-        Task<T?> GetByIdAsync(string id); 
-        IQueryable<T> GetAll() ;
-        Task AddAsync(T entity);
+        Task<T?> GetByIdAsync(string id);
 
+        //sequencial => as i will only change the state of entity in the memory to added, updated, deleted 
 
-        //sequencial => as i will only mark in the memory to updated or deleted 
-        //update 
-        //delete 
+        void Add(T entity);
         void Update(T entity);
         void Delete(T entity);
+
+        IQueryable<T> GetAll(); // i will return iquerable then add other query for it 
+
 
     }
 }

@@ -45,7 +45,7 @@ AsyncPlate is an asynchronous restaurant management backend system designed to h
 
 
 <p align="center">
-  <img src="Async Plate DB diagram.JPG" alt="AsyncPlate Entity Relationship Diagram" width="850">
+  <img src="screenshots/Async Plate DB diagram.JPG" alt="AsyncPlate Entity Relationship Diagram" width="850">
 </p>
 
 ## 🏗️ Architectural Overview

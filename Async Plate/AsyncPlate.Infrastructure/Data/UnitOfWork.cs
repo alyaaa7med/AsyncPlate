@@ -12,21 +12,20 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Infrastructure.Data
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
 
 
         private readonly AppDbContext _context;
         private IDbContextTransaction? _transaction;
 
-     
+
         public ICustomerRepo customers { get; }
         public IKitchenChefRepo kitchenChefs { get; }
-
         public IAdminRepo admins { get; }
         public IRefreshTokenRepo refreshtokens { get; }
         public IOneTimeTokenRepo onetimetokens { get; }
-        public ISupplierRepo suppliers { get;  }
+        public ISupplierRepo suppliers { get; }
         public IInventoryRepo inventories { get; }
         public IProductRepo products { get; }
         public IRecipeRepo recipes { get; }
@@ -35,10 +34,10 @@ namespace AsyncPlate.Infrastructure.Data
         public IOrderRepo orders { get; }
         public INotificationRepo notifications { get; }
 
-        public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo,IAdminRepo adminRepo,
+        public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo, IAdminRepo adminRepo,
                 IRefreshTokenRepo RefreshTokenRepo, IOneTimeTokenRepo onetimetokenRepo,
                 ISupplierRepo supplierRepo, IInventoryRepo inventoryRepo, IProductRepo productRepo, IRecipeRepo recipeRepo,
-                IOfferRepo offerRepo, ICategoryRepo categoryRepo, IOrderRepo orderRepo, INotificationRepo notificationRepo  )
+                IOfferRepo offerRepo, ICategoryRepo categoryRepo, IOrderRepo orderRepo, INotificationRepo notificationRepo)
         {
             _context = context;
             customers = customerRepo;
@@ -63,28 +62,30 @@ namespace AsyncPlate.Infrastructure.Data
 
         public async Task BeginTransactionAsync()
         {
+            if (_transaction != null)
+                throw new InvalidOperationException("Transaction already started.");
+
             _transaction = await _context.Database.BeginTransactionAsync();
         }
+
         public async Task CommitTransactionAsync()
         {
-            if (_transaction != null) await _transaction.CommitAsync();
+            if (_transaction == null) return;
 
+            await _transaction.CommitAsync();
+            await _transaction.DisposeAsync();
+            _transaction = null;
         }
 
         public async Task RollBackTransactionAsync()
         {
-            if (_transaction != null) await _transaction.RollbackAsync();
+            if (_transaction == null) return;
+
+            await _transaction.RollbackAsync();
+            await _transaction.DisposeAsync();
+            _transaction = null;
         }
 
-
-        public void Dispose()
-        {
-            // 1. Dispose the transaction first
-            _transaction?.Dispose();
-            _transaction = null; // Important: Clear the reference
-
-            // 2. Dispose the context
-            _context.Dispose();
-        }
     }
+
 }

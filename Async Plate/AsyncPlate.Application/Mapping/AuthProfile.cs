@@ -15,7 +15,7 @@ namespace AsyncPlate.Application.Mapping
         {
             CreateMap<SignupAppUserRequestDTO, AppUser>() //will be used by all user types (Customer, KitchenChef, Admin)
                .ForMember(dest => dest.UserName,
-                   opt => opt.MapFrom(src => src.Email)) // غالبًا اليوزرنيم = الإيميل
+                   opt => opt.MapFrom(src => src.Email)) //  اليوزرنيم = الإيميل
                .ForMember(dest => dest.ProfilePictureUrl,
                    opt => opt.Ignore()); // لأن IFormFile يحتاج معالجة منفصلة
 

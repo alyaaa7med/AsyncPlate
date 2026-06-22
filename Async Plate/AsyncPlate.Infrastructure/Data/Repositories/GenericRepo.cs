@@ -19,12 +19,12 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         }
 
         public async Task<T?> GetByIdAsync(string id) => await _context.Set<T>().FindAsync(id); // returns entity or null
-        public IQueryable<T> GetAll() => _context.Set<T>().AsQueryable();
-        public async Task AddAsync(T entity) => await _context.Set<T>().AddAsync(entity);
 
-
+        public void Add(T entity) =>   _context.Set<T>().Add(entity);
         public void Update(T entity) => _context.Set<T>().Update(entity);
         public void Delete(T entity) => _context.Set<T>().Remove(entity);
+
+        public IQueryable<T> GetAll() => _context.Set<T>().AsQueryable();
 
     }
 }

@@ -80,7 +80,7 @@ namespace AsyncPlate.Application.Services.Implementation
             //image upload 
             var imageUrl = await _mediaService.UploadImageAsync(categoryRequestDTO.ImageUrl, "categories");
 
-            await _unitOfWork.categories.AddAsync(category);
+             _unitOfWork.categories.Add(category);
             await _unitOfWork.SaveChangesAsync();
 
             _logger.LogInformation("Category created successfully: {Name}", category.Name);
