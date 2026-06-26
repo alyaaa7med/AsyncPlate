@@ -17,9 +17,13 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         }
 
         //get by userid
-        public async Task<Customer?> GetByUserIdAsync(string userId)
+      
+
+        public async Task<Customer?> GetWithUserByUserIdAsync(string userId)
         {
-            return await _context.Customers.FirstOrDefaultAsync(c => c.AppUserId == userId);
+            return await _context.Customers.Include(c=>c.AppUser).
+                FirstOrDefaultAsync(c => c.AppUserId == userId);
+
         }
 
         public async Task<List<string>> GetVipCustomerUserIdsAsync()
@@ -29,6 +33,21 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
                 .Where(c => c.LoyaltyPoints > 1220)
                 .Select(c => c.AppUserId) 
                 .ToListAsync();
+        }
+
+        public IQueryable<Customer> GetVipCustomers()
+        {
+            return _context.Customers
+                .AsNoTracking()
+                .Where(c => c.LoyaltyPoints>1500)
+                .Include(c => c.AppUser);
+        }
+
+        public IQueryable<Customer> GetAllWithUsers()
+        {
+            return _context.Customers
+                .AsNoTracking()
+                .Include(c => c.AppUser);
         }
     }
 

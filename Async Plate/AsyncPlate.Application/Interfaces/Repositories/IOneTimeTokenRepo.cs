@@ -17,5 +17,9 @@ namespace AsyncPlate.Application.Interfaces.Repositories
         //return bool 
 
         Task<OneTimeToken?> GetActiveOneTimeTokenAsync(Expression<Func<OneTimeToken, bool>> predicate);
+
+        Task<List<OneTimeToken>> GetAllTokenByUserIdAsync(string userId);
+        void RemoveRange(IEnumerable<OneTimeToken> tokens);
+
     }
 }

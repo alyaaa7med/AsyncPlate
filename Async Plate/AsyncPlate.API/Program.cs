@@ -84,6 +84,8 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<ICustomerService,CustomerService>();
+builder.Services.AddScoped<IKitchenChefService,KitchenChefService>();
 builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<INotificationSender, SignalRNotificationSender>();
 builder.Services.AddScoped<IOfferJob, OfferJob>();
@@ -303,6 +305,9 @@ using (var scope = app.Services.CreateScope())
     Cron.Daily(21, 0));
 
 }
+
+//ToDo: background job for deleting inactive onetimetokens....
+
 
 // Middlewares [API ]
 

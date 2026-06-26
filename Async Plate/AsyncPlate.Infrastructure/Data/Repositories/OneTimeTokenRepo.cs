@@ -16,11 +16,23 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         {
         }
 
-       
+
         public async Task<OneTimeToken?> GetActiveOneTimeTokenAsync(Expression<Func<OneTimeToken, bool>> predicate)
         {
             return await _context.Set<OneTimeToken>()
                 .SingleOrDefaultAsync(predicate);
+        }
+
+
+        public async Task<List<OneTimeToken>> GetAllTokenByUserIdAsync(string userId)
+        {
+            return await _context.OneTimeToken.Where(o=>o.AppUserId == userId).ToListAsync();
+                
+        }
+        public void RemoveRange(IEnumerable<OneTimeToken> tokens)
+        {
+             _context.OneTimeToken.RemoveRange(tokens);
+
         }
     }
 }

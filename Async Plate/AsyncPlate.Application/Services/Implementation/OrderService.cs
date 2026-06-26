@@ -119,7 +119,7 @@ namespace AsyncPlate.Application.Services.Implementation
 
         public async Task<OrderResponseDTO> ConfirmOrderAsync(string orderId, string userId)
         {
-            var customer = await _unitOfWork.customers.GetByUserIdAsync(userId);
+            var customer = await _unitOfWork.customers.GetWithUserByUserIdAsync(userId);
             if (customer == null)
             {
                 _logger.LogWarning("Customer not found. UserId: {UserId}", userId);
@@ -206,7 +206,7 @@ namespace AsyncPlate.Application.Services.Implementation
                 throw new Exceptions.BadRequestException($"Cannot cook order with status {order.Status}");
             }
 
-            var chef = await _unitOfWork.kitchenChefs.GetChefByUserIdAsync(userId);
+            var chef = await _unitOfWork.kitchenChefs.GetWithUserByUserIdAsync(userId);
             order.KitchenChef = chef;
 
             //get all products main and extra and remove duplicates

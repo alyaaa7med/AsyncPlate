@@ -11,7 +11,6 @@ namespace AsyncPlate.Application.Common.Extenstions
 
     public static class QueryableExtensions
     {
-        //pagination is query behavior, not repository responsibility
         public static async Task<PagedResult<T>> ToPagedResultAsync<T>(this IQueryable<T> query, int pageNumber, int pageSize) where T : class
         {
             var totalCount = await query.CountAsync();

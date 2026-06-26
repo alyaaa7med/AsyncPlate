@@ -103,12 +103,14 @@ namespace AsyncPlate.Application.Services.Implementation
 
                 if (!result.Succeeded)
                 {
+      
                     var identityErrors = string.Join(", ", result.Errors.Select(e => e.Description));
                     _logger.LogWarning("User creation failed: {Errors}", identityErrors);
                     throw new Exceptions.BadRequestException($"Failed to create user: {identityErrors}");//badrequest : email duplicate / weak password 
                 }
+                customer.AppUser.UserType = UserType.Customer;
 
-                 _unitOfWork.customers.Add(customer);          //nav prop of user is already filled
+                _unitOfWork.customers.Add(customer);          //nav prop of user is already filled
                                                                //so that no need to add fk manully to link customer 
                                                                //with user
                 await _unitOfWork.SaveChangesAsync();
@@ -183,6 +185,7 @@ namespace AsyncPlate.Application.Services.Implementation
                     _logger.LogWarning("User creation failed: {Errors}", identityErrors);
                     throw new Exceptions.BadRequestException($"Failed to create user: {identityErrors}");
                 }
+                chef.AppUser.UserType = UserType.KitchenChef;
 
                 _unitOfWork.kitchenChefs.Add(chef);          //nav prop of user is already filled
                                                              //so that no need to add fk manully to link chef 
@@ -190,7 +193,7 @@ namespace AsyncPlate.Application.Services.Implementation
 
                 await _unitOfWork.SaveChangesAsync();
 
-                var roleResult = await _userManager.AddToRoleAsync(chef.AppUser, "Chef");
+                var roleResult = await _userManager.AddToRoleAsync(chef.AppUser, "KitchenChef");
 
                 if (!roleResult.Succeeded)
                 {
@@ -324,13 +327,44 @@ namespace AsyncPlate.Application.Services.Implementation
             var resetLink = $"https://yourfrontend.com/reset-password?token={encodedToken}&email={user.Email}"; //to do in appsettings
 
 
+            var emailBody = $@"
+<div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;'>
+
+    <h2 style='color: #333;'>Reset Your Password</h2>
+
+    <p>We received a request to reset your password.</p>
+
+    <p>Click the button below to create a new password:</p>
+
+    <p style='text-align: center; margin: 30px 0;'>
+        <a href='{resetLink}'
+           style='background-color: #007bff;
+                  color: white;
+                  text-decoration: none;
+                  padding: 12px 24px;
+                  border-radius: 5px;
+                  display: inline-block;'>
+            Reset Password
+        </a>
+    </p>
+
+    <p style='color: #666; font-size: 14px;'>
+        If you didn't request a password reset, you can safely ignore this email.
+    </p>
+
+    <hr>
+
+    <p style='color: #888; font-size: 13px;'>
+        AsyncPlate Team
+    </p>
+
+</div>";
 
             BackgroundJob.Enqueue<IEmailService>(x => x.SendEmailAsync(
             user.Email!,
-           "Reset Password",
-           $"Click here to reset your password: {resetLink}"
-       )
-   );
+            "Reset Your Password",
+            emailBody));
+
             _logger.LogInformation("Forget Password Email is sent to user with email {email}", user.Email);
 
         }
@@ -346,6 +380,7 @@ namespace AsyncPlate.Application.Services.Implementation
             //invalid the token to prevent reuse
             //force logout 
             //return dto
+
             var validationResult = await _validator5.ValidateAsync(requestDTO);
 
             if (!validationResult.IsValid)

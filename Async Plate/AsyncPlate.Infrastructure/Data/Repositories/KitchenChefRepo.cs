@@ -15,11 +15,9 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         {
             // create / update / get / delete are in the generic repo no need to re-implement them here
         }
-
-        public async Task<KitchenChef?> GetChefByUserIdAsync(string userId)
-        {
-            return await _context.Chefs.FirstOrDefaultAsync(c => c.AppUserId == userId);
-        }
+      
+        
+    
 
         public async Task<List<string>> GetChefUserIdsAsync()
         {
@@ -29,6 +27,22 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
                 .ToListAsync();
         }
 
-        
+
+        public IQueryable<KitchenChef> GetAllWithUsers()
+        {
+            return _context.Chefs
+                .AsNoTracking()
+                .Include(c => c.AppUser);
+        }
+
+        public async Task<KitchenChef?> GetWithUserByUserIdAsync(string userId)
+        {
+            return await _context.Chefs
+                .Include(c => c.AppUser)
+                .FirstOrDefaultAsync(c => c.AppUserId == userId);
+        }
+
+
+
     }
 }
