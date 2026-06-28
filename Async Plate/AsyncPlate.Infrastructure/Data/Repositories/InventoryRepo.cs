@@ -19,9 +19,9 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
             return await _context.Inventories.AnyAsync(i => i.Name== name);
         }
 
-        public IQueryable<Inventory> FilterByName(string name)
+        public IQueryable<Inventory> FilterByName(IQueryable<Inventory>query, string name)
         {
-            return _context.Inventories.Where(x => x.Name.Contains(name));
+            return   query.Where(s => s.Name.Contains(name));
         }
 
       

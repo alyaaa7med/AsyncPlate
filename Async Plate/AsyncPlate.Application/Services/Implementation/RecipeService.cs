@@ -148,18 +148,6 @@ namespace AsyncPlate.Application.Services.Implementation
             var responseDTO = _mapper.Map<RecipeResponseDTO>(recipe);
             return responseDTO;
         }
-        public async Task<RecipeResponseDTO> GetRecipeByIdAsync(string inventoryId, string productId)
-        {
-           //validate ids
-           var recipe =  await _unitOfWork.recipes.GetRecipeWithInventoryAndProductAsync(inventoryId, productId);
-            if (recipe == null)
-            {
-                _logger.LogWarning("Recipe with inventory id {InventoryId} and product id {ProductId} not found", inventoryId, productId);
-                throw new Exceptions.NotFoundException("Recipe not found");
-            }
-            var responseDTO = _mapper.Map<RecipeResponseDTO>(recipe);
-            return responseDTO;
-        }
         public async Task<PagedResult<RecipeResponseDTO>> GetAllRecipesAsync(RecipeFilterDTO filterDto)
         {
             var recipesQuery = _unitOfWork.recipes.GetAllRecipes();
@@ -186,59 +174,7 @@ namespace AsyncPlate.Application.Services.Implementation
             };
         }
        
-        //public async Task<MakeRecipeResponseDTO> CookProductAsync(MakeRecipeRequestDTO makeRecipeRequestDTO)
-        //{
-        //    //validate dto 
-        //    //mapping
-        //    //make recipe
-        //    //update inventory
-        //    //check if <= threshould => if yes: send realtime notification to admin and backgroud email to supplier
-        //    //i think i need to return dto ? as i need to return new inventory 
-
-        //    var validationResult = await _validator1.ValidateAsync(makeRecipeRequestDTO);
-        //    if (!validationResult.IsValid)
-        //    {
-        //        var errorsDictionary = validationResult.Errors
-        //            .GroupBy(e => e.PropertyName)
-        //            .ToDictionary(
-        //                g => g.Key,
-        //                g => g.Select(e => e.ErrorMessage).ToArray()
-        //            );
-        //        throw new Exceptions.ValidationException(errorsDictionary);
-        //    }
-        //    //check if product and inventory exist
-        //    var product = await _unitOfWork.products.GetByIdAsync(makeRecipeRequestDTO.ProductId);
-        //    if (product == null)
-        //    {
-        //        _logger.LogWarning("Product with id {ProductId} not found", makeRecipeRequestDTO.ProductId);
-        //        throw new Exceptions.NotFoundException("Product not found");
-        //    }
-
-        //    var inventory = await _unitOfWork.inventories.GetByIdAsync(makeRecipeRequestDTO.InventoryId);
-        //    if (inventory == null)
-        //    {
-        //        _logger.LogWarning("Inventory with id {InventoryId} not found", makeRecipeRequestDTO.InventoryId);
-        //        throw new Exceptions.NotFoundException("Inventory not found");
-        //    }
-
-        //    var recipe = _mapper.Map<Recipe>(makeRecipeRequestDTO);
-
-        //    await _unitOfWork.recipes.AddAsync(recipe);
-
-        //    inventory.CurrentStock -= makeRecipeRequestDTO.Quantity;
-        //    _unitOfWork.inventories.Update(inventory);
-
-        //    await _unitOfWork.SaveChangesAsync();
-
-        //    _logger.LogInformation("a prodcut is being cooked now {productid} ",makeRecipeRequestDTO.ProductId);
-
-        //    //check if <= threshould => if yes: send realtime notification to admin and backgroud email to supplier
-        //    //use mediator to send notification to admin/ email notification 
-
-        //    recipe = await _unitOfWork.recipes.GetRecipeWithInventoryAndProduct(makeRecipeRequestDTO.InventoryId, makeRecipeRequestDTO.ProductId);
-        //    var responseDTO = _mapper.Map<MakeRecipeResponseDTO>(recipe);
-        //    return responseDTO;
-        //}
+     
     }
 
 }

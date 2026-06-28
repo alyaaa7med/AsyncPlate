@@ -11,7 +11,7 @@ namespace AsyncPlate.Application.Interfaces.Repositories
     public interface IInventoryRepo : IBaseRepo<Inventory>
     {
         Task<bool> AnyInventoryAsync(string name);
-        IQueryable<Inventory> FilterByName(string name);
+        IQueryable<Inventory> FilterByName(IQueryable<Inventory> query, string name);
 
         IQueryable<Inventory> GetAllWithSuppliers();
         IQueryable<Inventory> GetInventoriesBySupplierId(string supplierId);
@@ -20,6 +20,6 @@ namespace AsyncPlate.Application.Interfaces.Repositories
         Task<List<Inventory>> GetInventoriesByIdsAsync(List<string> inventoryIds);
 
         Task<List<Inventory>> GetLowStockWithSuppliersAsync();
-            
+
     }
 }

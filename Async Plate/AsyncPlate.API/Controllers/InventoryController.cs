@@ -11,7 +11,7 @@ namespace AsyncPlate.API.Controllers
 {
     [ApiController]
     [Route("api/Inventories")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class InventoryController : ControllerBase
     {
         private readonly IInventoryService _inventoryService;

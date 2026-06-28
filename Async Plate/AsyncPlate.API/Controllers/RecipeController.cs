@@ -40,13 +40,7 @@ namespace AsyncPlate.API.Controllers
             var recipeResponseDTO = await recipeService.DeleteRecipeAsync(inventoryId, productId);
             return Ok(new ApiResponse<RecipeResponseDTO>(true, "Recipe deleted successfully", recipeResponseDTO));
         }
-
-        [HttpGet("{productId}/{inventoryId}")]
-        public async Task<IActionResult> GetRecipeById(string productId, string inventoryId)
-        {
-            var recipeResponseDTO = await recipeService.GetRecipeByIdAsync(inventoryId, productId);
-            return Ok(new ApiResponse<RecipeResponseDTO>(true, "Recipe retrieved successfully", recipeResponseDTO));
-        }
+        
 
 
         [HttpGet()]
@@ -56,13 +50,6 @@ namespace AsyncPlate.API.Controllers
             return Ok(new ApiResponse<PagedResult<RecipeResponseDTO>>(true, "Recipes retrieved successfully", pagedResult));
         }
 
-        //[HttpPost("cook")] //automatic calling not by any one 
-        ////it should be in the order service as we cook when the order is confirmed not when 
-        ////the recipe is created 
-        //public async Task<IActionResult> CookProduct(AddRecipeRequestDTO cookRecipeRequestDTO)
-        //{
-        //    await recipeService.MakeRecipeAsync(makeRecipeRequestDTO);
-        //    return Ok();
-        //}
+     
     }
 }

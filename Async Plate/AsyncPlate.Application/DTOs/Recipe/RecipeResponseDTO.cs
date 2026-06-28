@@ -13,7 +13,7 @@ namespace AsyncPlate.Application.DTOs.Recipe
     public class RecipeResponseDTO
     {
         
-        public double Quantity { get; set; } 
+        public decimal Quantity { get; set; } //quantity of inventory needed 
 
         public InventorySummaryDTO Inventory { get; set; } = new ();    
 

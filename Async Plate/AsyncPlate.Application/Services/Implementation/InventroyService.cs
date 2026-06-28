@@ -101,7 +101,7 @@ namespace AsyncPlate.Application.Services.Implementation
 
             if (!string.IsNullOrEmpty(filterDto.Name))
             {
-                inventoriesQuery = _unitOfWork.inventories.FilterByName(filterDto.Name);
+                inventoriesQuery = _unitOfWork.inventories.FilterByName(inventoriesQuery, filterDto.Name);
             }
             var pagedResult = await inventoriesQuery.ToPagedResultAsync(filterDto.PageNumber, filterDto.PageSize);
 
@@ -170,7 +170,7 @@ namespace AsyncPlate.Application.Services.Implementation
             var inventoriesQuery = _unitOfWork.inventories.GetLowStockInventory();
             if (!string.IsNullOrEmpty(filterDto.Name))
             {
-                inventoriesQuery = _unitOfWork.inventories.FilterByName(filterDto.Name);
+                inventoriesQuery = _unitOfWork.inventories.FilterByName(inventoriesQuery,filterDto.Name);
             }
             var pagedResult = await inventoriesQuery.ToPagedResultAsync(filterDto.PageNumber, filterDto.PageSize);
 

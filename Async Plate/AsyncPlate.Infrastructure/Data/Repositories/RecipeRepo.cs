@@ -54,13 +54,13 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
                     Id = r.Inventory.Id,
                     Name = r.Inventory.Name
                 }
+                ,
+                Quantity = r.Quantity
             });
         }
 
-        public async Task<IEnumerable<Recipe>> GetRecipeByProductIdAsync2(string productId)
-        {
-            return await _context.Recipes.Where(r => r.ProductId == productId).ToListAsync();
-        }
+     
+
         public async Task<List<Recipe>> GetRecipesByProductIdsAsync(IEnumerable<string> productIds)
         {
             return await _context.Recipes.Where(r => productIds.Contains(r.ProductId)).ToListAsync();
