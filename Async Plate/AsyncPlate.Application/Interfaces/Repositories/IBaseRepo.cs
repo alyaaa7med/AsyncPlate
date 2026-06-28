@@ -14,8 +14,10 @@ namespace AsyncPlate.Application.Interfaces.Repositories
         //sequencial => as i will only change the state of entity in the memory to added, updated, deleted 
 
         void Add(T entity);
+        void AddRange(IEnumerable<T> entities);
         void Update(T entity);
         void Delete(T entity);
+        void DeleteRange(IEnumerable<T> entities);
 
         IQueryable<T> GetAll(); // i will return iquerable then add other query for it 
 

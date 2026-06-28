@@ -17,6 +17,11 @@ namespace AsyncPlate.Application.Mapping
                 .ForMember(dest => dest.ImageUrl,
                    opt => opt.Ignore());
 
+            CreateMap<UpdateCategoryRequestDTO, Category>()
+               .ForMember(dest => dest.ImageUrl,
+                  opt => opt.Ignore());
+
+
             CreateMap<Category, CategoryResponseDTO>()
                  .ForMember(dest => dest.ImageUrl,
                  //it will not be null 

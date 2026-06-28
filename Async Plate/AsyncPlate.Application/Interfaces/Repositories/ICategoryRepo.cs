@@ -1,4 +1,5 @@
 ﻿using AsyncPlate.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace AsyncPlate.Application.Interfaces.Repositories
         Task<bool> AnyCategoryAsync(string name);
         Task<Category?> GetCategoryWithRelatedDataAsync(string categoryId);
         Task<List<Category>> GetCategoriesByIdsAsync(List<string> categoryIds);
+        IQueryable<Category> GetAllWithRelatedData();
+        
     }
 }

@@ -12,7 +12,7 @@ namespace AsyncPlate.Domain.Entities
         public string Name { get; set; } = string.Empty;
         public Type Type { get; set; }
         public decimal BasePrice { get; set; } // price for selling 
-        public bool IsAvailable { get; set; }
+        public bool IsAvailable { get; set; } = true;
         public int TotalTimesOrdered { get; set; } //to calculate best sellers
 
 

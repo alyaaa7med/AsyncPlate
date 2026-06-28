@@ -31,6 +31,7 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         public async Task<IEnumerable<RecipeListDTO>> GetRecipeByProductIdAsync(string productId)
         {
             return await _context.Recipes.Where(r => r.ProductId == productId)
+
                                    .Select(r => new RecipeListDTO
                                    {
                                        InventoryName = r.Inventory.Name,

@@ -23,6 +23,7 @@ namespace AsyncPlate.Application.Interfaces
         IInventoryRepo inventories { get; }
         IRecipeRepo recipes { get; }
         IProductRepo products { get; }
+        IProductExtraRepo ProductExtras { get; }
         ICategoryRepo categories { get; }
         IOfferRepo offers { get; }
         IOrderRepo orders { get; }

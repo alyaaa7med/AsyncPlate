@@ -20,14 +20,14 @@ namespace AsyncPlate.Application.Services.Implementation
 {
     public class NotificationService : INotificationService
     {
-        private readonly ILogger<INotificationService> _logger;
+        private readonly ILogger<NotificationService> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly INotificationSender _notificationSender;
         private readonly IOfferJob _offerJob;
 
-        public NotificationService(ILogger<INotificationService> logger, IMapper mapper, IUnitOfWork unitOfWork
+        public NotificationService(ILogger<NotificationService> logger, IMapper mapper, IUnitOfWork unitOfWork
                                      , INotificationSender notificationSender, IOfferJob offerJob)
         {
             _logger = logger;

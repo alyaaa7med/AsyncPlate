@@ -6,6 +6,7 @@ using AsyncPlate.Application.DTOs.Inventory;
 using AsyncPlate.Application.DTOs.Offer;
 using AsyncPlate.Application.DTOs.Order;
 using AsyncPlate.Application.DTOs.Product;
+using AsyncPlate.Application.DTOs.ProductExtra;
 using AsyncPlate.Application.DTOs.Recipe;
 using AsyncPlate.Application.DTOs.Supplier;
 using AsyncPlate.Application.Interfaces;
@@ -18,6 +19,7 @@ using AsyncPlate.Application.Services.Interfaces;
 using AsyncPlate.Application.Validators.Admin;
 using AsyncPlate.Application.Validators.Authentication;
 using AsyncPlate.Application.Validators.Category;
+using AsyncPlate.Application.Validators.ExtraProduct;
 using AsyncPlate.Application.Validators.Inventory;
 using AsyncPlate.Application.Validators.Offer;
 using AsyncPlate.Application.Validators.Order;
@@ -80,6 +82,7 @@ builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductExtraService, ProductExtraService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
@@ -117,6 +120,11 @@ builder.Services.AddTransient<IValidator<OrderItemRequestDTO>, OrderItemRequestV
 builder.Services.AddTransient<IValidator<OrderExtraItemRequestDTO>, OrderExtraItemRequestValidator>();
 builder.Services.AddTransient<IValidator<AddOfferRequestDTO>, AddOfferRequestValidator>();
 builder.Services.AddTransient<IValidator<UpdateOfferRequestDTO>, UpdateOfferRequestValidator>();
+builder.Services.AddTransient<IValidator<UpdateCategoryRequestDTO>, UpdateCategoryRequestValidator>();
+builder.Services.AddTransient<IValidator<AddProductExtraDTO>, AddProductExtraDTOValidator>();
+builder.Services.AddTransient<IValidator<UpdateProductExtrasDTO>, UpdateProductExtrasDTOValidator>();
+
+
 
 
 
@@ -154,6 +162,8 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<CategoryProfile>();
     cfg.AddProfile<OfferProfile>();
     cfg.AddProfile<OrderProfile>();
+    cfg.AddProfile<ProductExtraProfile>();
+
 }, typeof(Program));
 
 //signalR
@@ -306,7 +316,7 @@ using (var scope = app.Services.CreateScope())
 
 }
 
-//ToDo: background job for deleting inactive onetimetokens....
+//ToDo: background job for deleting inactive onetimetokens + offers ....
 
 
 // Middlewares [API ]

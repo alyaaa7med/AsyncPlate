@@ -1,4 +1,7 @@
-﻿using AsyncPlate.Application.DTOs.Category;
+﻿using AsyncPlate.Application.Common.DTOs;
+using AsyncPlate.Application.DTOs.Category;
+using AsyncPlate.Application.Interfaces;
+using AsyncPlate.Application.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +14,9 @@ namespace AsyncPlate.Application.Services.Interfaces
     {
         Task<CategoryResponseDTO> AddCategoryAsync(AddCategoryRequestDTO categoryRequestDTO);
         Task<CategoryResponseDTO> GetCategoryByIdAsync(string categoryId);
-        //Task<CategoryResponseDTO> UpdateCategoryAsync(int categoryId, UpdateCategoryRequestDTO categoryRequestDTO);
-
-        //delete 
-        //get all
-        //get offers per category
+        Task<PagedResult<CategoryResponseDTO>> GetAllAsync(int pageNumber, int pageSize);
+        Task DeleteCategoryAsync(string categoryId);
+        Task<CategoryResponseDTO> UpdateCategoryAsync(string categoryId, UpdateCategoryRequestDTO categoryRequestDTO);
 
 
     }

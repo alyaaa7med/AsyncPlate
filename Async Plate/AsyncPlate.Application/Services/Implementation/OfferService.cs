@@ -19,7 +19,7 @@ namespace AsyncPlate.Application.Services.Implementation
 {
     public class OfferService : IOfferService
     {
-        private readonly ILogger<IOfferService> _logger;
+        private readonly ILogger<OfferService> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddOfferRequestDTO> _validator1;
@@ -27,7 +27,7 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly INotificationSender _notificationSender;
         private readonly IOfferJob _offerJob;
 
-        public OfferService(ILogger<IOfferService> logger, IMapper mapper, IUnitOfWork unitOfWork,
+        public OfferService(ILogger<OfferService> logger, IMapper mapper, IUnitOfWork unitOfWork,
             IValidator<AddOfferRequestDTO> validator1, IValidator<UpdateOfferRequestDTO> validator2
             , INotificationSender notificationSender, IOfferJob offerJob)
         {

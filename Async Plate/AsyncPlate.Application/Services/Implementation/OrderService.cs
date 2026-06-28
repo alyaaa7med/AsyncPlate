@@ -13,7 +13,7 @@ namespace AsyncPlate.Application.Services.Implementation
 {
     public class OrderService : IOrderService
     {
-        private readonly ILogger<IOrderService> _logger;
+        private readonly ILogger<OrderService> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<MakeOrderRequestDTO> _validator1;
@@ -27,7 +27,7 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IOrderExtraItemRepo _orderExtraItemRepo;
         private readonly IInventoryRepo _inventoryRepo;
         private readonly IOrderJob _orderJob;
-        public OrderService(ILogger<IOrderService> logger, IMapper mapper, IUnitOfWork unitOfWork,
+        public OrderService(ILogger<OrderService> logger, IMapper mapper, IUnitOfWork unitOfWork,
             IValidator<MakeOrderRequestDTO> validator1, ICustomerRepo customerRepo,IKitchenChefRepo chefRepo
             , IProductRepo productRepo, IProductExtraRepo productExtraRepo, IRecipeRepo recipeRepo
             , IOrderRepo orderRepo, IOrderItemRepo orderItemRepo, IOrderExtraItemRepo orderExtraItemRepo, IInventoryRepo inventoryRepo,
@@ -245,6 +245,8 @@ namespace AsyncPlate.Application.Services.Implementation
                             throw new Exceptions.BadRequestException( $"{inventory.Name} is not enough in stock");
                         }
                         inventory.CurrentStock -= required;
+                        //ToDo: product = not available
+
                         //no need to update as the inventory is tracked already in memory and the update is reflected in memory 
 
 

@@ -28,6 +28,8 @@ namespace AsyncPlate.Infrastructure.Data
         public ISupplierRepo suppliers { get; }
         public IInventoryRepo inventories { get; }
         public IProductRepo products { get; }
+        public IProductExtraRepo ProductExtras { get; }
+
         public IRecipeRepo recipes { get; }
         public IOfferRepo offers { get; }
         public ICategoryRepo categories { get; }
@@ -37,7 +39,8 @@ namespace AsyncPlate.Infrastructure.Data
         public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo, IAdminRepo adminRepo,
                 IRefreshTokenRepo RefreshTokenRepo, IOneTimeTokenRepo onetimetokenRepo,
                 ISupplierRepo supplierRepo, IInventoryRepo inventoryRepo, IProductRepo productRepo, IRecipeRepo recipeRepo,
-                IOfferRepo offerRepo, ICategoryRepo categoryRepo, IOrderRepo orderRepo, INotificationRepo notificationRepo)
+                IOfferRepo offerRepo, ICategoryRepo categoryRepo, IOrderRepo orderRepo
+            , IProductExtraRepo ProductExtraRepo , INotificationRepo notificationRepo)
         {
             _context = context;
             customers = customerRepo;
@@ -49,6 +52,7 @@ namespace AsyncPlate.Infrastructure.Data
             inventories = inventoryRepo;
             recipes = recipeRepo;
             products = productRepo;
+            ProductExtras =ProductExtraRepo;
             offers = offerRepo;
             categories = categoryRepo;
             orders = orderRepo;

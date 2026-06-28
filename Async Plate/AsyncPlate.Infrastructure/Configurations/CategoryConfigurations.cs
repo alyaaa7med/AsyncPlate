@@ -19,7 +19,7 @@ namespace AsyncPlate.Infrastructure.Configurations
             builder.Property(c => c.Name)
             .IsRequired()
             .HasMaxLength(100);
-            builder.HasIndex(x => x.Name).IsUnique();
+            builder.HasIndex(x => x.Name).IsUnique(); //as i search using it 
 
 
             builder.Property(c => c.Description)
