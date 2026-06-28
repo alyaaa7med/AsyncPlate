@@ -11,8 +11,8 @@ namespace AsyncPlate.Application.Interfaces.Repositories
     public interface ISupplierRepo : IBaseRepo<Supplier>
     {
         Task<bool> AnySupplierAsync(string email);
-        IQueryable<Supplier> FilterByName(string name);
-
+        Task<Supplier?> GetSupplierWithInventoryAsync(string supplierId);
+        IQueryable<Supplier> FilterByName(IQueryable<Supplier> query, string name);
     }
 
 }

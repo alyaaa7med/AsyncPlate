@@ -78,7 +78,7 @@ namespace AsyncPlate.Application.Services.Implementation
         {
             //check if found/not 
             //return responsedto
-            var supplier = await _unitOfWork.suppliers.GetByIdAsync(supplierId);
+            var supplier = await _unitOfWork.suppliers.GetSupplierWithInventoryAsync(supplierId);
             if (supplier == null)
             {
                 throw new Exceptions.NotFoundException("Supplier not found.");
@@ -93,7 +93,7 @@ namespace AsyncPlate.Application.Services.Implementation
 
             if (!string.IsNullOrEmpty(filterDto.Name))
             {
-                suppliersQuery = _unitOfWork.suppliers.FilterByName(filterDto.Name);
+                suppliersQuery = _unitOfWork.suppliers.FilterByName(suppliersQuery,filterDto.Name);
             }
             var pagedResult = await suppliersQuery.ToPagedResultAsync(filterDto.PageNumber, filterDto.PageSize);
 
@@ -113,7 +113,7 @@ namespace AsyncPlate.Application.Services.Implementation
 
         public async Task<SupplierResponseDTO> UpdateSupplierAsync(string supplierId, UpdateSupplierRequestDTO requestDTO)
         {
-            var supplier = await _unitOfWork.suppliers.GetByIdAsync(supplierId);
+            var supplier = await _unitOfWork.suppliers.GetSupplierWithInventoryAsync(supplierId);
             if (supplier == null)
             {
                 throw new Exceptions.NotFoundException("Supplier not found.");
@@ -143,7 +143,7 @@ namespace AsyncPlate.Application.Services.Implementation
         }
         public async Task<SupplierResponseDTO> DeleteSupplierAsync(string supplierId)
         {
-            var supplier = await _unitOfWork.suppliers.GetByIdAsync(supplierId);
+            var supplier = await _unitOfWork.suppliers.GetSupplierWithInventoryAsync(supplierId);
             if (supplier == null)
             {
                 throw new Exceptions.NotFoundException("Supplier not found.");

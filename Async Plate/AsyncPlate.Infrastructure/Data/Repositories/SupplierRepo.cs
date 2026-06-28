@@ -21,12 +21,20 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
             return await _context.Suppliers.AnyAsync(s => s.ContactEmail == email);
         }
 
-        public IQueryable<Supplier> FilterByName(string name)//not async as it just build the query not execute it 
+        public IQueryable<Supplier> FilterByName(IQueryable<Supplier> query, string name)//not async as it just build the query not execute it 
         {
-            return _context.Suppliers.Where(x => x.Name.Contains(name));
+            return query.Where(s => s.Name.Contains(name));
         }
 
-       
+        public async Task<Supplier?> GetSupplierWithInventoryAsync(string supplierId)
+        {
+            return await _context.Suppliers
+                .Include(s => s.Inventories)
+                .FirstOrDefaultAsync(s => s.Id == supplierId);
+        }
+
+
+
     }
 
 }

@@ -11,7 +11,7 @@ namespace AsyncPlate.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]s")]
-    //[Authorize(Roles ="Admin")]
+    [Authorize(Roles ="Admin")]
     public class SupplierController : ControllerBase
     {
         private readonly ISupplierService _supplierService;
