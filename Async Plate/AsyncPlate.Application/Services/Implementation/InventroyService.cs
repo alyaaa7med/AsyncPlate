@@ -164,7 +164,6 @@ namespace AsyncPlate.Application.Services.Implementation
             return _mapper.Map<InventoryResponseDTO>(inventory);
         }
 
-
         public async Task<PagedResult<InventoryResponseDTO>> GetLowStockInventoriesAsync(InventoryFilterDTO filterDto)
         {
             var inventoriesQuery = _unitOfWork.inventories.GetLowStockInventory();
@@ -185,7 +184,6 @@ namespace AsyncPlate.Application.Services.Implementation
                 TotalPages = pagedResult.TotalPages
             };
         }
-
         public async Task<SupplierSummaryDTO> GetSupplierByInventoryIdAsync(string inventoryId)
         {
             var inventory = await _unitOfWork.inventories.GetInventoryWithSupplierAsync(inventoryId);

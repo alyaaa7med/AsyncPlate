@@ -8,6 +8,7 @@ using AsyncPlate.Application.DTOs.Order;
 using AsyncPlate.Application.DTOs.Product;
 using AsyncPlate.Application.DTOs.ProductExtra;
 using AsyncPlate.Application.DTOs.Recipe;
+using AsyncPlate.Application.DTOs.Review;
 using AsyncPlate.Application.DTOs.Supplier;
 using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Application.Interfaces.Jobs;
@@ -25,6 +26,7 @@ using AsyncPlate.Application.Validators.Offer;
 using AsyncPlate.Application.Validators.Order;
 using AsyncPlate.Application.Validators.Product;
 using AsyncPlate.Application.Validators.Recipe;
+using AsyncPlate.Application.Validators.Review;
 using AsyncPlate.Application.Validators.Supplier;
 using AsyncPlate.Domain.Entities;
 using AsyncPlate.Infrastructure.Data;
@@ -70,7 +72,9 @@ builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IOrderItemRepo, OrderItemRepo>();
 builder.Services.AddScoped<IOrderExtraItemRepo, OrderExtraItemRepo>();
+builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
 builder.Services.AddScoped<INotificationRepo, NotificationRepo>();
+
 
 
 builder.Services.AddScoped<IMediaService, MediaService>();
@@ -88,7 +92,10 @@ builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<ICustomerService,CustomerService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IKitchenChefService,KitchenChefService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
+
 builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<INotificationSender, SignalRNotificationSender>();
 builder.Services.AddScoped<IOfferJob, OfferJob>();
@@ -123,6 +130,8 @@ builder.Services.AddTransient<IValidator<UpdateOfferRequestDTO>, UpdateOfferRequ
 builder.Services.AddTransient<IValidator<UpdateCategoryRequestDTO>, UpdateCategoryRequestValidator>();
 builder.Services.AddTransient<IValidator<AddProductExtraDTO>, AddProductExtraDTOValidator>();
 builder.Services.AddTransient<IValidator<UpdateProductExtrasDTO>, UpdateProductExtrasDTOValidator>();
+builder.Services.AddTransient<IValidator<AddReviewRequestDTO>, AddReviewRequestValidator>();
+builder.Services.AddTransient<IValidator<UpdateReviewRequestDTO>, UpdateReviewRequestValidator>();
 
 
 
@@ -163,6 +172,9 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<OfferProfile>();
     cfg.AddProfile<OrderProfile>();
     cfg.AddProfile<ProductExtraProfile>();
+    cfg.AddProfile<ReviewProfile>();
+    cfg.AddProfile<MenuProfile>();
+
 
 }, typeof(Program));
 

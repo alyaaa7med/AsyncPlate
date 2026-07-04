@@ -28,6 +28,7 @@ namespace AsyncPlate.Application.Interfaces
         IOfferRepo offers { get; }
         IOrderRepo orders { get; }
         INotificationRepo notifications { get; }
+         IReviewRepo reviews { get; }
 
         Task<int> SaveChangesAsync();//int : num of rows affected 
 

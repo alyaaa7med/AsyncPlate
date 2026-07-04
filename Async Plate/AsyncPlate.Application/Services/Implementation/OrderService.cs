@@ -245,10 +245,9 @@ namespace AsyncPlate.Application.Services.Implementation
                             throw new Exceptions.BadRequestException( $"{inventory.Name} is not enough in stock");
                         }
                         inventory.CurrentStock -= required;
-                        //ToDo: product = not available
+                        //product = not available => manually by the admin 
 
                         //no need to update as the inventory is tracked already in memory and the update is reflected in memory 
-
 
                         if (inventory.CurrentStock < inventory.MinStockLevel)
                         {

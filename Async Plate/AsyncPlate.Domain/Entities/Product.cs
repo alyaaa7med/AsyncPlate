@@ -22,7 +22,7 @@ namespace AsyncPlate.Domain.Entities
 
         //what actually ordered main/extra product
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-        public ICollection<OrderExtraItem> OrderItemExtras { get; set; }= new List<OrderExtraItem>();
+        public ICollection<OrderExtraItem> OrderItemExtras { get; set; } = new List<OrderExtraItem>();
 
 
         //what i store main and its extra 
@@ -33,8 +33,9 @@ namespace AsyncPlate.Domain.Entities
         public ICollection<ProductExtra> ExtraProducts { get; set; } = new List<ProductExtra>();
 
 
-    }
 
+      
+    }
     public enum Type
     {
         Main,

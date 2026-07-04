@@ -119,5 +119,43 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
                                  }).ToList()
                                  }).FirstOrDefaultAsync();
         }
+
+        public IQueryable<Product> GetMenuProducts()
+        {
+            return _context.Products
+                .AsNoTracking()
+                .Include(x => x.Category)
+                    .ThenInclude(c => c.CurrentOffer)
+                .Include(x => x.ExtraProducts)
+                    .ThenInclude(pe => pe.ExtraProduct)
+                .Include(x => x.Recipes)
+                    .ThenInclude(r => r.Inventory);
+        }
+
+        public async Task<Product?> GetMenuProductByIdAsync(string productId)
+        {
+            return await _context.Products
+                .AsNoTracking()
+                .Include(p => p.Category)
+                    .ThenInclude(c => c.CurrentOffer)
+                .Include(p => p.ExtraProducts)
+                    .ThenInclude(pe => pe.ExtraProduct)
+                .Include(p => p.Recipes)
+                    .ThenInclude(r => r.Inventory)
+                .FirstOrDefaultAsync(p => p.Id == productId);
+        }
+        public bool HasActiveOffer(Product product)
+        {
+            var offer = product.Category?.CurrentOffer;
+
+            return offer != null && offer.IsActive && offer.StartDate <= DateTime.UtcNow && offer.EndDate >= DateTime.UtcNow;
+        }
+        public decimal GetFinalPrice(Product product)
+        {
+            if (!HasActiveOffer(product))
+                return product.BasePrice;
+
+            return product.BasePrice * (1 - product.Category.CurrentOffer!.DiscountPercentage / 100m);
+        }
     }
 }

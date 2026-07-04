@@ -21,6 +21,10 @@ namespace AsyncPlate.Application.Interfaces.Repositories
         Task<List<string>> GetByIdsAsync(IEnumerable<string> ids);
         Task<List<string>> GetInvalidExtraProductNamesAsync(IEnumerable<string> productIds);
         Task<ProductWithExtrasDTO?> GetProductWithExtrasAsync(string productId);
+        bool HasActiveOffer(Product product);
+        decimal GetFinalPrice(Product product);
+        IQueryable<Product> GetMenuProducts();
+        Task<Product?> GetMenuProductByIdAsync(string productId);
 
     }
 }

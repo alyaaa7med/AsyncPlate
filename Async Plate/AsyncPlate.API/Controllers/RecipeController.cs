@@ -11,7 +11,7 @@ namespace AsyncPlate.API.Controllers
 
     [ApiController]
     [Route("api/[controller]s")]
-    //[Authorize(Roles = "KitchenChef")]
+    [Authorize(Roles = "KitchenChef")]
     public class RecipeController : Controller
     {
         private readonly IRecipeService recipeService;

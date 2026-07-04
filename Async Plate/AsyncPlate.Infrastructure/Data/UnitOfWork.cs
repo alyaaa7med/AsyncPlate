@@ -34,13 +34,15 @@ namespace AsyncPlate.Infrastructure.Data
         public IOfferRepo offers { get; }
         public ICategoryRepo categories { get; }
         public IOrderRepo orders { get; }
+        public IReviewRepo reviews { get; }
+
         public INotificationRepo notifications { get; }
 
         public UnitOfWork(AppDbContext context, ICustomerRepo customerRepo, IKitchenChefRepo kitchenChefRepo, IAdminRepo adminRepo,
                 IRefreshTokenRepo RefreshTokenRepo, IOneTimeTokenRepo onetimetokenRepo,
                 ISupplierRepo supplierRepo, IInventoryRepo inventoryRepo, IProductRepo productRepo, IRecipeRepo recipeRepo,
                 IOfferRepo offerRepo, ICategoryRepo categoryRepo, IOrderRepo orderRepo
-            , IProductExtraRepo ProductExtraRepo , INotificationRepo notificationRepo)
+            , IProductExtraRepo ProductExtraRepo , INotificationRepo notificationRepo,IReviewRepo reviewRepo)
         {
             _context = context;
             customers = customerRepo;
@@ -57,6 +59,7 @@ namespace AsyncPlate.Infrastructure.Data
             categories = categoryRepo;
             orders = orderRepo;
             notifications = notificationRepo;
+            reviews = reviewRepo;
         }
 
         public async Task<int> SaveChangesAsync()
