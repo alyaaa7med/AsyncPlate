@@ -1,5 +1,6 @@
 ﻿using AsyncPlate.Application.Interfaces.Repositories;
 using AsyncPlate.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,11 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
             await _context.Set<Notification>().AddRangeAsync(notifications);
         }
 
-        
+        public IQueryable<Notification> GetAllByUserId(string userId)
+        {
+            return _context.Set<Notification>().AsNoTracking()
+                                               .Where(n => n.userId == userId).OrderByDescending(n => n.CreatedAt);
+        }
+
     }
 }

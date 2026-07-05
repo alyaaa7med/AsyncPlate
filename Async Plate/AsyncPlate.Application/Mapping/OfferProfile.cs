@@ -1,4 +1,5 @@
-﻿using AsyncPlate.Application.DTOs.Offer;
+﻿using AsyncPlate.Application.DTOs.Category;
+using AsyncPlate.Application.DTOs.Offer;
 using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using System;
@@ -14,10 +15,11 @@ namespace AsyncPlate.Application.Mapping
         public OfferProfile()
         {
             CreateMap<AddOfferRequestDTO, Offer>();
-            CreateMap<UpdateOfferRequestDTO, Offer>();
 
 
             CreateMap<Offer, OfferResponseDTO>();
+
+            CreateMap<Category, CategorySummaryDTO>();
 
             CreateMap<Offer, OfferSummaryDTO>();
         }

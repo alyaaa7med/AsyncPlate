@@ -11,7 +11,7 @@ namespace AsyncPlate.API.Controllers.Customer
 {
     [Route("api/customer")]
     [ApiController]
-    //[Authorize(Roles = "Customer")]
+    [Authorize(Roles = "Customer")]
     public class MenuController : ControllerBase
     {
         private readonly IMenuService _menuService;

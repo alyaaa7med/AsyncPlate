@@ -20,7 +20,8 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
         {
             {
                 return await _context.Reviews
-                    .FirstOrDefaultAsync(r => r.OrderId == orderId);
+                                     .Include(r=>r.Order)
+                                     .FirstOrDefaultAsync(r => r.OrderId == orderId);
             }
         }
     }

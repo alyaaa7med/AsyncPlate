@@ -9,7 +9,6 @@
     public string Type { get; set; }= string.Empty;
 
     public bool IsAvailable { get; set; }
-    public bool IsOutOfStock { get; set; }
 
     public decimal BasePrice { get; set; }
     public decimal FinalPrice { get; set; }

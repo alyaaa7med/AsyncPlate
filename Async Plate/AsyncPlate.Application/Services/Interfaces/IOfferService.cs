@@ -13,9 +13,8 @@ namespace AsyncPlate.Application.Services.Interfaces
     {
         Task<OfferResponseDTO> AddOfferAsync(AddOfferRequestDTO offerRequestDTO);
         Task<OfferResponseDTO> GetOfferByIdAsync(string id);
-        Task<OfferResponseDTO> DeleteOfferByIdAsync(string id);
         Task<PagedResult<OfferResponseDTO>> GetAllOffersAsync(OfferFilterDTO offerFilter);
-        Task<OfferResponseDTO> UpdateOfferAsync(UpdateOfferRequestDTO offerRequestDTO);
+        Task<OfferResponseDTO> InactivateOfferAsync(string offerId);
 
 
     }

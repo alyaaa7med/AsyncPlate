@@ -1,5 +1,7 @@
 ﻿using AsyncPlate.Application.Common.DTOs;
+using AsyncPlate.Application.Common.Extenstions;
 using AsyncPlate.Application.DTOs.Offer;
+using AsyncPlate.Application.Exceptions;
 using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Application.Interfaces.Jobs;
 using AsyncPlate.Application.Interfaces.Services;
@@ -8,6 +10,7 @@ using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
 using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -23,19 +26,17 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddOfferRequestDTO> _validator1;
-        private readonly IValidator<UpdateOfferRequestDTO> _validator2;
         private readonly INotificationSender _notificationSender;
         private readonly IOfferJob _offerJob;
 
         public OfferService(ILogger<OfferService> logger, IMapper mapper, IUnitOfWork unitOfWork,
-            IValidator<AddOfferRequestDTO> validator1, IValidator<UpdateOfferRequestDTO> validator2
+            IValidator<AddOfferRequestDTO> validator1
             , INotificationSender notificationSender, IOfferJob offerJob)
         {
             _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _validator1 = validator1;
-            _validator2 = validator2;
             _notificationSender = notificationSender;
             _offerJob = offerJob;
         }
@@ -69,10 +70,10 @@ namespace AsyncPlate.Application.Services.Implementation
                 throw new Exceptions.NotFoundException($"Categories with IDs {string.Join(", ", notFoundCategoryIds)} not found.");
             }
             */
-            
+
             offer.Categories = categories;
 
-             _unitOfWork.offers.Add(offer);
+            _unitOfWork.offers.Add(offer);
             await _unitOfWork.SaveChangesAsync();
 
             _logger.LogInformation("Offer with ID {OfferId} created successfully.", offer.Id);
@@ -83,26 +84,69 @@ namespace AsyncPlate.Application.Services.Implementation
             return _mapper.Map<OfferResponseDTO>(offer);
         }
 
-        public async Task<OfferResponseDTO> GetOfferByIdAsync(string id)
+        public async Task<OfferResponseDTO> GetOfferByIdAsync(string offerId)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("Retrieving offer {OfferId}.", offerId);
+
+            var offer = await _unitOfWork.offers.GetOfferWithCategoryAsync(offerId);
+
+            if (offer == null)
+            {
+                _logger.LogWarning("Offer {OfferId} not found.", offerId);
+
+                throw new NotFoundException($"Offer with id '{offerId}' was not found.");
+            }
+
+            return _mapper.Map<OfferResponseDTO>(offer);
         }
 
-        public async Task<OfferResponseDTO> DeleteOfferByIdAsync(string id)
+        public async Task<OfferResponseDTO> InactivateOfferAsync(string offerId)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("Inactivating offer {OfferId}.", offerId);
+
+            var offer = await _unitOfWork.offers.GetOfferWithCategoryAsync(offerId);
+
+            if (offer == null)
+            {
+                _logger.LogWarning("Offer {OfferId} not found.", offerId);
+
+                throw new NotFoundException($"Offer with id '{offerId}' was not found.");
+            }
+
+            offer.IsActive = false;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<OfferResponseDTO>(offer);
         }
-        public async Task<PagedResult<OfferResponseDTO>> GetAllOffersAsync(OfferFilterDTO offerFilter)
+
+        public async Task<PagedResult<OfferResponseDTO>> GetAllOffersAsync(OfferFilterDTO offerFilterDTO)
         {
-            throw new NotImplementedException();
+            var query = _unitOfWork.offers.GetAllOffers();
+
+            if (!string.IsNullOrWhiteSpace(offerFilterDTO.CategoryName))
+                query = _unitOfWork.offers.FilterByCategory(query, offerFilterDTO.CategoryName);
+
+            if (offerFilterDTO.Percentage.HasValue)
+                query = _unitOfWork.offers.FilterByPercentage(query, offerFilterDTO.Percentage.Value);
+
+            if (offerFilterDTO.IsActive == true)
+                query = _unitOfWork.offers.FilterActive(query);
+
+            var pagedResult = await query.ToPagedResultAsync(
+                offerFilterDTO.PageNumber,
+                offerFilterDTO.PageSize);
+
+            return new PagedResult<OfferResponseDTO>
+            {
+                Items = _mapper.Map<List<OfferResponseDTO>>(pagedResult.Items),
+                TotalCount = pagedResult.TotalCount,
+                PageNumber = pagedResult.PageNumber,
+                PageSize = pagedResult.PageSize,
+                TotalPages = pagedResult.TotalPages
+            };
         }
-
-
-        public async Task<OfferResponseDTO> UpdateOfferAsync(UpdateOfferRequestDTO offerRequestDTO)
-        {
-            throw new NotImplementedException();
-        }
-
-
     }
 }
+
+

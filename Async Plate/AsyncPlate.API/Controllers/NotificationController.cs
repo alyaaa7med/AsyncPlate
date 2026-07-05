@@ -23,14 +23,14 @@ namespace AsyncPlate.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllNotifications()
+        public async Task<IActionResult> GetAllNotifications(int pageNumber = 1, int pageSize = 10)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
-            var responseDTOs = await _notificationService.GetAllNotificationsAsync(userId);
+            var responseDTOs = await _notificationService.GetAllNotificationsAsync(userId, pageNumber, pageSize);
             return Ok(new ApiResponse<PagedResult<NotificationResponseDTO>>
                 (true, "Notifications retrieved successfully", responseDTOs));
         }

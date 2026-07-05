@@ -16,24 +16,36 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
 
         }
 
-        public async Task<Offer?> GetOfferByCategoryAsync(string category)
+        public IQueryable<Offer> FilterByCategory(IQueryable<Offer> query, string categoryName)
         {
-            return await _context.Offers.FirstOrDefaultAsync(o => o.Categories.Any(c => c.Name == category));
-
+            return query.Where(o => o.Categories.Any(c => c.Name == categoryName));
         }
 
-        public IQueryable<Offer> GetOffersByPercentageAsync(decimal percentage)
+        public IQueryable<Offer> FilterByPercentage(IQueryable<Offer> query, decimal percentage)
         {
-            return _context.Offers.Where(o => o.DiscountPercentage >= percentage);
+            return query.Where(o => o.DiscountPercentage >= percentage);
         }
 
-        public IQueryable<Offer> GetActiveOffers()
+        public IQueryable<Offer> FilterActive(IQueryable<Offer> query)
         {
             var currentDate = DateTime.UtcNow;
-            return _context.Offers.Where(o => o.IsActive && o.StartDate <= currentDate 
-                                        && (o.EndDate >= currentDate));
+
+            return query.Where(o =>
+                o.IsActive &&
+                o.StartDate <= currentDate &&
+                (!o.EndDate.HasValue || o.EndDate >= currentDate));
         }
 
+        public IQueryable<Offer> GetAllOffers()
+        {
+            return _context.Offers.Include(o => o.Categories).AsQueryable();
 
+        }
+        public async Task<Offer?> GetOfferWithCategoryAsync(string offerId)
+        {
+            return await _context.Offers
+                .Include(o => o.Categories)
+                .FirstOrDefaultAsync(o => o.Id == offerId);
+        }
     }
 }

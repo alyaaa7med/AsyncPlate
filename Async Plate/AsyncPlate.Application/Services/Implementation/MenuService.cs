@@ -1,6 +1,7 @@
 ﻿using AsyncPlate.Application.Common.DTOs;
 using AsyncPlate.Application.Common.Extenstions;
 using AsyncPlate.Application.DTOs.Menu;
+using AsyncPlate.Application.DTOs.ProductExtra;
 using AsyncPlate.Application.Exceptions;
 using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Application.Interfaces.Services;
@@ -38,8 +39,7 @@ namespace AsyncPlate.Application.Services.Implementation
 
         public async Task<PagedResult<MenuItemResponseDTO>> GetMenuAsync(MenuFilterDTO filterDTO)
         {
-            _logger.LogInformation(
-                "Retrieving menu. Category={CategoryId}, Type={Type}, Page={PageNumber}",
+            _logger.LogInformation("Retrieving menu. Category={CategoryId}, Type={Type}, Page={PageNumber}",
                 filterDTO.CategoryId,
                 filterDTO.Type,
                 filterDTO.PageNumber);
@@ -83,7 +83,11 @@ namespace AsyncPlate.Application.Services.Implementation
 
                 dto.HasOffer = _unitOfWork.products.HasActiveOffer(product);
                 dto.FinalPrice = _unitOfWork.products.GetFinalPrice(product);
-                dto.IsOutOfStock = product.IsAvailable;
+
+                if (dto.HasOffer)
+                {
+                    dto.DiscountPercentage = product.Category.CurrentOffer!.DiscountPercentage;
+                }
 
                 return dto;
             }).ToList();
@@ -91,13 +95,14 @@ namespace AsyncPlate.Application.Services.Implementation
             return new PagedResult<MenuItemResponseDTO>
             {
                 Items = menuItems,
-                TotalCount = pagedResult.TotalCount,
                 PageNumber = pagedResult.PageNumber,
-                PageSize = pagedResult.PageSize
+                PageSize = pagedResult.PageSize,
+                TotalCount = pagedResult.TotalCount,
+                TotalPages = pagedResult.TotalPages
             };
         }
-
-        public async Task<MenuDetailsResponseDTO> GetProductDetailsAsync(string productId)
+        
+    public async Task<MenuDetailsResponseDTO> GetProductDetailsAsync(string productId)
         {
             _logger.LogInformation("Retrieving menu product details. ProductId: {ProductId}",productId);
 
@@ -115,8 +120,12 @@ namespace AsyncPlate.Application.Services.Implementation
 
             response.HasOffer = _unitOfWork.products.HasActiveOffer(product);
             response.FinalPrice = _unitOfWork.products.GetFinalPrice(product);
-            response.IsOutOfStock = product.IsAvailable;
 
+            if (response.HasOffer)
+            {
+                response.DiscountPercentage = product.Category.CurrentOffer!.DiscountPercentage;
+            }
+    
             return response;
         }
     }

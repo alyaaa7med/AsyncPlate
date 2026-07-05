@@ -50,6 +50,7 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
 
         }
 
+
         public async Task<List<Product>> GetAvailableProductsAsync()
         {
             return await _context.Products
@@ -119,31 +120,32 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
                                  }).ToList()
                                  }).FirstOrDefaultAsync();
         }
-
-        public IQueryable<Product> GetMenuProducts()
-        {
-            return _context.Products
-                .AsNoTracking()
-                .Include(x => x.Category)
-                    .ThenInclude(c => c.CurrentOffer)
-                .Include(x => x.ExtraProducts)
-                    .ThenInclude(pe => pe.ExtraProduct)
-                .Include(x => x.Recipes)
-                    .ThenInclude(r => r.Inventory);
-        }
-
+       
         public async Task<Product?> GetMenuProductByIdAsync(string productId)
         {
             return await _context.Products
                 .AsNoTracking()
                 .Include(p => p.Category)
                     .ThenInclude(c => c.CurrentOffer)
-                .Include(p => p.ExtraProducts)
-                    .ThenInclude(pe => pe.ExtraProduct)
+                .Include(p => p.MainProducts)
+                    .ThenInclude(mp => mp.ExtraProduct)
                 .Include(p => p.Recipes)
                     .ThenInclude(r => r.Inventory)
                 .FirstOrDefaultAsync(p => p.Id == productId);
         }
+       
+        public IQueryable<Product> GetMenuProducts()
+        {
+            return _context.Products
+                .AsNoTracking()
+                .Include(p => p.Category)
+                    .ThenInclude(c => c.CurrentOffer)
+                .Include(p => p.MainProducts)
+                    .ThenInclude(mp => mp.ExtraProduct)
+                .Include(p => p.Recipes)
+                    .ThenInclude(r => r.Inventory);
+        }
+
         public bool HasActiveOffer(Product product)
         {
             var offer = product.Category?.CurrentOffer;

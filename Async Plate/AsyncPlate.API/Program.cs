@@ -95,7 +95,7 @@ builder.Services.AddScoped<ICustomerService,CustomerService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IKitchenChefService,KitchenChefService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
-
+builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<INotificationSender, SignalRNotificationSender>();
 builder.Services.AddScoped<IOfferJob, OfferJob>();
@@ -126,7 +126,6 @@ builder.Services.AddTransient<IValidator<MakeOrderRequestDTO>, MakeOrderRequestV
 builder.Services.AddTransient<IValidator<OrderItemRequestDTO>, OrderItemRequestValidator>();
 builder.Services.AddTransient<IValidator<OrderExtraItemRequestDTO>, OrderExtraItemRequestValidator>();
 builder.Services.AddTransient<IValidator<AddOfferRequestDTO>, AddOfferRequestValidator>();
-builder.Services.AddTransient<IValidator<UpdateOfferRequestDTO>, UpdateOfferRequestValidator>();
 builder.Services.AddTransient<IValidator<UpdateCategoryRequestDTO>, UpdateCategoryRequestValidator>();
 builder.Services.AddTransient<IValidator<AddProductExtraDTO>, AddProductExtraDTOValidator>();
 builder.Services.AddTransient<IValidator<UpdateProductExtrasDTO>, UpdateProductExtrasDTOValidator>();
@@ -174,6 +173,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<ProductExtraProfile>();
     cfg.AddProfile<ReviewProfile>();
     cfg.AddProfile<MenuProfile>();
+    cfg.AddProfile<NotificationProfile>();
 
 
 }, typeof(Program));

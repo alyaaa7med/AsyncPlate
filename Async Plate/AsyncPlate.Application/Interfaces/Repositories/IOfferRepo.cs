@@ -1,4 +1,5 @@
 ﻿using AsyncPlate.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,13 @@ namespace AsyncPlate.Application.Interfaces.Repositories
 {
     public interface IOfferRepo:IBaseRepo<Offer>
     {
-        Task<Offer?> GetOfferByCategoryAsync(string category);
-        IQueryable<Offer> GetOffersByPercentageAsync(decimal percentage);//will be paginated 
-        IQueryable<Offer> GetActiveOffers();
+        IQueryable<Offer> FilterActive(IQueryable<Offer> query);
+
+        IQueryable<Offer> FilterByCategory(IQueryable<Offer> query, string categoryName);
+        IQueryable<Offer> FilterByPercentage(IQueryable<Offer> query, decimal percentage);
+        IQueryable<Offer> GetAllOffers();
+        Task<Offer?> GetOfferWithCategoryAsync(string offerId);
+       
+
     }
 }

@@ -22,23 +22,19 @@ namespace AsyncPlate.Infrastructure.Services
 
         public async Task SendToGroupAsync(string group,  NotificationResponseDTO notificationResponseDTO )
         {
-            await _hub.Clients.Group(group)
-                .SendAsync("ReceiveNotification", notificationResponseDTO);
+            await _hub.Clients.Group(group).SendAsync("ReceiveNotification", notificationResponseDTO);
         }
 
         public async Task SendToUserAsync(string userId, NotificationResponseDTO notificationResponseDTO)
         {
             //_logger.LogInformation($"Sending to user: {userId}");
 
-            await _hub.Clients.User(userId)
-                .SendAsync("ReceiveNotification", notificationResponseDTO); 
-            //ReceiveNotification is the SignalR event name that the client subscribes to, and it is already suitable for sending notifications to chefs when a new order is confirmed.
+            await _hub.Clients.User(userId).SendAsync("ReceiveNotification", notificationResponseDTO); 
         }
        
         public async Task SendToAllAsync(string message)
         {
-            await _hub.Clients.All
-                .SendAsync("ReceiveNotification", message);
+            await _hub.Clients.All.SendAsync("ReceiveNotification", message);
         }
 
         

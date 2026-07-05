@@ -27,7 +27,6 @@ namespace AsyncPlate.Application.DTOs.Menu
         public bool HasOffer { get; set; }
         public bool IsAvailable { get; set; }
 
-        public bool IsOutOfStock { get; set; }
 
         public List<ProductExtraDTO> Extras { get; set; } = [];
     }
