@@ -1,6 +1,8 @@
 ﻿using AsyncPlate.Application.Common.DTOs;
 using AsyncPlate.Application.Common.Extenstions;
+using AsyncPlate.Application.Constants;
 using AsyncPlate.Application.DTOs.Authentication;
+using AsyncPlate.Application.DTOs.Menu;
 using AsyncPlate.Application.DTOs.Product;
 using AsyncPlate.Application.DTOs.Recipe;
 using AsyncPlate.Application.Interfaces;
@@ -9,6 +11,7 @@ using AsyncPlate.Application.Services.Interfaces;
 using AsyncPlate.Domain.Entities;
 using AutoMapper;
 using FluentValidation;
+using Hangfire.Dashboard;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -27,13 +30,16 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddProductRequestDTO> _validator1;
         private readonly IEmailService _emailService;
-        public ProductService(ILogger<ProductService> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<AddProductRequestDTO> validator1, IEmailService emailService)
+        private readonly IRealtimeService _realtimeService;
+        public ProductService(ILogger<ProductService> logger, IMapper mapper, IUnitOfWork unitOfWork,
+            IRealtimeService realtimeService,IValidator<AddProductRequestDTO> validator1, IEmailService emailService)
         {
             _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _validator1 = validator1;
             _emailService = emailService;
+            _realtimeService = realtimeService;
         }
         public async Task<ProductResponseDTO> AddProductAsync(AddProductRequestDTO productRequestDTO)
         {
@@ -107,7 +113,7 @@ namespace AsyncPlate.Application.Services.Implementation
             return responseDTOs;
         }
 
-        public async Task ChangeAvailabilityAsync(string productId)
+        public async Task MakeProductUnAvailableAsync(string productId)
         {
             var product = await _unitOfWork.products.GetByIdAsync(productId);
 
@@ -117,13 +123,25 @@ namespace AsyncPlate.Application.Services.Implementation
                 throw new Exceptions.NotFoundException("Product not found");
             }
 
-            product.IsAvailable = !product.IsAvailable;
+            product.IsAvailable = false;
 
 
             await _unitOfWork.SaveChangesAsync();
-
             _logger.LogInformation("Availability for product {ProductId} changed to {Availability}", productId, product.IsAvailable);
+
+            //immediatly update the menuitem ..
+            var updatedMenuItem = new MenuRealtimeUpdateDTO
+            {
+                MenuItemId = product.Id,
+                IsAvailable = false,
+                HasOffer = false,
+                FinalPrice = product.BasePrice,
+                IsDeleted = false
+            };
+
+            await _realtimeService.SendToGroupAsync("Customers", RealtimeEvents.MenuUpdated, updatedMenuItem);
         }
+
 
         public async Task DeleteProductAsync(string productId)
         {
@@ -138,6 +156,19 @@ namespace AsyncPlate.Application.Services.Implementation
             _unitOfWork.products.Delete(product);
 
             await _unitOfWork.SaveChangesAsync();
+
+
+            //immediatly update the menu 
+            var updatedMenuItem = new MenuRealtimeUpdateDTO
+            {
+                MenuItemId = product.Id,
+                IsAvailable = false,
+                HasOffer = false,
+                FinalPrice = product.BasePrice,
+                IsDeleted = true
+            };
+
+            await _realtimeService.SendToGroupAsync("Customers", RealtimeEvents.MenuUpdated, updatedMenuItem);
 
             _logger.LogInformation("Product with id {ProductId} deleted successfully", productId);
         }

@@ -95,18 +95,18 @@ namespace AsyncPlate.Infrastructure.Services.Jobs
                  <table border='1' cellpadding='5'>
                  <tr>
                 <th>Item</th>
-                <th>Needed Quantity</th>
+                <th>Least Needed Quantity</th>
             </tr>");
 
             foreach (var inventory in inventories)
             {
-                var neededQuantity =
+                var leatneededQuantity =
                 Math.Max(0, inventory.MinStockLevel - inventory.CurrentStock);
 
                 builder.AppendLine($@"
             <tr>
                 <td>{inventory.Name}</td>
-                <td>{neededQuantity}</td>
+                <td>{leatneededQuantity}</td>
             </tr>");
             }
 

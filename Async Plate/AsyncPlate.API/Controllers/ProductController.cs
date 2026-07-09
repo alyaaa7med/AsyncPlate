@@ -37,10 +37,10 @@ namespace AsyncPlate.API.Controllers
         }
 
 
-        [HttpPatch("{productId}/availability")]
-        public async Task<IActionResult> ChangeAvailability([FromRoute] string productId)
+        [HttpPatch("{productId}/not-available")]
+        public async Task<IActionResult> UnavalibleProduct([FromRoute] string productId)
         {
-           await _productService.ChangeAvailabilityAsync(productId);
+           await _productService.MakeProductUnAvailableAsync(productId);
             return Ok(new ApiResponse<ProductResponseDTO>( true,"Product availability changed successfully",null));
         }
 

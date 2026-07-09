@@ -1,74 +1,183 @@
 ﻿using AsyncPlate.Application.DTOs;
 using AsyncPlate.Application.Interfaces.Services;
-
-using System.Reflection.Metadata;
-using System.Text;
+using AsyncPlate.Domain.Entities;
+using Microsoft.Extensions.Logging;
+using QuestPDF.Drawing;
+using QuestPDF.Elements;
 using QuestPDF.Fluent;
-
-namespace AsyncPlate.Infrastructure.Services
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
+public class PdfService : IPdfService
 {
-    public class PdfService : IPdfService
+    private readonly ILogger<PdfService> _logger;
+
+    public PdfService(ILogger<PdfService> logger)
     {
-        public string GenerateDailyReportPdf(DailyReportDTO report)
+        _logger = logger;
+    }
+    public string GenerateDailyReportPdf(DailyReportDTO report)
+    {
+        byte[] pdfBytes = Document.Create(document =>
         {
-            byte[] pdfBytes = QuestPDF.Fluent.Document.Create(container =>
-           {
-               container.Page(page =>
-               {
-                   page.Margin(30);
+            document.Page(page =>
+            {
+                page.Margin(30);
 
-                   page.Header()
-                       .Text("AsyncPlate Daily Report")
-                       .FontSize(24)
-                       .Bold();
+                page.Header().Text("AsyncPlate Daily Report")
+                    .Bold()
+                    .FontSize(24);
 
-                   page.Content().Column(column =>
-                   {
-                       column.Spacing(10);
+                page.Content().Column(column =>
+                {
+                    column.Spacing(20);
 
-                       column.Item().Text($"Date: {DateTime.UtcNow:dd/MM/yyyy}");
+                    SummaryCards(column, report);
 
-                       column.Item().Text("Orders Summary").Bold();
+                    TopProductsTable(column, report);
 
-                       column.Item().Text(
-                           $"Total Orders: {report.TotalOrders}");
+                    InventoryTable(column, report);
+                });
 
-                       column.Item().Text(
-                           $"Completed Orders: {report.CompletedOrders}");
+                page.Footer()
+                    .AlignCenter()
+                    .Text($"Generated on {DateTime.Now:dd MMM yyyy HH:mm}");
+            });
 
-                       column.Item().Text(
-                           $"Cancelled Orders: {report.CancelledOrders}");
+        }).GeneratePdf();
 
-                       column.Item().Text(
-                           $"Revenue: {report.TotalRevenue:C}");
+        _logger.LogInformation("PDF generated.");
 
+        return Convert.ToBase64String(pdfBytes);
+    }
+    private void SummaryCards(ColumnDescriptor column, DailyReportDTO report)
+    {
+        column.Item().Text("Summary")
+            .Bold()
+            .FontSize(18);
 
-                       column.Item().PaddingTop(20);
+        column.Item().Row(row =>
+        {
+            row.RelativeItem().Element(x =>
+                Card(x, "Orders", report.TotalOrders.ToString()));
 
-                       column.Item().Text("Top Products").Bold();
+            row.RelativeItem().PaddingHorizontal(5).Element(x =>
+                Card(x, "Completed", report.CompletedOrders.ToString()));
 
-                       foreach (var product in report.TopProducts)
-                       {
-                           column.Item().Text(
-                               $"{product.Name} - {product.TotalTimesOrdered}");
-                       }
+            row.RelativeItem().PaddingHorizontal(5).Element(x =>
+                Card(x, "Cancelled", report.CancelledOrders.ToString()));
 
-                       column.Item().PaddingTop(20);
+            row.RelativeItem().Element(x =>
+                Card(x, "Revenue", $"EGP {report.TotalRevenue:N2}"));
+        });
+    }
+    private void Card(IContainer container, string title, string value)
+    {
+        container
+            .Border(1)
+            .BorderColor(Colors.Grey.Lighten2)
+            .Padding(10)
+            .Column(column =>
+            {
+                column.Item().Text(title)
+                    .FontColor(Colors.Grey.Darken1);
 
-                       column.Item().Text("Low Stock Items").Bold();
+                column.Item().Text(value)
+                    .Bold()
+                    .FontSize(20);
+            });
+    }
+    private void TopProductsTable(ColumnDescriptor column, DailyReportDTO report)
+    {
+        column.Item().Text("Top Selling Products")
+            .Bold()
+            .FontSize(18);
 
-                       foreach (var item in report.LowStockItems)
-                       {
-                           column.Item().Text(
-                               $"{item.Name} | Current: {item.CurrentStock} | Min: {item.MinStockLevel}");
-                       }
-                   });
-               });
-           }).GeneratePdf();
+        column.Item().Table(table =>
+        {
+            table.ColumnsDefinition(columns =>
+            {
+                columns.RelativeColumn(4);
+                columns.RelativeColumn(1);
+            });
 
-            string pdfBase64 = Convert.ToBase64String(pdfBytes);
-            return pdfBase64;
-        }
+            table.Header(header =>
+            {
+                header.Cell().BorderBottom(1).Padding(5)
+                    .Text("Product").Bold();
+
+                header.Cell().BorderBottom(1).Padding(5)
+                    .AlignRight()
+                    .Text("Orders").Bold();
+            });
+
+            foreach (var product in report.TopProducts)
+            {
+                table.Cell()
+                    .BorderBottom(1)
+                    .BorderColor(Colors.Grey.Lighten2)
+                    .Padding(5)
+                    .Text(product.Name);
+
+                table.Cell()
+                    .BorderBottom(1)
+                    .BorderColor(Colors.Grey.Lighten2)
+                    .Padding(5)
+                    .AlignRight()
+                    .Text(product.TotalTimesOrdered.ToString());
+            }
+        });
+    }
+    private void InventoryTable(ColumnDescriptor column, DailyReportDTO report)
+    {
+        column.Item().Text("Low Stock Inventory")
+            .Bold()
+            .FontSize(18);
+
+        column.Item().Table(table =>
+        {
+            table.ColumnsDefinition(columns =>
+            {
+                columns.RelativeColumn(3);
+                columns.RelativeColumn();
+                columns.RelativeColumn();
+            });
+
+            table.Header(header =>
+            {
+                header.Cell().BorderBottom(1).Padding(5)
+                    .Text("Item").Bold();
+
+                header.Cell().BorderBottom(1).Padding(5)
+                    .AlignCenter()
+                    .Text("Current").Bold();
+
+                header.Cell().BorderBottom(1).Padding(5)
+                    .AlignCenter()
+                    .Text("Minimum").Bold();
+            });
+
+            foreach (var item in report.LowStockItems)
+            {
+                table.Cell()
+                    .BorderBottom(1)
+                    .BorderColor(Colors.Grey.Lighten2)
+                    .Padding(5)
+                    .Text(item.Name);
+
+                table.Cell()
+                    .BorderBottom(1)
+                    .BorderColor(Colors.Grey.Lighten2)
+                    .Padding(5)
+                    .AlignCenter()
+                    .Text(item.CurrentStock.ToString());
+
+                table.Cell()
+                    .BorderBottom(1)
+                    .BorderColor(Colors.Grey.Lighten2)
+                    .Padding(5)
+                    .AlignCenter()
+                    .Text(item.MinStockLevel.ToString());
+            }
+        });
     }
 }
-

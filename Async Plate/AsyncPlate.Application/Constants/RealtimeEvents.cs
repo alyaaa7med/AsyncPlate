@@ -11,5 +11,6 @@ namespace AsyncPlate.Application.Constants
         public const string NotificationReceived = "NotificationReceived";
         public const string OrderStatusChanged = "OrderStatusChanged";
         public const string MenuUpdated = "MenuUpdated";
+        public const string MenuBulkUpdated = "MenuBulkUpdated";
     }
 }

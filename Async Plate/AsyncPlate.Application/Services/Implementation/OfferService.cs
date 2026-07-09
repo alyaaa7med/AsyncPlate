@@ -1,5 +1,7 @@
 ﻿using AsyncPlate.Application.Common.DTOs;
 using AsyncPlate.Application.Common.Extenstions;
+using AsyncPlate.Application.Constants;
+using AsyncPlate.Application.DTOs.Menu;
 using AsyncPlate.Application.DTOs.Offer;
 using AsyncPlate.Application.Exceptions;
 using AsyncPlate.Application.Interfaces;
@@ -26,18 +28,18 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddOfferRequestDTO> _validator1;
-        private readonly IRealtimeService _notificationSender;
+        private readonly IRealtimeService _realtimeService;
         private readonly IOfferJob _offerJob;
 
         public OfferService(ILogger<OfferService> logger, IMapper mapper, IUnitOfWork unitOfWork,
             IValidator<AddOfferRequestDTO> validator1
-            , IRealtimeService notificationSender, IOfferJob offerJob)
+            , IRealtimeService realtimeService, IOfferJob offerJob)
         {
             _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _validator1 = validator1;
-            _notificationSender = notificationSender;
+            _realtimeService = realtimeService;
             _offerJob = offerJob;
         }
 
@@ -117,7 +119,25 @@ namespace AsyncPlate.Application.Services.Implementation
 
             await _unitOfWork.SaveChangesAsync();
 
+            var menuItems = await _unitOfWork.products.GetMenuProducts().Select(m => m.Id).ToListAsync();
 
+            //immediatly update the menu 
+            var dto = new MenuBulkRealtimeUpdateDTO
+            {
+                MenuItems = _unitOfWork.products.GetMenuProducts().Select(p => new MenuRealtimeUpdateDTO
+                {
+                    MenuItemId = p.Id,
+                    IsAvailable = p.IsAvailable,
+                    HasOffer = false,
+                    FinalPrice = p.BasePrice,
+                    IsDeleted = false
+                }).ToList()
+            };
+
+            //immediatly update the menu 
+            await _realtimeService.SendToGroupAsync("Customers", RealtimeEvents.MenuBulkUpdated, dto);
+                 
+          
             return _mapper.Map<OfferResponseDTO>(offer);
         }
 

@@ -16,7 +16,7 @@ namespace AsyncPlate.Application.Services.Interfaces
         Task<ProductResponseDTO> AddProductAsync(AddProductRequestDTO productRequestDTO);
         Task<ProductResponseDTO> GetProductByIdAsync(string productId);
         Task<IEnumerable<RecipeListDTO>> GetRecipeByProductIdAsync(string productId);
-        Task ChangeAvailabilityAsync(string productId);
+        Task MakeProductUnAvailableAsync(string productId);
         Task DeleteProductAsync(string productId);
         Task<PagedResult<ProductResponseDTO>> GetAllProductsAsync(int pageNumber, int pageSize);
         Task<IEnumerable<ProductResponseDTO>> GetProductsByCategoryAsync(string categoryId);

@@ -336,7 +336,6 @@ namespace AsyncPlate.Application.Services.Implementation
             };
         }
 
-
         public async Task<IEnumerable<OrderResponseDTO>> GetChefActiveOrdersAsync(string userId)
         {
             var chef = await _unitOfWork.kitchenChefs.GetWithUserByUserIdAsync(userId);

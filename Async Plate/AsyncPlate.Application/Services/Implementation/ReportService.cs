@@ -55,6 +55,7 @@ namespace AsyncPlate.Application.Services.Implementation
 
             report.LowStockItems = _mapper.Map<List<InventoryResponseDTO>>(inventories);
 
+            _logger.LogInformation("Daily report generated successfully at {Time}", DateTime.UtcNow);
             return report;
         }
     }

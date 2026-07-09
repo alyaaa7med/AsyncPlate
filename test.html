@@ -1,23 +1,101 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
 
 <script>
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJlOTY0MDRjYS1iMzJhLTRlODMtODYyMS1mMzIzNzQ0Mzk2MmIiLCJlbWFpbCI6ImNoZWZAZ21haWwuY29tIiwicm9sZSI6IktpdGNoZW5DaGVmIiwibmJmIjoxNzgzNTU2NDk0LCJleHAiOjE3ODM1NjM2OTQsImlhdCI6MTc4MzU1NjQ5NCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.CFmHAkvNMnplhaJOPjTlOI_CoXXoFNX8SqgtFzN-z6w";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyOGNhMDJkYi0zYWE3LTQzYTAtOTA2NC1jZGJhNGE1YjNkYmEiLCJlbWFpbCI6ImFseWFhQGdtYWlsLmNvbSIsInJvbGUiOiJDdXN0b21lciIsIm5iZiI6MTc4MzU2Mjg3NCwiZXhwIjoxNzgzNTcwMDc0LCJpYXQiOjE3ODM1NjI4NzQsImlzcyI6ImxvY2FsaG9zdCIsImF1ZCI6ImxvY2FsaG9zdCJ9.uDtR3MEF8agPq2UJszj-KtpJr4COnOcYySPSQ1Lhbk0";
+
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("https://localhost:51499/hubs/notifications", {
         accessTokenFactory: () => token
     })
     .build();
 
+let menu = [];
+
+async function loadMenu() {
+
+    const response = await fetch(
+        "https://localhost:51499/api/customer/menu?pageNumber=1&pageSize=10",
+        {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+    if (!response.ok) {
+        console.error("Failed to load menu:", response.status);
+        return;
+    }
+
+    const result = await response.json();
+
+    menu = result.data.items;
+
+    console.log("📋 Initial Menu");
+    console.table(menu);
+}
+
 connection.on("NotificationReceived", msg => {
     console.log("📩 Notification received:", msg);
 });
+
 connection.on("OrderStatusChanged", msg => {
-    console.log("📩 orderstatus changed recieved :", msg);
+    console.log("📦 Order status changed:", msg);
 });
-connection.on("MenuUpdated", msg => {
-    console.log("📩 menu updated recieved:", msg);
+connection.on("MenuUpdated", updated => {
+
+    console.log("📋 Menu Updated");
+    console.log(updated);
+
+    const index = menu.findIndex(x => x.id === updated.menuItemId);
+
+    if (index === -1)
+        return;
+
+    if (updated.isDeleted) {
+        menu.splice(index, 1);
+
+        console.log("🗑️ Menu Item Deleted");
+        console.table(menu);
+        return;
+    }
+
+    menu[index] = {
+        ...menu[index],
+        isAvailable: updated.isAvailable,
+        hasOffer: updated.hasOffer,
+        finalPrice: updated.finalPrice,
+        isDeleted: updated.isDeleted
+    };
+
+    console.table(menu);
 });
+connection.on("MenuBulkUpdated", data => {
+
+    console.log("📋 Menu Bulk Updated");
+    console.log(data);
+
+    data.menuItems.forEach(updated => {
+
+        const index = menu.findIndex(x => x.id === updated.menuItemId);
+
+        if (index === -1)
+            return;
+
+        menu[index] = {
+            ...menu[index],
+            isAvailable: updated.isAvailable,
+            hasOffer: updated.hasOffer,
+            finalPrice: updated.finalPrice,
+            isDeleted: updated.isDeleted
+        };
+    });
+
+    console.table(menu);
+});
+loadMenu();
+
 connection.start()
     .then(() => console.log("✅ Connected to SignalR"))
     .catch(err => console.error("❌ Connection error:", err));
+
 </script>

@@ -44,6 +44,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using QuestPDF.Infrastructure;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -282,6 +283,10 @@ builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("Jwt")
 );
 
+
+// QuestPDF license settings
+QuestPDF.Settings.License = LicenseType.Community;
+
 var app = builder.Build();
 
 //seeding instead of make seprate role service 
@@ -313,10 +318,12 @@ using (var scope = app.Services.CreateScope())
 {
     var recurringJob = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
 
-    recurringJob.AddOrUpdate<ReportJob>(
+    recurringJob.AddOrUpdate<IReportJob>(
         "daily-report",
         job => job.ExecuteAsync(),
         Cron.Daily(21, 0));
+
+    RecurringJob.TriggerJob("daily-report");
 }
 
 using (var scope = app.Services.CreateScope())
@@ -327,6 +334,8 @@ using (var scope = app.Services.CreateScope())
     "daily-low-stock-email",
     job => job.SendLowStockSuppliersEmail(),
     Cron.Daily(21, 0));
+
+    RecurringJob.TriggerJob("daily-low-stock-email");
 
 }
 
