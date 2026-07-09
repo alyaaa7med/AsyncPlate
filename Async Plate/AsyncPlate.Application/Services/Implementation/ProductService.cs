@@ -119,7 +119,6 @@ namespace AsyncPlate.Application.Services.Implementation
 
             product.IsAvailable = !product.IsAvailable;
 
-            _unitOfWork.products.Update(product);
 
             await _unitOfWork.SaveChangesAsync();
 

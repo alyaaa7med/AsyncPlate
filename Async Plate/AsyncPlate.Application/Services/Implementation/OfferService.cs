@@ -26,12 +26,12 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddOfferRequestDTO> _validator1;
-        private readonly INotificationSender _notificationSender;
+        private readonly IRealtimeService _notificationSender;
         private readonly IOfferJob _offerJob;
 
         public OfferService(ILogger<OfferService> logger, IMapper mapper, IUnitOfWork unitOfWork,
             IValidator<AddOfferRequestDTO> validator1
-            , INotificationSender notificationSender, IOfferJob offerJob)
+            , IRealtimeService notificationSender, IOfferJob offerJob)
         {
             _logger = logger;
             _mapper = mapper;
@@ -79,7 +79,7 @@ namespace AsyncPlate.Application.Services.Implementation
             _logger.LogInformation("Offer with ID {OfferId} created successfully.", offer.Id);
 
             //trigger the offer job to send notifications
-            BackgroundJob.Enqueue<IOfferJob>(job => job.SendnNewOfferNotificationsAsync(offer.Id));
+            BackgroundJob.Enqueue<IOfferJob>(job => job.SendNewOfferNotificationsAsync(offer.Id));
 
             return _mapper.Map<OfferResponseDTO>(offer);
         }
@@ -116,6 +116,7 @@ namespace AsyncPlate.Application.Services.Implementation
             offer.IsActive = false;
 
             await _unitOfWork.SaveChangesAsync();
+
 
             return _mapper.Map<OfferResponseDTO>(offer);
         }

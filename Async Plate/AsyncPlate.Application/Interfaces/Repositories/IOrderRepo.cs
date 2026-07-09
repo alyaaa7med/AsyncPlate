@@ -11,11 +11,12 @@ namespace AsyncPlate.Application.Interfaces.Repositories
     public interface IOrderRepo : IBaseRepo<Order>
     {
         Task<Order?> GetOrderWithOrderItemsAndExtraOrderItemsByIdAsync(string orderId);
-
         Task<int> GetTodayOrdersCountAsync();
         Task<int> GetCompletedOrdersCountAsync();
         Task<int> GetCancelledOrdersCountAsync();
         Task<decimal> GetTodayRevenueAsync();
+        Task<IEnumerable<Order>> GetChefActiveOrdersAsync(string chefId);
+        IQueryable<Order> GetOrdersWithOrderItemsAndExtraOrderItems();
 
     }
 }

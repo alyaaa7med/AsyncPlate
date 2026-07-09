@@ -43,6 +43,13 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
                     BasePrice = pe.ExtraProduct.BasePrice,
                 }).ToListAsync();
         }
+        public async Task<List<ProductExtra>> GetProductExtrasByProductIdsAsync(IEnumerable<string> productIds)
+        {
+            return await _context.ProductExtras
+                .AsNoTracking()
+                .Where(pe => productIds.Contains(pe.ProductId))
+                .ToListAsync();
+        }
 
     }
 

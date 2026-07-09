@@ -77,7 +77,7 @@ builder.Services.AddScoped<INotificationRepo, NotificationRepo>();
 
 
 
-builder.Services.AddScoped<IMediaService, MediaService>();
+builder.Services.AddScoped<IMediaService, DiskMediaService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
@@ -97,9 +97,11 @@ builder.Services.AddScoped<IKitchenChefService,KitchenChefService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPdfService, PdfService>();
-builder.Services.AddScoped<INotificationSender, SignalRNotificationSender>();
+builder.Services.AddScoped<IRealtimeService, SignalRService>();
 builder.Services.AddScoped<IOfferJob, OfferJob>();
 builder.Services.AddScoped<IOrderJob, OrderJob>();
+builder.Services.AddScoped<IInventoryJob, InventoryJob>();
+builder.Services.AddScoped<IReportJob, ReportJob>();
 
 builder.Services.AddSignalR();
 
@@ -354,7 +356,7 @@ app.UseCors("cors");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.MapHub<NotificationHub>("/hubs/notifications");
+app.MapHub<RealtimeHub>("/hubs/notifications");
 
 
 app.Run();

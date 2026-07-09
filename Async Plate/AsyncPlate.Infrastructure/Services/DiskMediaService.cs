@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AsyncPlate.Infrastructure.Services
 {
-    public class MediaService : IMediaService
+    public class DiskMediaService : IMediaService
     {
         public async Task<string> UploadImageAsync(IFormFile file, string folderName)
         {

@@ -28,8 +28,6 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
 
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
-
-
         public async Task<int> GetTodayOrdersCountAsync()
         {
             var today = DateTime.UtcNow.Date;
@@ -54,7 +52,6 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
                 .Where(o => o.CreatedAt.Date == today && o.Status == OrderStatus.Cancelled)
                 .CountAsync();
         }
-
         public async Task<decimal> GetTodayRevenueAsync()
         {
             var today = DateTime.UtcNow.Date;
@@ -63,7 +60,42 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
                 .Where(o => o.CreatedAt.Date == today && o.Status == OrderStatus.Completed)
                 .SumAsync(o => o.TotalFeeTotal);
         }
+        public IQueryable<Order> GetOrdersWithOrderItemsAndExtraOrderItems()
+        {
+            return _context.Orders
+                .Include(o => o.Customer)
+                    .ThenInclude(c => c != null ? c.AppUser : null)
 
+                .Include(o => o.KitchenChef)
+                    .ThenInclude(k => k != null ? k.AppUser : null)
+
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
+
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Extras)
+                        .ThenInclude(e => e.Product);
+        }
+        public async Task<IEnumerable<Order>> GetChefActiveOrdersAsync(string chefId)
+        {
+            return await _context.Orders
+                .AsNoTracking()
+                .Where(o => o.KitchenChefId == chefId &&
+                            (o.Status == OrderStatus.Confirmed ||
+                             o.Status == OrderStatus.Cooking))
+                .OrderBy(o => o.OrderDate)
+                .Include(o => o.Customer)
+                    .ThenInclude(c => c.AppUser)
+                .Include(o => o.KitchenChef)
+                    .ThenInclude(k => k.AppUser)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Extras)
+                        .ThenInclude(e => e.Product)
+                .ToListAsync();
+        }
+      
     }
 }
 /*Hangfire Job
@@ -72,6 +104,6 @@ Generate Report (DTO)
    ↓
 Generate PDF (QuestPDF)
    ↓
-EmailService (MailKit)
+EmailService (Mailtrap)
    ↓
 Admin receives email with attachment */

@@ -21,6 +21,9 @@ namespace AsyncPlate.Application.Mapping
 
             CreateMap<OrderExtraItemRequestDTO, OrderExtraItem>();
 
+            CreateMap<Order, OrderResponseDTO>()
+                .ForMember(o => o.Status, o => o.MapFrom(s => s.Status.ToString()))
+                .ForMember(o => o.OrderItems, o => o.MapFrom(s => s.OrderItems));
 
 
 

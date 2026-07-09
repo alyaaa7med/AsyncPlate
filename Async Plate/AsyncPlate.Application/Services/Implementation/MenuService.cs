@@ -29,7 +29,7 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IInventoryService _inventoryService;
 
 
-        public MenuService(IUnitOfWork unitOfWork,IMapper mapper, ILogger<MenuService> logger, IInventoryService inventoryService)
+        public MenuService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<MenuService> logger, IInventoryService inventoryService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -75,7 +75,7 @@ namespace AsyncPlate.Application.Services.Implementation
                 query = query.Where(p => p.BasePrice <= filterDTO.MaxPrice.Value);
             }
 
-            var pagedResult = await query.ToPagedResultAsync(filterDTO.PageNumber,filterDTO.PageSize);
+            var pagedResult = await query.ToPagedResultAsync(filterDTO.PageNumber, filterDTO.PageSize);
 
             var menuItems = pagedResult.Items.Select(product =>
             {
@@ -101,18 +101,19 @@ namespace AsyncPlate.Application.Services.Implementation
                 TotalPages = pagedResult.TotalPages
             };
         }
-        
-    public async Task<MenuDetailsResponseDTO> GetProductDetailsAsync(string productId)
-        {
-            _logger.LogInformation("Retrieving menu product details. ProductId: {ProductId}",productId);
 
-            var product = await _unitOfWork.products.GetMenuProductByIdAsync(productId);
+        public async Task<MenuDetailsResponseDTO> GetMenuItemDetailsAsync(string menuItemId)
+
+        {
+            _logger.LogInformation("Retrieving menu product details. ProductId: {ProductId}", menuItemId);
+
+            var product = await _unitOfWork.products.GetMenuProductByIdAsync(menuItemId);
 
             if (product == null)
             {
-                _logger.LogWarning( "Product not found. ProductId: {ProductId}",productId);
+                _logger.LogWarning("Product not found. ProductId: {ProductId}", menuItemId);
 
-                throw new Exceptions.NotFoundException($"Product with id '{productId}' was not found.");
+                throw new Exceptions.NotFoundException($"Product with id '{menuItemId}' was not found.");
             }
 
             var response = _mapper.Map<MenuDetailsResponseDTO>(product);
@@ -125,7 +126,7 @@ namespace AsyncPlate.Application.Services.Implementation
             {
                 response.DiscountPercentage = product.Category.CurrentOffer!.DiscountPercentage;
             }
-    
+
             return response;
         }
     }

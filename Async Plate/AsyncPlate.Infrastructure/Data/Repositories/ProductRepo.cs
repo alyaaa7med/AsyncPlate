@@ -93,6 +93,12 @@ namespace AsyncPlate.Infrastructure.Data.Repositories
             return await _context.Products.AsNoTracking()
                 .Where(p => ids.Contains(p.Id)).Select(p => p.Id).ToListAsync();
         }
+
+        public async Task<List<Product>> GetProductsByIdsAsync(IEnumerable<string> ids)
+        {
+            return await _context.Products.AsNoTracking().Where(p => ids.Contains(p.Id)).ToListAsync();
+        }
+
         public async Task<List<string>> GetInvalidExtraProductNamesAsync(IEnumerable<string> productIds)
         {
             return await _context.Products

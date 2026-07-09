@@ -13,6 +13,6 @@ namespace AsyncPlate.Application.Services.Interfaces
     {
         Task<PagedResult<MenuItemResponseDTO>> GetMenuAsync(MenuFilterDTO filter);
 
-        Task<MenuDetailsResponseDTO> GetProductDetailsAsync(string productId);
+        Task<MenuDetailsResponseDTO> GetMenuItemDetailsAsync(string menuItemId);
     }
 }

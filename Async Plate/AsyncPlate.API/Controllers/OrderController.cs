@@ -6,6 +6,8 @@ using AsyncPlate.Application.Services.Implementation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using AsyncPlate.Application.Common.DTOs;
 
 namespace AsyncPlate.API.Controllers
 {
@@ -22,27 +24,20 @@ namespace AsyncPlate.API.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> MakeOrder([FromBody] MakeOrderRequestDTO makeOrderRequestDTO)
-        {
-            
-            var responseDto = await _orderService.MakeOrderAsync(makeOrderRequestDTO);
-            return Created($"/orders/{responseDto.Id}", new ApiResponse<OrderResponseDTO>(true, "Order created successfully", responseDto));
-        }
-
-        [HttpPost("{orderId}/cook")]
-        //[Authorize(Roles = "KitchenChef")]
-        public async Task<IActionResult> CookOrder([FromRoute] string orderId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
-            await _orderService.CookOrderAsync(orderId, userId);
-            return Ok(new ApiResponse<OrderResponseDTO>(true, "Order cooked successfully", null));
+
+            var responseDto = await _orderService.MakeOrderAsync(userId, makeOrderRequestDTO);
+            return Created($"/orders/{responseDto.Id}", new ApiResponse<OrderResponseDTO>(true, "Order created successfully", responseDto));
         }
 
-        [HttpPost("{orderId}/confirm")]
-        //[Authorize(Roles = "Customer")]
+
+        [HttpPatch("{orderId}/confirm")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> ConfirmOrder([FromRoute] string orderId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -53,33 +48,75 @@ namespace AsyncPlate.API.Controllers
         }
 
 
-        [HttpPost("{orderId}/cancel")]
-        //[Authorize(Roles = "Customer,KitchenChef")]
+        [HttpPatch("{orderId}/cancel")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CancelOrder([FromRoute] string orderId)
         {
-            var responseDto = await _orderService.CancelOrderAsync(orderId);
-            return Ok(new ApiResponse<OrderResponseDTO>(true, "Order canceled successfully", responseDto));
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+            var responseDto = await _orderService.CancelOrderAsync(orderId, userId);
+            return Ok(new ApiResponse<OrderResponseDTO>(true, "Order cancelled successfully", responseDto));
+
+
         }
 
 
-     
+        [HttpPatch("{orderId}/cook")]
+        [Authorize(Roles = "KitchenChef")]
+        public async Task<IActionResult> CookOrder([FromRoute] string orderId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            await _orderService.CookOrderAsync(orderId, userId);
+            return Ok(new ApiResponse<OrderResponseDTO>(true, "Order cooked successfully", null));
+        }
+
+        [HttpPatch("{orderId}/complete")]
+        [Authorize(Roles = "KitchenChef")]
+        public async Task<IActionResult> CompleteOrder([FromRoute] string orderId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var responseDto = await _orderService.CompleteOrderAsync(orderId, userId);
+            return Ok(new ApiResponse<OrderResponseDTO>(true, "Order ready to be delivered", responseDto));
+
+        }
 
 
+        [HttpGet("my-active-orders")]
+        [Authorize(Roles = "KitchenChef")]
+        public async Task<IActionResult> GetChefActiveOrders()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var responseDto = await _orderService.GetChefActiveOrdersAsync(userId);
+            return Ok(new ApiResponse<IEnumerable<OrderResponseDTO>>(true, "Active orders retrieved successfully", responseDto));
+
+        }
+
+        [HttpGet("{orderId}")]
+        [Authorize(Roles = "Admin,KitchenChef")]
+        public async Task<IActionResult> GetOrderById([FromRoute] string orderId)
+        {
+            var responseDto = await _orderService.GetOrderByIdAsync(orderId);
+            return Ok(new ApiResponse<OrderResponseDTO>(true, "Order retrieved successfully", responseDto));
+
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,KitchenChef")]
+        public async Task<IActionResult> GetAllOrdersWithRelatedData([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            var pagedResult = await _orderService.GetAllOrdersWithRelatedDataAsync(pageNumber, pageSize);
+            return Ok(new ApiResponse<PagedResult<OrderResponseDTO>>(true, "Orders retrieved successfully", pagedResult));
+        }
     }
 }
 
-/*
- POST /api/orders
-GET  /api/orders/my
-GET  /api/orders/{id}
-PUT  /api/orders/{id}/cancel
-
-GET /api/chef/orders/live
-PUT /api/chef/orders/{id}/start-cooking
-PUT /api/chef/orders/{id}/ready
-
-GET /api/admin/orders
-GET /api/admin/orders/history
-GET /api/admin/dashboard/stats
-GET /api/admin/reports/revenue
- */

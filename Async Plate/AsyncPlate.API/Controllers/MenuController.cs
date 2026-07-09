@@ -30,10 +30,10 @@ namespace AsyncPlate.API.Controllers.Customer
             return Ok(new ApiResponse<PagedResult<MenuItemResponseDTO>>(true, "Menu retrieved successfully.", response));
         }
 
-        [HttpGet("{productId}")]
-        public async Task<IActionResult> GetProduct([FromRoute] string productId)
+        [HttpGet("{menuItemId}")]
+        public async Task<IActionResult> GetMenuItem([FromRoute] string menuItemId)
         {
-            var response = await _menuService.GetProductDetailsAsync(productId);
+            var response = await _menuService.GetMenuItemDetailsAsync(menuItemId);
 
             return Ok(new ApiResponse<MenuDetailsResponseDTO>(true, "Product retrieved successfully.", response));
 

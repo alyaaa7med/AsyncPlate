@@ -213,7 +213,7 @@ namespace AsyncPlate.Application.Services.Implementation
                 category.ImageUrl = await _mediaService.UploadImageAsync(categoryRequestDTO.ImageUrl,"categories");
             }
 
-            _unitOfWork.categories.Update(category);
+            //_unitOfWork.categories.Update(category);//no need as it is tracked
 
             await _unitOfWork.SaveChangesAsync();
 

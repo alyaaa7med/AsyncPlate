@@ -26,11 +26,11 @@ namespace AsyncPlate.Application.Services.Implementation
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly INotificationSender _notificationSender;
+        private readonly IRealtimeService _notificationSender;
         private readonly IOfferJob _offerJob;
 
         public NotificationService(ILogger<NotificationService> logger, IMapper mapper, IUnitOfWork unitOfWork
-                                     , INotificationSender notificationSender, IOfferJob offerJob)
+                                     , IRealtimeService notificationSender, IOfferJob offerJob)
         {
             _logger = logger;
             _mapper = mapper;

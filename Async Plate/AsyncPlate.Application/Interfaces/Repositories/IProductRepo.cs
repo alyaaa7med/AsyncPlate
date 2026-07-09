@@ -19,6 +19,7 @@ namespace AsyncPlate.Application.Interfaces.Repositories
         Task<List<Product>> GetProductsByPriceRangeAsync(decimal minPrice, decimal maxPrice);
         IQueryable<Product> GetAllWithCatgeorySummary();
         Task<List<string>> GetByIdsAsync(IEnumerable<string> ids);
+        Task<List<Product>> GetProductsByIdsAsync(IEnumerable<string> ids);
         Task<List<string>> GetInvalidExtraProductNamesAsync(IEnumerable<string> productIds);
         Task<ProductWithExtrasDTO?> GetProductWithExtrasAsync(string productId);
         bool HasActiveOffer(Product product);

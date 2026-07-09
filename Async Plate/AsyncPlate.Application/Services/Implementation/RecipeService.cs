@@ -124,7 +124,7 @@ namespace AsyncPlate.Application.Services.Implementation
                 });
             }
 
-            _unitOfWork.recipes.Update(recipe);
+            //_unitOfWork.recipes.Update(recipe); //no need as it is tracked by EF Core
             await _unitOfWork.SaveChangesAsync();
 
             //reload recipe with inventory and product

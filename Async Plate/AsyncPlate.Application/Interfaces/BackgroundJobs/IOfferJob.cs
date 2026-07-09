@@ -9,6 +9,6 @@ namespace AsyncPlate.Application.Interfaces.Jobs
 {
     public interface IOfferJob
     {
-        Task SendnNewOfferNotificationsAsync(string offerId);
+        Task SendNewOfferNotificationsAsync(string offerId);
     }
 }

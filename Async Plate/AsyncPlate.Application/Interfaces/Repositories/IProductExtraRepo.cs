@@ -17,6 +17,8 @@ namespace AsyncPlate.Application.Interfaces.Repositories
         Task<ProductExtra?> GetProductExtraAsync(string productId, string extraProductId);
 
         Task<IEnumerable<ProductExtraDTO>> GetExtrasByProductIdAsync(string productId);
+        Task<List<ProductExtra>> GetProductExtrasByProductIdsAsync(IEnumerable<string> productIds);
+
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using AsyncPlate.Application.DTOs.Notification;
+﻿using AsyncPlate.Application.Constants;
+using AsyncPlate.Application.DTOs.Notification;
 using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Application.Interfaces.Jobs;
 using AsyncPlate.Application.Interfaces.Services;
@@ -14,12 +15,12 @@ namespace AsyncPlate.Infrastructure.Services.Jobs
     public class InventoryJob : IInventoryJob
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly INotificationSender _notificationSender;
+        private readonly IRealtimeService _realtimeService;
         private readonly IEmailService _emailService;
-        public InventoryJob(IUnitOfWork unitOfWork, INotificationSender notificationSender , IEmailService emailService)
+        public InventoryJob(IUnitOfWork unitOfWork, IRealtimeService realtimeService , IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
-            _notificationSender = notificationSender;
+            _realtimeService = realtimeService;
             _emailService = emailService;
         }
 
@@ -55,8 +56,8 @@ namespace AsyncPlate.Infrastructure.Services.Jobs
                 Url = $"Inventories/{inventory.Id}"
             };
 
-            await _notificationSender.SendToGroupAsync("Chefs", notificationDto);
-            await _notificationSender.SendToGroupAsync("Admins", notificationDto);
+            await _realtimeService.SendToGroupAsync("Chefs", RealtimeEvents.NotificationReceived, notificationDto);
+            await _realtimeService.SendToGroupAsync("Admins", RealtimeEvents.NotificationReceived, notificationDto);
 
         }
 

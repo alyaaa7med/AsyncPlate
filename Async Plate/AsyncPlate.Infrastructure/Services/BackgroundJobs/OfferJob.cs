@@ -1,4 +1,5 @@
-﻿using AsyncPlate.Application.DTOs.Notification;
+﻿using AsyncPlate.Application.Constants;
+using AsyncPlate.Application.DTOs.Notification;
 using AsyncPlate.Application.Interfaces;
 using AsyncPlate.Application.Interfaces.Jobs;
 using AsyncPlate.Application.Interfaces.Services;
@@ -16,16 +17,16 @@ namespace AsyncPlate.Infrastructure.Services.Jobs
     public class OfferJob : IOfferJob
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly INotificationSender _notificationSender;
+        private readonly IRealtimeService _realtimeService;
         private readonly IMapper _mapper;
-        public OfferJob(IUnitOfWork unitOfWork, IMapper mapper, INotificationSender notificationSender)
+        public OfferJob(IUnitOfWork unitOfWork, IMapper mapper, IRealtimeService realtimeService)
         {
             _unitOfWork = unitOfWork;
-            _notificationSender = notificationSender;
+            _realtimeService = realtimeService  ;
             _mapper = mapper;
         }
 
-        public async Task SendnNewOfferNotificationsAsync(string offerId)
+        public async Task SendNewOfferNotificationsAsync(string offerId)
         {
             var offer = await _unitOfWork.offers.GetByIdAsync(offerId);
             if (offer == null)
@@ -51,7 +52,7 @@ namespace AsyncPlate.Infrastructure.Services.Jobs
             {
                 var notificationDTO = _mapper.Map<NotificationResponseDTO>(notification);//no need to reload for the nav prop userid as
                                                                                          //the object i created has the userId 
-                await _notificationSender.SendToUserAsync(notificationDTO.UserId, notificationDTO);
+                await _realtimeService.SendToUserAsync(notificationDTO.UserId, RealtimeEvents.NotificationReceived, notificationDTO);
 
             }
             //foreach (var userId in vipUsers)

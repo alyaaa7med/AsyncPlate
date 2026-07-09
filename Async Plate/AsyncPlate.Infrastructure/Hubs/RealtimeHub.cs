@@ -5,13 +5,13 @@ using System.Text.RegularExpressions;
 
 namespace AsyncPlate.Infrastructure.Hubs
 {
-    public class NotificationHub : Hub
+    public class RealtimeHub : Hub
     {
 
         //what will happen after connection is established with the client
         //add to groups 
-        private readonly ILogger<NotificationHub> _logger;
-        public NotificationHub(ILogger<NotificationHub> logger)
+        private readonly ILogger<RealtimeHub> _logger;
+        public RealtimeHub(ILogger<RealtimeHub> logger)
         {
             _logger = logger;
         }
@@ -25,7 +25,7 @@ namespace AsyncPlate.Infrastructure.Hubs
             if (role == "Customer")
                 await Groups.AddToGroupAsync(Context.ConnectionId, "Customers");
 
-            if (role == "Chef")
+            if (role == "KitchenChef")
                 await Groups.AddToGroupAsync(Context.ConnectionId, "Chefs");
 
             if (role == "Admin")

@@ -13,6 +13,5 @@ namespace AsyncPlate.Application.Interfaces.Jobs
         Task SendCompleteOrderNotificationAsync(string orderId);
 
 
-
     }
 }
