@@ -18,27 +18,52 @@
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 ![Mailtrap](https://img.shields.io/badge/Mailtrap-22C55E?style=for-the-badge)
 
-
 </p>
 
+##  📖 Table of Contents
 
+- [About](#-about)
+- [Features](#-features)
+- [Technology Stack](#️-technology-stack)
+- [Database ERD](#️-database-erd)
+- [Architecture](#️-architecture)
+- [Solution Structure](#️-solution-structure)
+- [Engineering Decisions](#-engineering-decisions)
+- [Screenshots](#-screenshots)
+- [Getting Started](#-getting-started)
+- [Author](#-author)
+- [License](#-license)
 
-# About
+#  📌 About
 
 AsyncPlate is a production-inspired restaurant management platform that demonstrates modern backend engineering practices. It manages menus, orders, inventory, kitchen operations, notifications, reporting, and real-time communication while emphasizing clean architecture, scalability, and maintainability
 
+# ✨ Features 
 
-#  Features
+| Name | Description |
+|---------|-------------|
+|  **Authentication & Authorization** | JWT authentication, Refresh Tokens, Role-Based Access Control (RBAC), and password recovery using OTP verification. |
+|  **Menu Management** | Manage products, categories, extras, and promotional offers with real-time updates. |
+|  **Order Management** | Complete order lifecycle from creation to completion with real-time status tracking. |
+|  **Kitchen Operations** | Instantly deliver orders to the kitchen with real-time inventory synchronization. |
+|  **Inventory & Suppliers** | Manage suppliers, inventories, recipes, realtime ingredient consumption, and stock tracking. |
+|  **Order Reviews** | Allow customers to rate and review completed orders. |
+|  **Notification System** | Real-time notifications, email messages. |
+|  **Reporting** | Automated daily PDF report generation powered by **QuestPDF** and **Hangfire**. |
 
-- **Authentication & Authorization** — JWT, Refresh Tokens, and role-based access control.
-- **Menu Management** — Products, categories, extras, offers, and availability.
-- **Order Management** — Complete order lifecycle with real-time status updates.
-- **Kitchen Operations** — Instant order delivery and cooking workflow via SignalR.
--  **Inventory Management** — Suppliers, ingredients, recipes, and stock tracking.
--  **Notification System** — Real-time and email notifications with OTP support.
-- **Reporting** — Automated PDF reports powered by QuestPDF and Hangfire.
 
-# Database ERD
+# 🛠️ Technology Stack
+| Category | Technologies |
+|----------|--------------|
+| **Backend** | ASP.NET Core Web API, Entity Framework Core, SQL Server, SignalR, Hangfire |
+|  **Authentication** | JWT, Refresh Tokens |
+|  **Architecture & Design** | Clean Architecture, Repository Pattern, Unit of Work |
+| **Libraries & Frameworks** | FluentValidation, AutoMapper |
+|  **API Documentation** | Swagger / OpenAPI |
+| **Reporting** | QuestPDF |
+|  **Email** | Mailtrap |
+
+# 🗄️ Database ERD
 
 The system uses a relational database designed to maintain data integrity, minimize redundancy, and efficiently model restaurant operations.
 
@@ -49,12 +74,33 @@ The system uses a relational database designed to maintain data integrity, minim
 
 
 
-# Solution Structure
-| | |
-|---|---|
-| AsyncPlate is built on **Clean Architecture**, organizing the solution into four independent layers with a clear separation of responsibilities. Dependencies always point inward, ensuring the Domain layer remains isolated from infrastructure and framework-specific concerns. This design makes the application easier to maintain, test, and extend. | <img src="screenshots/cleanarch.png" width="320"> |
 
+# 🏗️ Architecture
 
+<table>
+<tr>
+<td width="65%" valign="top">
+
+AsyncPlate follows **Clean Architecture**, organizing the solution into **four independent layers**:
+
+| Layer | Responsibility |
+|-------|----------------|
+| **Presentation** | Handles HTTP requests, API endpoints, and client communication. |
+|  **Application** | Contains business use cases, validation, and application logic. |
+| **Domain** | Defines core entities and business rules. |
+| **Infrastructure** | Implements data access, authentication, email services, and other external integrations. |
+
+</td>
+
+<td width="35%" align="center" valign="middle">
+
+<img src="screenshots/cleanarch.png" alt="Clean Architecture Diagram" width="250"/>
+
+</td>
+</tr>
+</table>
+
+#  🗂️ Solution Structure 
 
 ```text
 AsyncPlate/
@@ -62,18 +108,17 @@ AsyncPlate/
 ├── AsyncPlate.API      # Presentation Layer (HTTP/WebSocket Gateway Entry point)
 │   ├── Controllers
 │   ├── Middlewares
-│   └── Configuration
+│   └── ResponseModel
 │
 ├── AsyncPlate.Application       # Use Case Layer (Core business orchestration)
 │   ├── DTOs
 │   ├── Interfaces
 │   ├── Services
 │   ├── Mapping
-│   └── Validation
+│   └── Validators
 │
 ├── AsyncPlate.Domain        # Core Layer (Zero external dependencies)
-│   ├── Entities
-│   └── Exceptions
+│   └── Entities
 │
 └── AsyncPlate.Infrastructure       # Infrastructure Layer (External tools & data storage)
     ├── Data
@@ -84,20 +129,21 @@ AsyncPlate/
     └── Configurations
 ```
 
+# 💡 Engineering Decisions
+
+| Decision | Benefit |
+|----------|---------|
+|  **Repository + Unit of Work** | Abstracts data access and ensures transactional consistency across multiple operations. |
+|  **Async/Await** | Implements asynchronous I/O operations to improve scalability and responsiveness by preventing thread blocking. |
+|  **Performance Optimization** | Optimizes read operations using projections, selective eager loading, `AsNoTracking()` for read-only queries, and proper database indexing to improve performance and reduce memory usage. |
+| **SignalR** | Enables real-time communication for updates,  synchronization without client polling. |
+|  **Hangfire** | Executes background and scheduled jobs, such as email delivery and PDF report generation, without impacting API responsiveness. |
+| **FluentValidation** | Centralizes validation logic, keeping controllers and handlers clean while improving maintainability. |
+| **AutoMapper** | Simplifies object-to-object mapping, reducing boilerplate code and improving maintainability. |
 
 
-# Engineering Decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| **Repository + Unit of Work** | Encapsulates data access and coordinates database transactions to maintain consistency across multiple operations. |
-| **Asynchronous Programming** | Database operations and external services are implemented using `async`/`await` to improve scalability by avoiding blocked threads during I/O operations. |
-| **Database Query Optimization** | Read queries were optimized using projection, selective eager loading, `AsNoTracking()` for read-only operations, and appropriate database indexing to improve performance while avoiding the N+1 query problem. |
-| **SignalR** | Provides real-time updates for order status, menu changes, inventory availability, and notifications without client polling. |
-| **Hangfire** | Handles long-running and scheduled background tasks such as sending emails and report generation without blocking user requests. 
-
-
-# Screenshots
+# 📸 Screenshots
 The following screenshots demonstrate testing some features of AsyncPlate.
 
 <table>
@@ -133,7 +179,7 @@ The following screenshots demonstrate testing some features of AsyncPlate.
 </table>
   
   
-# Getting Started
+# 🚀 Getting Started
 
 Follow these steps to configure and run AsyncPlate locally.
 
@@ -197,13 +243,14 @@ https://localhost:51499/swagger/index.html
 
 > **Note:** The port number may differ depending on your local development environment.
 
-# Author
+
+# 👩‍💻 Author
 
 **Alyaa Ahmed**
 
 - GitHub: https://github.com/alyaaa7med
 - LinkedIn: https://www.linkedin.com/in/alyaa-ahmed12/
 
-# License
+# 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](License.txt) file for details.
