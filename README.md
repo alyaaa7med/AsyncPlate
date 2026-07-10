@@ -150,31 +150,28 @@ The following screenshots demonstrate testing some features of AsyncPlate.
  
   <tr>
     <td><img src="screenshots/Screenshot (257).png" width="100%"></td>
-    <td><img src="screenshots/Screenshot (258).png" width="100%"></td>
     <td><img src="screenshots/Screenshot (259).png" width="100%"></td>
+    <td><img src="screenshots/Screenshot (260).png" width="100%"></td>
   </tr>
   <tr>
-    <td><img src="screenshots/Screenshot (260).png" width="100%"></td>
     <td><img src="screenshots/Screenshot (261).png" width="100%"></td>
     <td><img src="screenshots/Screenshot (262).png" width="100%"></td>
+     <td><img src="screenshots/Screenshot (263).png" width="100%"></td>
   </tr>
   <tr>
-    <td><img src="screenshots/Screenshot (263).png" width="100%"></td>
     <td><img src="screenshots/Screenshot (264).png" width="100%"></td>
  <td><img src="screenshots/Screenshot (267).png" width="100%"></td>
+  <td><img src="screenshots/Screenshot (269).png" width="100%"></td>
   </tr>
   
-    
-  
   <tr>
-    <td><img src="screenshots/Screenshot (269).png" width="100%"></td>
     <td><img src="screenshots/Screenshot (270).png" width="100%"></td>
     <td><img src="screenshots/Screenshot (271).png" width="100%"></td>
+     <td><img src="screenshots/Screenshot (274).png" width="100%"></td>
   </tr>
   <tr>
     <td><img src="screenshots/Screenshot (272).png" width="100%"></td>
     <td><img src="screenshots/Screenshot (273).png" width="100%"></td>
-    <td><img src="screenshots/Screenshot (274).png" width="100%"></td>
   </tr>
 </table>
   
