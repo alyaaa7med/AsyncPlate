@@ -206,4 +206,4 @@ https://localhost:51499/swagger/index.html
 
 # License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](License.txt) file for details.
