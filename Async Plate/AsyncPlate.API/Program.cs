@@ -323,7 +323,7 @@ using (var scope = app.Services.CreateScope())
         job => job.ExecuteAsync(),
         Cron.Daily(21, 0));
 
-    RecurringJob.TriggerJob("daily-report");
+    //RecurringJob.TriggerJob("daily-report"); //uncomment to trigger the job immediately for testing purposes
 }
 
 using (var scope = app.Services.CreateScope())
@@ -335,7 +335,7 @@ using (var scope = app.Services.CreateScope())
     job => job.SendLowStockSuppliersEmail(),
     Cron.Daily(21, 0));
 
-    RecurringJob.TriggerJob("daily-low-stock-email");
+    //RecurringJob.TriggerJob("daily-low-stock-email"); //uncomment to trigger the job immediately for testing purposes
 
 }
 
@@ -365,7 +365,7 @@ app.UseCors("cors");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.MapHub<RealtimeHub>("/hubs/notifications");
+app.MapHub<RealtimeHub>("/hubs/realtime");
 
 
 app.Run();
