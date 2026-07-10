@@ -43,7 +43,7 @@ AsyncPlate is a production-inspired restaurant management platform that demonstr
 The system uses a relational database designed to maintain data integrity, minimize redundancy, and efficiently model restaurant operations.
 
 <p align="center">
-    <img src="screenshots/erd.drawio.png" width="900" />
+    <img src="screenshots/ERD.drawio.png" width="900" />
 </p>
 
 
