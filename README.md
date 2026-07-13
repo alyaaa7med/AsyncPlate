@@ -95,7 +95,7 @@ AsyncPlate follows **Clean Architecture**, organizing the solution into **four i
 
 <td width="50%" align="center" valign="middle">
 
-<img src="screenshots/cleanarch.png" alt="Clean Architecture Diagram" width="100%" />
+<img src="screenshots/cleanarch.png" alt="Clean Architecture Diagram"  />
 
 </td>
 </tr>
