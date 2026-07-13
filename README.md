@@ -92,9 +92,9 @@ AsyncPlate follows **Clean Architecture**, organizing the solution into **four i
 
 </td>
 
-<td width="35%" align="center" valign="middle">
+<td width="50%" align="center" valign="middle">
 
-<img src="screenshots/cleanarch.png" alt="Clean Architecture Diagram" width="250"/>
+<img src="screenshots/cleanarch.png" alt="Clean Architecture Diagram" />
 
 </td>
 </tr>
@@ -175,7 +175,10 @@ The following screenshots demonstrate testing some features of AsyncPlate.
   </tr>
 </table>
   
-  
+## 🧪 Real-Time Test Client
+
+A lightweight JavaScript client for testing SignalR real-time communication. It connects to the `RealtimeHub` using JWT authentication and verifies `live notifications`, `order status updates`, and `menu synchronization`.
+
 # 🚀 Getting Started
 
 Follow these steps to configure and run AsyncPlate locally.

@@ -1,6 +1,10 @@
+
+<!--this is a simple JS client for realtime communication between server and client 
+for testing realtime features like new offers, notifications,... -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
 
 <script>
+// token is changing based on the user we need to test for based on its rule.
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyOGNhMDJkYi0zYWE3LTQzYTAtOTA2NC1jZGJhNGE1YjNkYmEiLCJlbWFpbCI6ImFseWFhQGdtYWlsLmNvbSIsInJvbGUiOiJDdXN0b21lciIsIm5iZiI6MTc4MzU2Mjg3NCwiZXhwIjoxNzgzNTcwMDc0LCJpYXQiOjE3ODM1NjI4NzQsImlzcyI6ImxvY2FsaG9zdCIsImF1ZCI6ImxvY2FsaG9zdCJ9.uDtR3MEF8agPq2UJszj-KtpJr4COnOcYySPSQ1Lhbk0";
 
 const connection = new signalR.HubConnectionBuilder()
