@@ -80,7 +80,7 @@ The system uses a relational database designed to maintain data integrity, minim
 
 <table>
 <tr>
-<td width="65%" valign="top">
+<td width="50%" valign="top">
 
 AsyncPlate follows **Clean Architecture**, organizing the solution into **four independent layers**:
 
@@ -93,7 +93,7 @@ AsyncPlate follows **Clean Architecture**, organizing the solution into **four i
 
 </td>
 
-<td width="70%" align="center" valign="middle">
+<td width="50%" align="center" valign="middle">
 
 <img src="screenshots/cleanarch.png" alt="Clean Architecture Diagram" width="100%" />
 
