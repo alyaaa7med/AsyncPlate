@@ -79,7 +79,7 @@ The system uses a relational database designed to maintain data integrity, minim
 # 🏗️ Architecture
 
 <p align="center">
-  <img src="screenshots/cleanarch.png" alt="Clean Architecture Diagram" height="50% width="50%">
+  <img src="screenshots/cleanarch.png" alt="Clean Architecture Diagram" width="50%">
 </p>
 
 AsyncPlate follows **Clean Architecture**, organizing the solution into **four independent layers**:
