@@ -77,12 +77,11 @@ The system uses a relational database designed to maintain data integrity, minim
 
 
 # 🏗️ Architecture
-
 <p align="center">
-  <img src="screenshots/cleanarch.png" alt="Clean Architecture Diagram" width="50%">
+  <img src="screenshots/cleanarch.png" alt="Clean Architecture Diagram" width="95%" height="250px">
 </p>
+AsyncPlate follows Clean Architecture, organizing the solution into four independent layers:
 
-AsyncPlate follows **Clean Architecture**, organizing the solution into **four independent layers**:
 
 | Layer | Responsibility |
 |-------|----------------|
@@ -90,6 +89,7 @@ AsyncPlate follows **Clean Architecture**, organizing the solution into **four i
 | **Application** | Contains business use cases, validation, and application logic. |
 | **Domain** | Defines core entities and business rules. |
 | **Infrastructure** | Implements data access, authentication, email services, and other external integrations. |
+
 
 #  🗂️ Solution Structure 
 
