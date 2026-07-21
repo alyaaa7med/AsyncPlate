@@ -332,7 +332,7 @@ using (var scope = app.Services.CreateScope())
 
     recurringJob.AddOrUpdate<IInventoryJob>(
     "daily-low-stock-email",
-    job => job.SendLowStockSuppliersEmail(),
+    job => job.SendLowStockSuppliersEmailAsync(),
     Cron.Daily(21, 0));
 
     //RecurringJob.TriggerJob("daily-low-stock-email"); //uncomment to trigger the job immediately for testing purposes

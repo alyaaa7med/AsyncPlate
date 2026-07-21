@@ -478,7 +478,7 @@ namespace AsyncPlate.Application.Services.Implementation
             //send notification to admin and chef for low stock inventory 
             foreach (var inventoryid in lowStockInventories)
             {
-                BackgroundJob.Enqueue<IInventoryJob>(job => job.SendLowStockInventoryNotification(inventoryid));
+                BackgroundJob.Enqueue<IInventoryJob>(job => job.SendLowStockInventoryNotificationAsync(inventoryid));
             }
 
 

@@ -8,8 +8,8 @@ namespace AsyncPlate.Application.Interfaces.Jobs
 {
     public interface IInventoryJob
     {
-        Task SendLowStockInventoryNotification(string inventoryId);
-        Task SendLowStockSuppliersEmail();
+        Task SendLowStockInventoryNotificationAsync(string inventoryId);
+        Task SendLowStockSuppliersEmailAsync();
 
     }
 }

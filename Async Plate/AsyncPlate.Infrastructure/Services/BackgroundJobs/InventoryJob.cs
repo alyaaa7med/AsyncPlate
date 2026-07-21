@@ -24,7 +24,7 @@ namespace AsyncPlate.Infrastructure.Services.Jobs
             _emailService = emailService;
         }
 
-        public async Task SendLowStockInventoryNotification(string inventoryId)
+        public async Task SendLowStockInventoryNotificationAsync(string inventoryId)
         {
             var inventory = await _unitOfWork.inventories.GetByIdAsync(inventoryId);
             if (inventory == null)
@@ -62,7 +62,7 @@ namespace AsyncPlate.Infrastructure.Services.Jobs
         }
 
 
-        public async Task SendLowStockSuppliersEmail()
+        public async Task SendLowStockSuppliersEmailAsync()
         {
             var lowStockSuppliers = (await _unitOfWork.inventories.GetLowStockWithSuppliersAsync())
                 .GroupBy(i => i.Supplier.ContactEmail)
